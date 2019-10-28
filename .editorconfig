@@ -4,8 +4,6 @@ indent_style = space
 indent_size = 4
 insert_final_newline = true
 
-[*.{java,pom}]
+[*.{java,xml}]
 charset = utf-8
 
-[*.java]
-charset = utf-8
