@@ -1,10 +1,5 @@
 version: 2
 jobs:
-    build:
-        docker:
-            - image: openjdk:11
-        steps:
-            - checkout
     test:
         docker:
             - image: openjdk:11
@@ -38,9 +33,3 @@ workflows:
     check:
         jobs:
             - test
-            - deploy:
-                  requires:
-                      - test
-                  filters:
-                      branches:
-                          only: master
