@@ -1,0 +1,11 @@
+apply plugin: 'nebula.provided-base'
+
+dependencies {
+    provided 'javax.servlet:javax.servlet-api:3.0.1'
+}
+
+ext {
+    artifactName = 'public-api-commons'
+}
+
+description = 'Smartling Public API commons'
