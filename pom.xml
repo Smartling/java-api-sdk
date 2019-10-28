@@ -6,22 +6,31 @@
     <artifactId>smartling-sdk</artifactId> <!-- FIXME: maybe reuse smartling-api-sdk name -->
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
-    <name>smartling-sdk</name>
+    <name>Smartling Public SDK</name>
 
-    <url>http://maven.apache.org</url>
-    <scm>https://github.com/Smartling/api-sdk-java</scm>
+    <url>https://api-reference.smartling.com</url>
+    <scm>
+        <url>https://github.com/Smartling/api-sdk-java</url>
+    </scm>
 
     <properties>
         <maven.compiler.release>7</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <org.powermock.version>2.0.4</org.powermock.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.28.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -39,7 +48,10 @@
         </plugins>
     </build>
 
+    <!-- list in alphabetical order -->
     <modules>
-
+        <module>smartling-api-client</module>
+        <module>smartling-api-commons</module>
+        <module>smartling-authentication-client</module>
     </modules>
 </project>
