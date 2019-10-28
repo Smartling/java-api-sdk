@@ -1,0 +1,46 @@
+version: 2
+jobs:
+    build:
+        docker:
+            - image: openjdk:11
+        steps:
+            - checkout
+    test:
+        docker:
+            - image: openjdk:11
+        environment:
+            JAVAOPTIONS: "-Xms512m -Xmx2048m"
+        steps:
+            - checkout
+            - run:
+                  name: Build & Test
+                  command: 'mvn clean test'
+            - run:
+                  name: Collect Test Results
+                  command: |
+                      mkdir test-results
+                      find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} test-results/ \;
+            - store_test_results:
+                  path: test-results
+    deploy:
+        docker:
+            - image: openjdk:11
+        steps:
+            - checkout
+            - run:
+                  name: Deploy Artifacts
+                  command: |
+                      git config --global user.name "Continuous integration"
+                      git config --global user.email "ci@smartling.com"
+
+workflows:
+    version: 2
+    check:
+        jobs:
+            - test
+            - deploy:
+                  requires:
+                      - test
+                  filters:
+                      branches:
+                          only: master
