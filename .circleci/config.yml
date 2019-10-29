@@ -2,7 +2,7 @@ version: 2
 jobs:
     test:
         docker:
-            - image: openjdk:11
+            - image: smartlingci/javajdk:11
         environment:
             JAVAOPTIONS: "-Xms512m -Xmx2048m"
         steps:
