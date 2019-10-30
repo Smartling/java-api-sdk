@@ -2,7 +2,6 @@ package com.smartling.api.external.client;
 
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.smartling.api.external.client.exception.RestApiRuntimeException;
-import com.smartling.api.external.client.graphql.GraphQlClientFactory;
 import com.smartling.web.api.v2.EmptyData;
 import okhttp3.internal.SslContextBuilder;
 import okhttp3.mockwebserver.MockResponse;
@@ -41,7 +40,6 @@ import java.util.concurrent.TimeoutException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 public class ClientFactoryTest
 {
@@ -260,36 +258,6 @@ public class ClientFactoryTest
         } finally
         {
             executorService.shutdown();
-            webServer.shutdown();
-        }
-    }
-
-    @Test
-    public void testGraphQlClientFactory() throws IOException
-    {
-        final GraphQlClientFactory graphQlClientFactory = new GraphQlClientFactory();
-        final MockWebServer webServer = new MockWebServer();
-        webServer.start();
-        try
-        {
-            String responseBody = "{\"data\":{}}";
-            final MockResponse response = new MockResponse()
-                .setResponseCode(HttpStatus.SC_OK)
-                .setHeader(HttpHeaders.CONTENT_LENGTH, responseBody.length())
-                .setHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON)
-                .setBody(responseBody);
-            webServer.enqueue(response);
-
-            final Foo foo = graphQlClientFactory.build(requestFilters,
-                Collections.<ClientResponseFilter>emptyList(),
-                webServer.url("/").toString(),
-                Foo.class,
-                graphQlClientFactory.getDefaultDeserializerMap(),
-                new HttpClientConfiguration(),
-                null);
-            foo.getFoo("uid");
-        } finally
-        {
             webServer.shutdown();
         }
     }
