@@ -53,5 +53,6 @@
         <module>smartling-api-client</module>
         <module>smartling-api-commons</module>
         <module>smartling-authentication-client</module>
+        <module>smartling-authorization-api</module>
     </modules>
 </project>
