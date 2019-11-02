@@ -6,7 +6,7 @@
     <artifactId>smartling-sdk</artifactId> <!-- FIXME: maybe reuse smartling-api-sdk name -->
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
-    <name>Smartling Public SDK</name>
+    <name>Smartling API SDK Parent</name>
 
     <url>https://api-reference.smartling.com</url>
     <scm>
@@ -48,11 +48,12 @@
         </plugins>
     </build>
 
-    <!-- list in alphabetical order -->
+    <!-- list in alphabetical order, except api-sdk-all -->
     <modules>
         <module>smartling-api-client</module>
         <module>smartling-api-commons</module>
         <module>smartling-authentication-client</module>
         <module>smartling-authorization-api</module>
+        <module>smartling-api-sdk-all</module> <!-- keep last -->
     </modules>
 </project>
