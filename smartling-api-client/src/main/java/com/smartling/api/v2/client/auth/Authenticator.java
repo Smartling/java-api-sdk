@@ -1,11 +1,11 @@
 package com.smartling.api.v2.client.auth;
 
 import com.smartling.api.sdk.v2.HttpClientSettings;
-import com.smartling.api.sdk.v2.response.authentication.AuthenticationApi;
-import com.smartling.api.sdk.v2.response.authentication.AuthenticationApiFactory;
-import com.smartling.api.sdk.v2.response.authentication.pto.Authentication;
-import com.smartling.api.sdk.v2.response.authentication.pto.AuthenticationRefreshRequest;
-import com.smartling.api.sdk.v2.response.authentication.pto.AuthenticationRequest;
+import com.smartling.api.v2.authentication.AuthenticationApi;
+import com.smartling.api.v2.authentication.AuthenticationApiFactory;
+import com.smartling.api.v2.authentication.pto.Authentication;
+import com.smartling.api.v2.authentication.pto.AuthenticationRefreshRequest;
+import com.smartling.api.v2.authentication.pto.AuthenticationRequest;
 
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -54,7 +54,8 @@ public class Authenticator
         this.userIdentifier = userIdentifier;
         this.userSecret = userSecret;
         this.clock = new SystemClock();
-        this.api = new AuthenticationApiFactory().createAuthenticationApi(hostAndProtocol);
+        // FIXME: need to allow for stage
+        this.api = new AuthenticationApiFactory().buildApi();
     }
 
     /**

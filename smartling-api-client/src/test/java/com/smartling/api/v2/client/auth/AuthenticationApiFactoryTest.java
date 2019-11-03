@@ -1,10 +1,10 @@
 package com.smartling.api.v2.client.auth;
 
-import com.smartling.api.sdk.v2.response.authentication.AuthenticationApi;
-import com.smartling.api.sdk.v2.response.authentication.AuthenticationApiFactory;
-import com.smartling.api.sdk.v2.response.authentication.pto.Authentication;
-import com.smartling.api.sdk.v2.response.authentication.pto.AuthenticationRefreshRequest;
-import com.smartling.api.sdk.v2.response.authentication.pto.AuthenticationRequest;
+import com.smartling.api.v2.authentication.AuthenticationApi;
+import com.smartling.api.v2.authentication.AuthenticationApiFactory;
+import com.smartling.api.v2.authentication.pto.Authentication;
+import com.smartling.api.v2.authentication.pto.AuthenticationRefreshRequest;
+import com.smartling.api.v2.authentication.pto.AuthenticationRequest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +28,7 @@ public class AuthenticationApiFactoryTest
     public void createAuthenticationApi()
     {
         AuthenticationApiFactory factory = new AuthenticationApiFactory();
-        AuthenticationApi api = factory.createAuthenticationApi();
+        AuthenticationApi api = factory.buildApi();
 
         Authentication auth = api.authenticate(new AuthenticationRequest(userId, userSecret));
         System.err.println(auth);

@@ -1,4 +1,4 @@
-package com.smartling.api.sdk.v2.response.authentication.pto;
+package com.smartling.api.v2.authentication.pto;
 
 import com.smartling.api.sdk.v2.response.ResponseData;
 import lombok.Data;

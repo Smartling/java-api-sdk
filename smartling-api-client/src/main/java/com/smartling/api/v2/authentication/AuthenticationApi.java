@@ -1,8 +1,8 @@
-package com.smartling.api.sdk.v2.response.authentication;
+package com.smartling.api.v2.authentication;
 
-import com.smartling.api.sdk.v2.response.authentication.pto.Authentication;
-import com.smartling.api.sdk.v2.response.authentication.pto.AuthenticationRefreshRequest;
-import com.smartling.api.sdk.v2.response.authentication.pto.AuthenticationRequest;
+import com.smartling.api.v2.authentication.pto.Authentication;
+import com.smartling.api.v2.authentication.pto.AuthenticationRefreshRequest;
+import com.smartling.api.v2.authentication.pto.AuthenticationRequest;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
