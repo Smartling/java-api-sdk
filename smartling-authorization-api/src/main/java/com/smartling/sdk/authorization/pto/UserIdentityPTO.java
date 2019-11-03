@@ -1,6 +1,6 @@
 package com.smartling.sdk.authorization.pto;
 
-import com.smartling.web.api.v2.ResponseData;
+import com.smartling.api.v2.response.ResponseData;
 
 
 public class UserIdentityPTO implements ResponseData
