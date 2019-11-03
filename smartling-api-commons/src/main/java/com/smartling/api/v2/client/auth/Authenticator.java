@@ -1,6 +1,6 @@
 package com.smartling.api.v2.client.auth;
 
-import com.smartling.api.sdk.v2.HttpClientSettings;
+import com.smartling.api.client.context.HttpClientSettings;
 import com.smartling.api.v2.authentication.AuthenticationApi;
 import com.smartling.api.v2.authentication.AuthenticationApiFactory;
 import com.smartling.api.v2.authentication.pto.Authentication;
@@ -44,18 +44,24 @@ public class Authenticator
 
     public Authenticator(String userIdentifier, String userSecret, String hostAndProtocol, HttpClientSettings httpClientSettings)
     {
-        this(userIdentifier, userSecret, hostAndProtocol, httpClientSettings, new SystemClock());
+        this(userIdentifier, userSecret, hostAndProtocol, httpClientSettings, new AuthenticationApiFactory().buildApi(hostAndProtocol));
     }
 
-    Authenticator(String userIdentifier, String userSecret, String hostAndProtocol, HttpClientSettings httpClientSettings, Clock clock)
+    Authenticator(String userIdentifier, String userSecret, String hostAndProtocol, HttpClientSettings httpClientSettings, AuthenticationApi api)
+    {
+        this(userIdentifier, userSecret, hostAndProtocol, httpClientSettings, api, new SystemClock());
+    }
+
+    Authenticator(String userIdentifier, String userSecret, String hostAndProtocol, HttpClientSettings httpClientSettings, AuthenticationApi api, Clock clock)
     {
         Objects.requireNonNull(userIdentifier, "userIdentifierRequired");
         Objects.requireNonNull(userSecret, "userSecret required");
+        Objects.requireNonNull(api, "authentication API required");
+        Objects.requireNonNull(clock, "clock required");
         this.userIdentifier = userIdentifier;
         this.userSecret = userSecret;
-        this.clock = new SystemClock();
-        // FIXME: need to allow for stage
-        this.api = new AuthenticationApiFactory().buildApi();
+        this.api = api;
+        this.clock = clock;
     }
 
     /**
@@ -65,28 +71,16 @@ public class Authenticator
      */
     public String getAccessToken()
     {
-        return getAccessToken(null);
-    }
-
-    /**
-     * Returns a valid access token for this authenticator's user identifier and secret.
-     *
-     * @param requestId an identifier assigned to all rest calls initiated by this method. It does not affect
-     *                  method logic and is indented for internal debugging purposes only.
-     * @return a valid access token
-     */
-    public String getAccessToken(String requestId)
-    {
         if (authentication != null && isValid())
         {
             logger.finest("current token valid");
             return authentication.getAccessToken();
         }
 
-        return refreshOrRequestNewAccessToken(requestId, false);
+        return refreshOrRequestNewAccessToken(false);
     }
 
-    private synchronized String refreshOrRequestNewAccessToken(String requestId, boolean forceRefresh)
+    private synchronized String refreshOrRequestNewAccessToken(boolean forceRefresh)
     {
         if (!forceRefresh && authentication != null && isValid())
         {
@@ -97,7 +91,7 @@ public class Authenticator
             logger.info("Going to refresh access token.");
             try
             {
-                return refreshAccessToken(requestId);
+                return refreshAccessToken();
             }
             catch (Exception e)
             {
@@ -106,32 +100,7 @@ public class Authenticator
         }
 
         logger.info("Requesting new token.");
-        return this.getAccessTokenInternal(requestId);
-    }
-
-    /**
-     * Returns a valid access token header (tokenType + accessToken) for this authenticator's user identifier and secret.
-     *
-     * @return a valid access token
-     * @throws AuthenticationException if an access couldn't be obtained for the user and secret
-     */
-    public String getAccessTokenHeader()
-    {
-        final String accessToken = getAccessToken();
-        return authentication.getTokenType() + ' ' + accessToken;
-    }
-
-    /**
-     * Returns a valid access token header (tokenType + accessToken) for this authenticator's user identifier and secret.
-     * Forces token refresh
-     *
-     * @return a valid access token
-     * @throws AuthenticationException if an access couldn't be obtained for the user and secret
-     */
-    public String getAccessTokenHeaderForceRefresh()
-    {
-        final String accessToken = refreshOrRequestNewAccessToken(null, true);
-        return authentication.getTokenType() + ' ' + accessToken;
+        return this.getAccessTokenInternal();
     }
 
     boolean isValid()
@@ -139,7 +108,10 @@ public class Authenticator
         if (authentication == null)
             return false;
 
-        return authentication.getExpiresIn() + clock.currentTimeMillis() > clock.currentTimeMillis() + REFRESH_BEFORE_EXPIRES_MS;
+        //long expiryTime = authentication.getExpiresIn() * 1000 + clock.currentTimeMillis();
+
+        //return authentication.getExpiresIn() * 1000 + clock.currentTimeMillis() > clock.currentTimeMillis() - REFRESH_BEFORE_EXPIRES_MS;
+        return authentication.getExpiresIn() * 1000 + clock.currentTimeMillis() > clock.currentTimeMillis();
     }
 
     boolean isRefreshable()
@@ -147,16 +119,16 @@ public class Authenticator
         if (authentication == null)
             return false;
 
-        return authentication.getExpiresIn() + clock.currentTimeMillis() > clock.currentTimeMillis();
+        return authentication.getExpiresIn() * 1000 + clock.currentTimeMillis() > clock.currentTimeMillis();
     }
 
-    private synchronized String getAccessTokenInternal(String requestId)
+    private synchronized String getAccessTokenInternal()
     {
         this.authentication = api.authenticate(new AuthenticationRequest(userIdentifier, userSecret));
         return authentication.getAccessToken();
     }
 
-    private synchronized String refreshAccessToken(String requestId)
+    private synchronized String refreshAccessToken()
     {
         this.authentication = api.refresh(new AuthenticationRefreshRequest(authentication.getRefreshToken()));
         return authentication.getAccessToken();

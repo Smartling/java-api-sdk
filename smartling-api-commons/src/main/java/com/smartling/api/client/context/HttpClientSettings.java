@@ -1,4 +1,4 @@
-package com.smartling.api.sdk.v2;
+package com.smartling.api.client.context;
 
 /**
  * Groups any configuration related to the underlying HTTP client configuration:

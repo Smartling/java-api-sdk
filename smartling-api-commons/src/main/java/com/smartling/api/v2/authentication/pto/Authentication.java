@@ -1,9 +1,13 @@
 package com.smartling.api.v2.authentication.pto;
 
 import com.smartling.api.v2.response.ResponseData;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@AllArgsConstructor
 @Data
+@EqualsAndHashCode
 public class Authentication implements ResponseData
 {
     private String accessToken;

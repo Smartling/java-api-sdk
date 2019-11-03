@@ -1,7 +1,7 @@
 package com.smartling.api.v2.client.auth;
 
 import com.smartling.api.v2.client.HttpClientConfiguration;
-import com.smartling.api.sdk.v2.HttpClientSettings;
+import com.smartling.api.client.context.HttpClientSettings;
 
 public class BearerAuthSecretFilter extends AbstractBearerAuthFilter
 {
