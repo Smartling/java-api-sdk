@@ -1,5 +1,7 @@
 package com.smartling.web.api.v2;
 
+import com.smartling.sdk.v2.ResponseData;
+
 import java.io.Serializable;
 
 public class RestApiResponse<T extends ResponseData> implements Serializable

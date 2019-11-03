@@ -1,9 +1,8 @@
 package com.smartling.api.external.client.auth;
 
 import com.smartling.api.client.authentication.Authenticator;
-import com.smartling.api.client.authentication.HttpClientSettings;
-import com.smartling.api.client.authentication.HttpClientSettings.Proxy;
 import com.smartling.api.external.client.HttpClientConfiguration;
+import com.smartling.api.v2.HttpClientSettings;
 
 public class BearerAuthSecretFilter extends AbstractBearerAuthFilter
 {
@@ -22,7 +21,7 @@ public class BearerAuthSecretFilter extends AbstractBearerAuthFilter
     public BearerAuthSecretFilter(final String userIdentifier, final String userSecret, final String apiHost, HttpClientConfiguration httpClientConfiguration)
     {
         HttpClientSettings authenticatorHttpSettings = new HttpClientSettings();
-        authenticatorHttpSettings.setProxy(Proxy.newProxy(
+        authenticatorHttpSettings.setProxy(HttpClientSettings.Proxy.newProxy(
                 httpClientConfiguration.getProxyHost(),
                 httpClientConfiguration.getProxyPort(),
                 httpClientConfiguration.getProxyUser(),

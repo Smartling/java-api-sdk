@@ -1,6 +1,6 @@
 package com.smartling.api.external.client.servlet;
 
-import com.smartling.web.api.v2.ResponseData;
+import com.smartling.sdk.v2.ResponseData;
 import java.util.List;
 
 public class TestListPTO implements ResponseData

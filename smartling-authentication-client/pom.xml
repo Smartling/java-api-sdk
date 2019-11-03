@@ -15,6 +15,21 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.smartling</groupId>
+            <artifactId>smartling-authentication-api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smartling</groupId>
+            <artifactId>smartling-api-commons</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smartling</groupId>
+            <artifactId>smartling-http-client</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>com.eclipsesource.minimal-json</groupId>
             <artifactId>minimal-json</artifactId>
             <version>0.9.5</version>

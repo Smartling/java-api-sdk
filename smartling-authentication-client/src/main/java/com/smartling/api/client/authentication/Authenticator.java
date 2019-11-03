@@ -1,10 +1,13 @@
 package com.smartling.api.client.authentication;
 
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
+import com.smartling.api.v2.HttpClientSettings;
+import com.smartling.sdk.v2.authentication.AuthenticationApi;
+import com.smartling.sdk.v2.authentication.AuthenticationApiFactory;
+import com.smartling.sdk.v2.authentication.pto.Authentication;
+import com.smartling.sdk.v2.authentication.pto.AuthenticationRefreshRequest;
+import com.smartling.sdk.v2.authentication.pto.AuthenticationRequest;
 
-import java.io.IOException;
-import java.util.logging.Level;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 /**
@@ -18,48 +21,46 @@ import java.util.logging.Logger;
  */
 public class Authenticator
 {
-    private static final String AUTH_URL_PATTERN = "https://%s/auth-api/v2/authenticate";
-    private static final String REFRESH_URL_PATTERN = "https://%s/auth-api/v2/authenticate/refresh";
-    private static final String DEFAULT_API_HOST = "api.smartling.com";
     private static Logger logger = Logger.getLogger(Authenticator.class.getName());
 
-    private final HttpClient client;
+    private static final int REFRESH_BEFORE_EXPIRES_MS = 90 * 1000;
+    private final Clock clock;
+
     private final String userIdentifier;
     private final String userSecret;
 
-    private String authUrl;
-    private String refreshUrl;
     private Authentication authentication;
+    private AuthenticationApi api;
 
     public Authenticator(String userIdentifier, String userSecret)
     {
-        this(userIdentifier, userSecret, DEFAULT_API_HOST);
+        this(userIdentifier, userSecret, "https://api.smartling.com");
     }
 
-    public Authenticator(String userIdentifier, String userSecret, HttpClientSettings httpClientSettings)
+    public Authenticator(String userIdentifier, String userSecret, String hostAndProtocol)
     {
-        this(userIdentifier, userSecret, DEFAULT_API_HOST, httpClientSettings);
+        this(userIdentifier, userSecret, hostAndProtocol, new HttpClientSettings());
     }
 
-    public Authenticator(String userIdentifier, String userSecret, String apiHost)
+    public Authenticator(String userIdentifier, String userSecret, String hostAndProtocol, HttpClientSettings httpClientSettings)
     {
-        this(userIdentifier, userSecret, apiHost, new HttpClientSettings());
+        this(userIdentifier, userSecret, hostAndProtocol, httpClientSettings, new SystemClock());
     }
 
-    public Authenticator(String userIdentifier, String userSecret, String apiHost, HttpClientSettings httpClientSettings)
+    Authenticator(String userIdentifier, String userSecret, String hostAndProtocol, HttpClientSettings httpClientSettings, Clock clock)
     {
+        Objects.requireNonNull(userIdentifier, "userIdentifierRequired");
+        Objects.requireNonNull(userSecret, "userSecret required");
         this.userIdentifier = userIdentifier;
         this.userSecret = userSecret;
-        this.authUrl = String.format(AUTH_URL_PATTERN, apiHost);
-        this.refreshUrl = String.format(REFRESH_URL_PATTERN, apiHost);
-        this.client = new HttpClient(httpClientSettings);
+        this.clock = new SystemClock();
+        this.api = new AuthenticationApiFactory().createAuthenticationApi(hostAndProtocol);
     }
 
     /**
      * Returns a valid access token for this authenticator's user identifier and secret.
      *
      * @return a valid access token
-     * @throws AuthenticationException if an access couldn't be obtained for the user and secret
      */
     public String getAccessToken()
     {
@@ -72,11 +73,10 @@ public class Authenticator
      * @param requestId an identifier assigned to all rest calls initiated by this method. It does not affect
      *                  method logic and is indented for internal debugging purposes only.
      * @return a valid access token
-     * @throws AuthenticationException if an access couldn't be obtained for the user and secret
      */
     public String getAccessToken(String requestId)
     {
-        if (authentication != null && authentication.isValid())
+        if (authentication != null && isValid())
         {
             logger.finest("current token valid");
             return authentication.getAccessToken();
@@ -87,12 +87,11 @@ public class Authenticator
 
     private synchronized String refreshOrRequestNewAccessToken(String requestId, boolean forceRefresh)
     {
-        if (!forceRefresh && authentication != null && authentication.isValid())
+        if (!forceRefresh && authentication != null && isValid())
         {
             logger.finest("current token valid");
-            return authentication.getAccessToken();
         }
-        if (authentication != null && authentication.isRefreshable())
+        if (authentication != null && isRefreshable())
         {
             logger.info("Going to refresh access token.");
             try
@@ -105,15 +104,8 @@ public class Authenticator
             }
         }
 
-        try
-        {
-            logger.info("Requesting new token.");
-            return this.getAccessTokenInternal(requestId);
-        }
-        catch (IOException e)
-        {
-            throw new AuthenticationConnectionException("Unable to authenticate", e);
-        }
+        logger.info("Requesting new token.");
+        return this.getAccessTokenInternal(requestId);
     }
 
     /**
@@ -127,6 +119,7 @@ public class Authenticator
         final String accessToken = getAccessToken();
         return authentication.getTokenType() + ' ' + accessToken;
     }
+
     /**
      * Returns a valid access token header (tokenType + accessToken) for this authenticator's user identifier and secret.
      * Forces token refresh
@@ -140,60 +133,31 @@ public class Authenticator
         return authentication.getTokenType() + ' ' + accessToken;
     }
 
-    private JsonValue buildAuthRequest()
+    boolean isValid()
     {
-        JsonObject request = new JsonObject();
+        if (authentication == null)
+            return false;
 
-        request.add("userIdentifier", userIdentifier);
-        request.add("userSecret", userSecret);
-
-        return request;
+        return authentication.getExpiresIn() + clock.currentTimeMillis() > clock.currentTimeMillis() + REFRESH_BEFORE_EXPIRES_MS;
     }
 
-    private JsonValue buildRefreshRequest()
+    boolean isRefreshable()
     {
-        JsonObject request = new JsonObject();
+        if (authentication == null)
+            return false;
 
-        request.add("refreshToken", authentication.getRefreshToken());
-
-        return request;
+        return authentication.getExpiresIn() + clock.currentTimeMillis() > clock.currentTimeMillis();
     }
 
-    private Authentication buildAuthentication(JsonObject data)
+    private synchronized String getAccessTokenInternal(String requestId)
     {
-        return AuthenticationBuilder.builder()
-                .accessToken(data.getString("accessToken", null))
-                .refreshToken(data.getString("refreshToken", null))
-                .expiresIn(data.getInt("expiresIn", -1))
-                .refreshExpiresIn(data.getInt("refreshExpiresIn", -1))
-                .tokenType(data.getString("tokenType", null))
-                .build();
+        this.authentication = api.authenticate(new AuthenticationRequest(userIdentifier, userSecret));
+        return authentication.getAccessToken();
     }
 
-    private String getAccessTokenInternal(String requestId) throws IOException
+    private synchronized String refreshAccessToken(String requestId)
     {
-        return getAccessTokenFromResponse(client.post(authUrl, buildAuthRequest(), requestId));
-    }
-
-    private String refreshAccessToken(String requestId) throws IOException
-    {
-        return getAccessTokenFromResponse(client.post(refreshUrl, buildRefreshRequest(), requestId));
-    }
-
-    private String getAccessTokenFromResponse(ResponseEntity<JsonObject> response)
-    {
-        if (logger.isLoggable(Level.FINE))
-            logger.fine(String.valueOf(response.getBody()));
-
-        if (response.getStatus() == 401 || response.getStatus() == 403)
-            throw new AccessDeniedException(response.getMessage());
-        if (response.getStatus() == 400)
-            throw new BadRequestException("Bad authentication request");
-        else if(response.getStatus() != 200)
-            throw new AuthenticationConnectionException("Bad response status: " + response.getStatus());
-
-        this.authentication = buildAuthentication(response.getBody().get("response").asObject().get("data").asObject());
-
+        this.authentication = api.refresh(new AuthenticationRefreshRequest(authentication.getRefreshToken()));
         return authentication.getAccessToken();
     }
 }

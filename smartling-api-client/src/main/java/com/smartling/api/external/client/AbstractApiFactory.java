@@ -13,7 +13,7 @@ import org.jboss.resteasy.spi.ResteasyProviderFactory;
 public abstract class AbstractApiFactory<T>
 {
     private static final String DEFAULT_API_HOST              = "api.smartling.com";
-    private static final String DEFAULT_API_HOST_AND_PROTOCOL = "https://" + DEFAULT_API_HOST;
+    protected static final String DEFAULT_API_HOST_AND_PROTOCOL = "https://" + DEFAULT_API_HOST;
 
     private final ClientFactory clientFactory;
 

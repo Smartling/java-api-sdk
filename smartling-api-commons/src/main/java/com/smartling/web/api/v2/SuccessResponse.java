@@ -1,5 +1,7 @@
 package com.smartling.web.api.v2;
 
+import com.smartling.sdk.v2.ResponseData;
+
 /**
  * Successful response including the given data.
  *
