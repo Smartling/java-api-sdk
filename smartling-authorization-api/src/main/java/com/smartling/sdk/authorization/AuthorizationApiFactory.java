@@ -1,6 +1,6 @@
 package com.smartling.sdk.authorization;
 
-import com.smartling.api.external.client.AbstractApiFactory;
+import com.smartling.api.v2.client.AbstractApiFactory;
 
 /**
  * Provides an API factory for the Smartling authorization API.
