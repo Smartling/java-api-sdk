@@ -23,7 +23,7 @@ public class Authenticator
 {
     private static Logger logger = Logger.getLogger(Authenticator.class.getName());
 
-    private static final int REFRESH_BEFORE_EXPIRES_MS = 90 * 1000;
+    static final int REFRESH_BEFORE_EXPIRES_MS = 90 * 1000;
     private final Clock clock;
 
     private final String userIdentifier;
@@ -31,6 +31,9 @@ public class Authenticator
 
     private Authentication authentication;
     private AuthenticationApi api;
+
+    private volatile long expiresAt = -1;
+    private volatile long refreshExpiresAt = -1;
 
     public Authenticator(String userIdentifier, String userSecret)
     {
@@ -80,11 +83,12 @@ public class Authenticator
         return refreshOrRequestNewAccessToken(false);
     }
 
-    private synchronized String refreshOrRequestNewAccessToken(boolean forceRefresh)
+    synchronized String refreshOrRequestNewAccessToken(boolean forceRefresh)
     {
         if (!forceRefresh && authentication != null && isValid())
         {
             logger.finest("current token valid");
+            return authentication.getAccessToken();
         }
         if (authentication != null && isRefreshable())
         {
@@ -108,10 +112,7 @@ public class Authenticator
         if (authentication == null)
             return false;
 
-        //long expiryTime = authentication.getExpiresIn() * 1000 + clock.currentTimeMillis();
-
-        //return authentication.getExpiresIn() * 1000 + clock.currentTimeMillis() > clock.currentTimeMillis() - REFRESH_BEFORE_EXPIRES_MS;
-        return authentication.getExpiresIn() * 1000 + clock.currentTimeMillis() > clock.currentTimeMillis();
+        return expiresAt > clock.currentTimeMillis() + REFRESH_BEFORE_EXPIRES_MS;
     }
 
     boolean isRefreshable()
@@ -119,18 +120,22 @@ public class Authenticator
         if (authentication == null)
             return false;
 
-        return authentication.getExpiresIn() * 1000 + clock.currentTimeMillis() > clock.currentTimeMillis();
+        return refreshExpiresAt > clock.currentTimeMillis();
     }
 
     private synchronized String getAccessTokenInternal()
     {
         this.authentication = api.authenticate(new AuthenticationRequest(userIdentifier, userSecret));
+        this.expiresAt = authentication.getExpiresIn() * 1000 + System.currentTimeMillis();
+        this.refreshExpiresAt = authentication.getRefreshExpiresIn() * 100 + System.currentTimeMillis();
         return authentication.getAccessToken();
     }
 
     private synchronized String refreshAccessToken()
     {
         this.authentication = api.refresh(new AuthenticationRefreshRequest(authentication.getRefreshToken()));
+        this.expiresAt = authentication.getExpiresIn() * 1000 + System.currentTimeMillis();
+        this.refreshExpiresAt = authentication.getRefreshExpiresIn() * 100 + System.currentTimeMillis();
         return authentication.getAccessToken();
     }
 }
