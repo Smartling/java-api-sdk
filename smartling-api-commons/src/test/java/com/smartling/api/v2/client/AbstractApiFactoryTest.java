@@ -15,9 +15,10 @@ import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
-@Ignore
 @SuppressWarnings("unchecked")
 public class AbstractApiFactoryTest
 {
@@ -41,7 +42,10 @@ public class AbstractApiFactoryTest
         fooFactory = new FooFactory(clientFactory);
 
         final Foo foo = mock(Foo.class);
-        when(clientFactory.build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), any(String.class), eq(Foo.class), eq(deserializerMap), any(HttpClientConfiguration.class), any(ResteasyProviderFactory.class))).thenReturn(foo);
+
+        when(clientFactory.build(any(List.class), any(List.class), any(String.class), eq(Foo.class), eq(deserializerMap), any(HttpClientConfiguration.class), any(ResteasyProviderFactory.class))).thenReturn(foo);
+        when(clientFactory.build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), anyString(), eq(Foo.class), eq(deserializerMap), any(HttpClientConfiguration.class),
+            (ResteasyProviderFactory) isNull())).thenReturn(foo);
     }
 
     @Test(expected = NullPointerException.class)
@@ -96,8 +100,8 @@ public class AbstractApiFactoryTest
         final BearerAuthStaticTokenFilter tokenFilter = new BearerAuthStaticTokenFilter(USER_IDENTIFIER);
         final String domain = "http://foo.com";
 
-        verify(clientFactory, times(1)).build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), eq(deserializerMap), any(HttpClientConfiguration.class), eq((ResteasyProviderFactory)null));
         assertNotNull(fooFactory.buildApi(tokenFilter, domain));
+        verify(clientFactory, times(1)).build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), eq(deserializerMap), any(HttpClientConfiguration.class), eq((ResteasyProviderFactory)null));
         verify(clientFactory, times(1)).build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), eq(deserializerMap), any(HttpClientConfiguration.class), eq((ResteasyProviderFactory)null));
     }
 
