@@ -1,4 +1,4 @@
-package com.smartling.sdk.authorization.pto;
+package com.smartling.api.v2.authorization.pto;
 
 import com.smartling.api.v2.response.ResponseData;
 

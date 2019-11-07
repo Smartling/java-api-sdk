@@ -1,6 +1,6 @@
-package com.smartling.sdk.authorization;
+package com.smartling.api.v2.authorization;
 
-import com.smartling.sdk.authorization.pto.UserIdentityDataPTO;
+import com.smartling.api.v2.authorization.pto.UserIdentityDataPTO;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
