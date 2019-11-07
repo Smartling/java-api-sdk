@@ -1,4 +1,4 @@
-package com.smartling.sdk.authorization;
+package com.smartling.api.v2.authorization;
 
 import com.smartling.api.v2.client.AbstractApiFactory;
 

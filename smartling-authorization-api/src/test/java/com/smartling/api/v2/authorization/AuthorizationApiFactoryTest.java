@@ -1,7 +1,7 @@
-package com.smartling.sdk.authorization;
+package com.smartling.api.v2.authorization;
 
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
-import com.smartling.sdk.authorization.pto.UserIdentityDataPTO;
+import com.smartling.api.v2.authorization.pto.UserIdentityDataPTO;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
