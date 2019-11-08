@@ -84,6 +84,7 @@
     <modules>
         <module>smartling-api-commons</module>
         <module>smartling-authorization-api</module>
+        <module>smartling-issues-api</module>
         <module>smartling-api-sdk-all</module> <!-- keep last -->
     </modules>
 </project>
