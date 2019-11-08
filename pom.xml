@@ -11,8 +11,8 @@
     <url>https://api-reference.smartling.com</url>
 
     <scm>
-        <url>https://github.com/Smartling/api-sdk-java</url>
-        <developerConnection>scm:git:ssh://git@github.com/Smartling/api-sdk-java</developerConnection>
+        <url>https://github.com/Smartling/java-api-sdk</url>
+        <developerConnection>scm:git:ssh://git@github.com/Smartling/java-api-sdk</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
