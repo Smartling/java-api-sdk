@@ -49,7 +49,7 @@ public abstract class AbstractApiFactory<T>
         Objects.requireNonNull(userIdentifier, "userIdentifier must be defined");
         Objects.requireNonNull(userSecret, "userSecret must be defined");
 
-        final BearerAuthSecretFilter bearerAuthSecretFilter = new BearerAuthSecretFilter(userIdentifier, userSecret, DEFAULT_API_HOST);
+        final BearerAuthSecretFilter bearerAuthSecretFilter = new BearerAuthSecretFilter(userIdentifier, userSecret, DEFAULT_API_HOST_AND_PROTOCOL);
         return buildApi(bearerAuthSecretFilter);
     }
 

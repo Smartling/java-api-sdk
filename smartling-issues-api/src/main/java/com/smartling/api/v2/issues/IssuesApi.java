@@ -77,7 +77,7 @@ public interface IssuesApi
 
     @DELETE
     @Path("/projects/{projectId}/issues/{issueUid}/assignee")
-    EmptyData deleteIssueAssigneeUser(@PathParam("projectId") String projectId,
+    void deleteIssueAssigneeUser(@PathParam("projectId") String projectId,
                                       @PathParam("issueUid") String issueUid);
 
     @PUT
@@ -112,7 +112,7 @@ public interface IssuesApi
 
     @DELETE
     @Path("/projects/{projectId}/issues/{issueUid}/comments/{commentUid}")
-    EmptyData deleteIssueComment(@PathParam("projectId") String projectId,
+    void deleteIssueComment(@PathParam("projectId") String projectId,
                                  @PathParam("issueUid") String issueUid,
                                  @PathParam("commentUid") String commentUid);
 
