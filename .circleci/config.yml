@@ -24,6 +24,11 @@ jobs:
                       - "52:1a:a4:d8:67:65:05:a3:0c:a0:7a:41:3f:90:af:ba"
             - checkout
             - run:
+                  name: Configure Git
+                  command: |
+                      git config --global user.email "artifacts@smartling.com"
+                      git config --global user.name "Smartling, Inc."
+            - run:
                   name: Import GPG Key
                   command: gpg --batch --passphrase ${GPG_SIGNING_PASSWORD} --import .circleci/gpg.key.txt
             - run:
