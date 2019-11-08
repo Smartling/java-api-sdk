@@ -37,9 +37,9 @@ workflows:
     build_and_release:
         jobs:
             - test
-             -  deploy:
-                    requires:
-                        - test
-                    filters:
-                        branches:
-                            only: ci-build
+            - deploy:
+                  requires:
+                      - test
+                  filters:
+                      branches:
+                          only: ci-build
