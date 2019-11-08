@@ -13,7 +13,7 @@ public enum ErrorKey
     }
 
     /**
-     * Key is a lowercased string to comply rules&best practises for API.
+     * Key is a lowercase string to comply rules and best practises for API.
      *
      * @return name() in lower case
      */
