@@ -7,11 +7,21 @@
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <name>Smartling API Parent</name>
-
+    <description>Smartling API SDK</description>
     <url>https://api-reference.smartling.com</url>
+
     <scm>
         <url>https://github.com/Smartling/api-sdk-java</url>
+        <developerConnection>scm:git:ssh://git@github.com/Smartling/api-sdk-java</developerConnection>
+        <tag>HEAD</tag>
     </scm>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
     <properties>
         <maven.compiler.release>7</maven.compiler.release>
@@ -99,4 +109,77 @@
         <module>smartling-issues-api</module>
         <module>smartling-api-sdk-all</module> <!-- keep last -->
     </modules>
+
+    <developers>
+        <developer>
+            <name>Smartling</name>
+            <organization>Smartling, Inc.</organization>
+            <url>https://github.com/Smartling/</url>
+            <roles>
+                <role>Organization</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Scott Rossillo</name>
+            <organization>Smartling, Inc.</organization>
+            <url>https://github.com/foo4u/</url>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <repository>
+            <id>sonatype-oss-staging</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+   </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <configuration>
+                            <gpgArguments>
+                                <gpgArgument>--no-tty</gpgArgument>
+                                <gpgArgument>--batch</gpgArgument>
+                                <gpgArgument>--pinentry-mode</gpgArgument>
+                                <gpgArgument>loopback</gpgArgument>
+                            </gpgArguments>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.smartling.cc4j</groupId>
+                        <artifactId>conventional-commits-maven-plugin</artifactId>
+                        <version>0.1.0</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>2.5.3</version>
+                        <configuration>
+                            <autoVersionSubmodules>true</autoVersionSubmodules>
+                            <dryRun>true</dryRun>
+                            <pushChanges>true</pushChanges>
+                            <tagNameFormat>v@{project.version}</tagNameFormat>
+                            <allowTimestampedSnapshots>false</allowTimestampedSnapshots>
+                            <scmCommentPrefix xml:space="preserve">ci: </scmCommentPrefix>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
