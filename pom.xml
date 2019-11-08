@@ -172,7 +172,7 @@
                         <configuration>
                             <autoVersionSubmodules>true</autoVersionSubmodules>
                             <dryRun>false</dryRun>
-                            <pushChanges>false</pushChanges>
+                            <pushChanges>true</pushChanges>
                             <tagNameFormat>v@{project.version}</tagNameFormat>
                             <allowTimestampedSnapshots>false</allowTimestampedSnapshots>
                             <scmCommentPrefix xml:space="preserve">ci: </scmCommentPrefix>
