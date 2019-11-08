@@ -6,9 +6,9 @@ import com.smartling.api.v2.authentication.AuthenticationApiFactory;
 import com.smartling.api.v2.authentication.pto.Authentication;
 import com.smartling.api.v2.authentication.pto.AuthenticationRefreshRequest;
 import com.smartling.api.v2.authentication.pto.AuthenticationRequest;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
-import java.util.logging.Logger;
 
 /**
  * Authenticates a given user identifier and user secret against Smartling's authentication service, returning a
@@ -19,10 +19,9 @@ import java.util.logging.Logger;
  *
  * @author Scott Rossillo
  */
+@Slf4j
 public class Authenticator
 {
-    private static Logger logger = Logger.getLogger(Authenticator.class.getName());
-
     static final int REFRESH_BEFORE_EXPIRES_MS = 90 * 1000;
     private final Clock clock;
 
@@ -76,7 +75,7 @@ public class Authenticator
     {
         if (authentication != null && isValid())
         {
-            logger.finest("current token valid");
+            log.debug("current token valid");
             return authentication.getAccessToken();
         }
 
@@ -87,23 +86,23 @@ public class Authenticator
     {
         if (!forceRefresh && authentication != null && isValid())
         {
-            logger.finest("current token valid");
+            log.debug("using current token");
             return authentication.getAccessToken();
         }
         if (authentication != null && isRefreshable())
         {
-            logger.info("Going to refresh access token.");
+            log.debug("Going to refresh access token.");
             try
             {
                 return refreshAccessToken();
             }
             catch (Exception e)
             {
-                logger.warning("Failed to refresh accessToken. Requesting new token.");
+                log.warn("Failed to refresh accessToken. Requesting new token.");
             }
         }
 
-        logger.info("Requesting new token.");
+        log.debug("Requesting new token.");
         return this.getAccessTokenInternal();
     }
 
