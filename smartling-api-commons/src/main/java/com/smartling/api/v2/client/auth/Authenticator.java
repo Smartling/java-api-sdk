@@ -98,7 +98,7 @@ public class Authenticator
             }
             catch (Exception e)
             {
-                log.warn("Failed to refresh accessToken. Requesting new token.");
+                log.info("Failed to refresh accessToken. Requesting new token.");
             }
         }
 
