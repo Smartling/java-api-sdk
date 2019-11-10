@@ -3,16 +3,17 @@ package com.smartling.api.v2.client.exception;
 import com.smartling.api.v2.response.Error;
 import com.smartling.api.v2.response.ErrorResponse;
 import com.smartling.api.v2.response.ResponseCode;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
+@Slf4j
 public class RestApiRuntimeException extends WebApplicationException
 {
-    private final static Logger logger            = Logger.getLogger(RestApiRuntimeException.class.getName());
     private static final int    ERRORS_LOG_LIMIT  = 3;
     private static final String REQUEST_ID_HEADER = "X-SL-RequestId";
 
@@ -45,7 +46,7 @@ public class RestApiRuntimeException extends WebApplicationException
         }
         catch (ProcessingException ex)
         {
-            logger.warning(String.format("Failed to process JSON: %s", ex.getMessage()));
+            log.warn("Failed to process JSON: {}", ex.getMessage());
         }
 
         return null;
