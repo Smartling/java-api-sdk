@@ -47,4 +47,4 @@ workflows:
                       - test
                   filters:
                       branches:
-                          only: ci-build
+                          only: master
