@@ -1,12 +1,24 @@
 package com.smartling.api.sdk;
 
-import com.smartling.api.v2.client.AbstractApiFactory;
+import java.util.Objects;
 
-public class SmartlingApiFactory extends AbstractApiFactory<SmartlingApi>
+/**
+ * Provides a factory to create an instance of the Smartling API.
+ */
+public class SmartlingApiFactory
 {
-    @Override
-    protected Class<SmartlingApi> getApiClass()
+    /**
+     * Returns a Smartling API instance
+     *
+     * @param userIdentifier your API v2 user identifier (required)
+     * @param userSecret your API v2 user secret (required)
+     *
+     * @return a configured {@link SmartlingApi} instance
+     */
+    public SmartlingApi build(String userIdentifier, String userSecret)
     {
-        return SmartlingApi.class;
+        Objects.requireNonNull(userIdentifier, "userIdentifer required");
+        Objects.requireNonNull(userSecret, "userSecret required");
+        return new SmartlingApiImpl(userIdentifier, userSecret);
     }
 }
