@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.smartling</groupId>
+        <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
@@ -16,7 +16,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.smartling</groupId>
+            <groupId>com.smartling.api</groupId>
             <artifactId>smartling-api-commons</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

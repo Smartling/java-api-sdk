@@ -8,7 +8,7 @@
     <name>Smartling API Commons</name>
 
     <parent>
-        <groupId>com.smartling</groupId>
+        <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
