@@ -6,7 +6,8 @@ integration within their application.
 
 ## Using this SDK
 
-The Smartling API SDK is distributed via Maven Central.
+The Smartling API SDK is distributed via Maven Central and is compatible with JDK 1.7
+(Java 7) and up.
 
 ### Maven
 
