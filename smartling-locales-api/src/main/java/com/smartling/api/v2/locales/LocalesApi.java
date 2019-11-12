@@ -57,5 +57,4 @@ public interface LocalesApi
     @GET
     @Path("/dictionary/extended/locales")
     ListResponse<ExtendedLocalePTO> getLocalesAsDictionaryExtended(@QueryParam("localeIds") List<String> localeIds);
-
 }
