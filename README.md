@@ -1,8 +1,6 @@
 # Smartling Java API SDK
 
-SDK for integrating with the Smartling API. The Smartling API allows developers to upload
-language specific resource files and download the translations of those files for easy
-integration within their application.
+Java SDK for integrating with the [Smartling API].
 
 ## Using this SDK
 
@@ -50,3 +48,5 @@ request must pass all automated tests before it will be considered for inclusion
 
 Smartling developers should refer to the wiki for instructions on contributing to this
 SDK.
+
+[Smartling API]: https://api-reference.smartling.com/
