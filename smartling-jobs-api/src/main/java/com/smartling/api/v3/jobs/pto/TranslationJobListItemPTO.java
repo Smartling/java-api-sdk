@@ -4,18 +4,14 @@ import com.smartling.api.v2.response.ResponseData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 import java.util.List;
 
 @Data
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Accessors(chain = true)
 public class TranslationJobListItemPTO implements ResponseData
 {
     private String translationJobUid;

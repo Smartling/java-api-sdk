@@ -1,17 +1,18 @@
 package com.smartling.api.v3.jobs.pto;
 
-import com.smartling.api.v3.jobs.pto.account.IssuesCountsPTO;
 import com.smartling.api.v2.response.ResponseData;
-import java.util.List;
-
+import com.smartling.api.v3.jobs.pto.account.IssuesCountsPTO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
+import java.util.List;
 
 @Data
 @NoArgsConstructor
-@Accessors(chain = true)
+@AllArgsConstructor
+@Builder
 public class TranslationJobResponsePTO implements ResponseData
 {
     private String translationJobUid;

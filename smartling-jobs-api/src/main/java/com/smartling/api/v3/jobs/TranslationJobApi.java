@@ -64,7 +64,6 @@ public interface TranslationJobApi
     String API_JOB_CANCEL_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/cancel";
     String API_JOB_CLOSE_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/close";
     String API_JOB_DELETE_ENDPOINT = API_JOBS_ENDPOINT + "/{translationJobUid}";
-    String API_JOB_PRIORITY_ENDPOINT = API_JOBS_ENDPOINT + "/{translationJobUid}/priority";
     String API_JOB_ASYNC_PROCESSES_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/processes/{processUid}";
     String API_JOB_AUTHORIZE_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/authorize";
     String API_JOB_LOCALES_COMPLETION_DATES_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/locales-completion-dates";
@@ -194,10 +193,6 @@ public interface TranslationJobApi
     @Path(API_JOB_LOCALES_COMPLETION_DATES_ENDPOINT)
     ListResponse<TranslationJobLocaleCompletionDatePTO> getTranslationJobLocalesCompletionDates(@PathParam(PROJECT_ID) String projectId,
                                                                                                 @PathParam(TRANSLATION_JOB_UID) String translationJobUid);
-
-    @DELETE
-    @Path(API_JOB_PRIORITY_ENDPOINT)
-    EmptyData deleteTranslationJobPriority(@PathParam(PROJECT_ID) String projectId, @PathParam(TRANSLATION_JOB_UID) String translationJobUid);
 
     @POST
     @Path(API_PROJECT_CUSTOM_FIELDS_ENDPOINT)
