@@ -39,8 +39,8 @@ public interface LocalesApi
      *
      * @param localeIds list of desired locales to return, if <code>null</code> or empty, all
      *                  locales will be returned
-     * @param supported <code>true</code> if only supported locales should be returned;
-     *                  <code>false</code> or <code>null</code> otherwise
+     * @param supportedOnly <code>true</code> if only supported locales should be returned;
+     *                      <code>false</code> or <code>null</code> otherwise
      * @return list of locales
      */
     @GET
