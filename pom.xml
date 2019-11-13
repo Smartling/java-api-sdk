@@ -129,6 +129,7 @@
         <module>smartling-issues-api</module>
         <module>smartling-locales-api</module>
         <module>smartling-api-sdk-all</module> <!-- keep last -->
+        <module>smartling-jobs-api</module>
     </modules>
 
     <developers>

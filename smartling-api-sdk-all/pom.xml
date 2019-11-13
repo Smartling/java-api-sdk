@@ -21,5 +21,10 @@
             <artifactId>smartling-locales-api</artifactId>
             <version>0.3.3-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.smartling</groupId>
+            <artifactId>smartling-jobs-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
