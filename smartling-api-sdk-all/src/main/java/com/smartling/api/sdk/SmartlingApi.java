@@ -1,6 +1,7 @@
 package com.smartling.api.sdk;
 
 import com.smartling.api.v2.issues.IssuesApi;
+import com.smartling.api.locales.v2.LocalesApi;
 
 /**
  * Provides APIs for working with the Smartling Platform.
@@ -14,4 +15,12 @@ public interface SmartlingApi
      * @return {@link IssuesApi}
      */
     IssuesApi issuesApi();
+
+    /**
+     * Returns an API for working with Smartling
+     * <a href="https://api-reference.smartling.com/#tag/Locales">locales</a>.
+     *
+     * @return {@link LocalesApi}
+     */
+    LocalesApi localesApi();
 }
