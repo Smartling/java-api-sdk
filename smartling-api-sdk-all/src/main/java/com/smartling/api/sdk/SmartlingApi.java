@@ -17,7 +17,7 @@ public interface SmartlingApi
     IssuesApi issuesApi();
 
     /**
-     * Returns an API to for working with Smartling
+     * Returns an API for working with Smartling
      * <a href="https://api-reference.smartling.com/#tag/Locales">locales</a>.
      *
      * @return {@link LocalesApi}
