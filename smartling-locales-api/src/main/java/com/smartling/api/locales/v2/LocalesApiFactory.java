@@ -1,4 +1,4 @@
-package com.smartling.api.v2.locales;
+package com.smartling.api.locales.v2;
 
 import com.smartling.api.v2.client.AbstractApiFactory;
 

@@ -2,8 +2,8 @@ package com.smartling.api.sdk;
 
 import com.smartling.api.v2.issues.IssuesApi;
 import com.smartling.api.v2.issues.IssuesApiFactory;
-import com.smartling.api.v2.locales.LocalesApi;
-import com.smartling.api.v2.locales.LocalesApiFactory;
+import com.smartling.api.locales.v2.LocalesApi;
+import com.smartling.api.locales.v2.LocalesApiFactory;
 
 final class SmartlingApiImpl implements SmartlingApi
 {

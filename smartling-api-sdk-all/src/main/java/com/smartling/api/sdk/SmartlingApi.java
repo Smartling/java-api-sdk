@@ -1,7 +1,7 @@
 package com.smartling.api.sdk;
 
 import com.smartling.api.v2.issues.IssuesApi;
-import com.smartling.api.v2.locales.LocalesApi;
+import com.smartling.api.locales.v2.LocalesApi;
 
 /**
  * Provides APIs for working with the Smartling Platform.

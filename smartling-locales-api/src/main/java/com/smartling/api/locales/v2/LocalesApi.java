@@ -1,9 +1,9 @@
-package com.smartling.api.v2.locales;
+package com.smartling.api.locales.v2;
 
-import com.smartling.api.v2.locales.pto.ExtendedLocalePTO;
+import com.smartling.api.locales.v2.pto.LanguagePTO;
+import com.smartling.api.locales.v2.pto.LocalePTO;
+import com.smartling.api.locales.v2.pto.ExtendedLocalePTO;
 import com.smartling.api.v2.response.ListResponse;
-import com.smartling.api.v2.locales.pto.LanguagePTO;
-import com.smartling.api.v2.locales.pto.LocalePTO;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
