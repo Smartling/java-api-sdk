@@ -1,8 +1,11 @@
 package com.smartling.api.v3.jobs;
 
 import com.smartling.api.v3.jobs.pto.AddLocaleCommandPTO;
+import com.smartling.api.v3.jobs.pto.AsyncProcessDTO;
 import com.smartling.api.v3.jobs.pto.AsyncResponsePTO;
+import com.smartling.api.v3.jobs.pto.CustomFieldCreatePTO;
 import com.smartling.api.v3.jobs.pto.CustomFieldPTO;
+import com.smartling.api.v3.jobs.pto.CustomFieldUpdatePTO;
 import com.smartling.api.v3.jobs.pto.PagingCommandPTO;
 import com.smartling.api.v3.jobs.pto.SortCommandPTO;
 import com.smartling.api.v2.response.EmptyData;
@@ -62,6 +65,7 @@ public interface TranslationJobApi
     String API_JOB_CLOSE_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/close";
     String API_JOB_DELETE_ENDPOINT = API_JOBS_ENDPOINT + "/{translationJobUid}";
     String API_JOB_PRIORITY_ENDPOINT = API_JOBS_ENDPOINT + "/{translationJobUid}/priority";
+    String API_JOB_ASYNC_PROCESSES_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/processes/{processUid}";
     String API_JOB_AUTHORIZE_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/authorize";
     String API_JOB_LOCALES_COMPLETION_DATES_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/locales-completion-dates";
 
@@ -74,6 +78,9 @@ public interface TranslationJobApi
     String API_PROJECT_CUSTOM_FIELDS_ENDPOINT = "/projects/{projectId}/custom-fields";
 
     String PROJECT_ID = "projectId";
+    String ACCOUNT_UID = "accountUid";
+    String FIELD_UID = "fieldUid";
+    String PROCESS_UID = "processUid";
     String TRANSLATION_JOB_UID = "translationJobUid";
     String LOCALE_ID = "localeId";
 
@@ -188,15 +195,35 @@ public interface TranslationJobApi
     ListResponse<TranslationJobLocaleCompletionDatePTO> getTranslationJobLocalesCompletionDates(@PathParam(PROJECT_ID) String projectId,
                                                                                                 @PathParam(TRANSLATION_JOB_UID) String translationJobUid);
 
-    @GET
-    @Path(API_PROJECT_CUSTOM_FIELDS_ENDPOINT)
-    ListResponse<CustomFieldPTO> getProjectActiveCustomFields(@PathParam(PROJECT_ID) String projectId);
-
     @DELETE
     @Path(API_JOB_PRIORITY_ENDPOINT)
     EmptyData deleteTranslationJobPriority(@PathParam(PROJECT_ID) String projectId, @PathParam(TRANSLATION_JOB_UID) String translationJobUid);
 
+    @GET
+    @Path(API_PROJECT_CUSTOM_FIELDS_ENDPOINT)
+    ListResponse<CustomFieldPTO> getProjectActiveCustomFields(@PathParam(PROJECT_ID) String projectId);
+
     @POST
     @Path(API_PROJECT_CUSTOM_FIELDS_ENDPOINT)
     EmptyData assignCustomFieldsToProject(@PathParam(PROJECT_ID) String projectId, @BeanParam List<CustomFieldAssignmentPTO> customFieldAssignments);
+
+    @GET
+    @Path(API_ACCOUNT_CUSTOM_FIELDS_ENDPOINT)
+    ListResponse<CustomFieldPTO> getAccountCustomFields(@PathParam(ACCOUNT_UID) String accountUid, BeanParam filterPTO);
+
+    @POST
+    @Path(API_ACCOUNT_CUSTOM_FIELDS_ENDPOINT)
+    CustomFieldPTO createCustomField(@PathParam(ACCOUNT_UID) String accountUid, @BeanParam CustomFieldCreatePTO customFieldCreatePTO);
+
+    @PUT
+    @Path(API_ACCOUNT_CUSTOM_FIELDS_SINGLE_FIELD_ENDPOINT)
+    CustomFieldPTO updateCustomField(@PathParam(ACCOUNT_UID) String accountUid,
+                                     @PathParam(FIELD_UID) String fieldUid,
+                                     @BeanParam CustomFieldUpdatePTO customFieldUpdatePTO);
+
+    @GET
+    @Path(API_JOB_ASYNC_PROCESSES_ENDPOINT)
+    AsyncProcessDTO getProcessDetails(@PathParam(PROJECT_ID) String projectId,
+                                      @PathParam(TRANSLATION_JOB_UID) String translationJobUid,
+                                      @PathParam(PROCESS_UID) String processUid);
 }
