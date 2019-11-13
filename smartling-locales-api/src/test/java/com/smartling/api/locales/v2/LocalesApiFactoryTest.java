@@ -1,6 +1,5 @@
 package com.smartling.api.locales.v2;
 
-import com.smartling.api.locales.v2.pto.ExtendedLocalePTO;
 import com.smartling.api.locales.v2.pto.LanguagePTO;
 import com.smartling.api.locales.v2.pto.LocalePTO;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
@@ -14,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.ws.rs.core.HttpHeaders;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -232,76 +230,6 @@ public class LocalesApiFactoryTest
         validateLocale(filteredLocales.getItems().get(0), "aa", "Afar", "aa", "Afar", "LTR", "CHARACTER", false, null, null);
         validateLocale(filteredLocales.getItems().get(1), "zh-TW", "Chinese (Traditional)", "zh", "Chinese", "RTL", "SPACE", true, "TW", "Taiwan");
 
-    }
-    @Test
-    public void testGetFilteredLocalesExtended() throws Exception
-    {
-        assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, GET_FILTERED_EXTENDED_LOCALES_DATA_JSON));
-
-        final List<String> localeIds = new LinkedList<>();
-        localeIds.add("aa");
-        localeIds.add("zh-TW");
-
-        final ListResponse<ExtendedLocalePTO> filteredLocales = localesApi.getLocalesAsDictionaryExtended(localeIds);
-
-        final RecordedRequest request = mockWebServer.takeRequest();
-
-        assertEquals("GET", request.getMethod());
-        assertTrue(request.getPath().contains("/locales-api/v2/dictionary/extended/locales"));
-        assertTrue(request.getPath().contains(String.format("localeIds=%s", localeIds.get(0))));
-        assertTrue(request.getPath().contains(String.format("localeIds=%s", localeIds.get(1))));
-
-        assertNotNull(filteredLocales);
-        assertEquals(2, filteredLocales.getTotalCount());
-        assertEquals(2, filteredLocales.getItems().size());
-        validateLocale(filteredLocales.getItems().get(0), "aa", "Afar", "aa", "Afar", "LTR", "CHARACTER", false, null, null);
-        validateLocale(filteredLocales.getItems().get(1), "zh-TW", "Chinese (Traditional)", "zh", "Chinese", "RTL", "SPACE", true, "TW", "Taiwan");
-        assertEquals(Arrays.asList("ONE", "OTHER"), filteredLocales.getItems().get(0).getPluralTags());
-        assertEquals(Arrays.asList("ONE", "MANY"), filteredLocales.getItems().get(1).getPluralTags());
-
-    }
-    @Test
-    public void testGetAllLanguages() throws Exception
-    {
-        assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, LANGUAGES_DATA_JSON));
-
-        final ListResponse<LanguagePTO> languages = localesApi.getLanguagesAsDictionary(null);
-
-        final RecordedRequest request = mockWebServer.takeRequest();
-
-        assertEquals("GET", request.getMethod());
-        assertTrue(request.getPath().contains("/locales-api/v2/dictionary/languages"));
-        assertFalse(request.getPath().contains("?")); //no params are passed
-
-        assertNotNull(languages);
-        assertEquals(2, languages.getTotalCount());
-        assertEquals(2, languages.getItems().size());
-        validateLanguage(languages.getItems().get(0), "fr", "French", "LTR",  "CHARACTER");
-        validateLanguage(languages.getItems().get(1), "en", "English", "RTL", "SPACE");
-    }
-
-    @Test
-    public void testGetFilteredLanguages() throws Exception
-    {
-        assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, LANGUAGES_DATA_JSON));
-        final List<String> languageIds = new LinkedList<>();
-        languageIds.add("fr");
-        languageIds.add("en");
-
-        final ListResponse<LanguagePTO> languages = localesApi.getLanguagesAsDictionary(languageIds);
-
-        final RecordedRequest request = mockWebServer.takeRequest();
-
-        assertEquals("GET", request.getMethod());
-        assertTrue(request.getPath().contains("/locales-api/v2/dictionary/languages"));
-        assertTrue(request.getPath().contains(String.format("languageIds=%s", languages.getItems().get(0).getLanguageId())));
-        assertTrue(request.getPath().contains(String.format("languageIds=%s", languages.getItems().get(1).getLanguageId())));
-
-        assertNotNull(languages);
-        assertEquals(2, languages.getTotalCount());
-        assertEquals(2, languages.getItems().size());
-        validateLanguage(languages.getItems().get(0), "fr", "French", "LTR",  "CHARACTER");
-        validateLanguage(languages.getItems().get(1), "en", "English", "RTL", "SPACE");
     }
 
     private void validateLanguage(LanguagePTO languagePTO, String languageId, String languageDescription, String direction, String wordDelimiter)

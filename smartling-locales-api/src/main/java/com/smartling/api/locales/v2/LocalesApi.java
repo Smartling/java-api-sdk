@@ -1,8 +1,6 @@
 package com.smartling.api.locales.v2;
 
-import com.smartling.api.locales.v2.pto.LanguagePTO;
 import com.smartling.api.locales.v2.pto.LocalePTO;
-import com.smartling.api.locales.v2.pto.ExtendedLocalePTO;
 import com.smartling.api.v2.response.ListResponse;
 
 import javax.ws.rs.*;
@@ -15,10 +13,15 @@ import java.util.List;
 public interface LocalesApi
 {
     /**
-     * <p>Endpoint to get list of all locales used in Smartling and available for all customers.
-     * Works as a dictionary, but also capable of filtering by specified locale ids.</p>
+     * Returns a list of all locales used by Smartling.
      *
-     * @param localeIds list of desired locales. Might be null or empty. Than all locales are returned
+     * <p>
+     *     The list of returned locales may be filtered by providing a list of
+     *     locale identifiers to return.
+     * </p>
+     *
+     * @param localeIds list of desired locales to return, if <code>null</code> or empty, all
+     *                  locales will be returned
      * @return list of locales
      */
     @GET
@@ -26,35 +29,21 @@ public interface LocalesApi
     ListResponse<LocalePTO> getLocalesAsDictionary(@QueryParam("localeIds") List<String> localeIds);
 
     /**
-     * <p>Endpoint to get list of all locales used in Smartling and available for all customers.
-     * Works as a dictionary, but also capable of filtering by specified locale ids.</p>
-     * @param localeIds list of desired locales. Might be null or empty. Than all locales are returned
-     * @param supported supported locales only. Might be null or false
+     * Returns a list of all locales used by Smartling.
+     *
+     * <p>
+     *     The list of returned locales may be filtered by providing a list of
+     *     locale identifiers to return and a boolean to indicate if only Smartling supported
+     *     locales should be returned.
+     * </p>
+     *
+     * @param localeIds list of desired locales to return, if <code>null</code> or empty, all
+     *                  locales will be returned
+     * @param supported <code>true</code> if only supported locales should be returned;
+     *                  <code>false</code> or <code>null</code> otherwise
      * @return list of locales
      */
     @GET
     @Path("/dictionary/locales")
     ListResponse<LocalePTO> getLocalesAsDictionary(@QueryParam("localeIds") List<String> localeIds, @QueryParam("supportedOnly") Boolean supportedOnly);
-
-    /**
-     * <p>Endpoint to get list of all languages used in Smartling and available for all customers.
-     * Works as a dictionary, but also capable of filtering by specified language ids.</p>
-     *
-     * @param languageIds list of desired languages. Might be null or empty. Than all languages are returned
-     * @return list of languages
-     */
-    @GET
-    @Path("/dictionary/languages")
-    ListResponse<LanguagePTO> getLanguagesAsDictionary(@QueryParam("languageIds") List<String> languageIds);
-
-    /**
-     * <p>Endpoint to get list of all locales used in Smartling and available for all customers.
-     * Works as a dictionary, but also capable of filtering by specified locale ids.</p>
-     *
-     * @param localeIds list of desired locales, extended with pluraltag information. Might be null or empty. Than all locales are returned
-     * @return list of locales
-     */
-    @GET
-    @Path("/dictionary/extended/locales")
-    ListResponse<ExtendedLocalePTO> getLocalesAsDictionaryExtended(@QueryParam("localeIds") List<String> localeIds);
 }

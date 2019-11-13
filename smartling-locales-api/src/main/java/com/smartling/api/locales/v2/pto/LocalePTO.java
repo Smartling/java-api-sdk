@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * PTO class to provide basic info about locale, which is Id and Description.
+ * Provides information about a locale.
  */
 @Data
 @NoArgsConstructor
