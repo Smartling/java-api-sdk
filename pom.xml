@@ -128,8 +128,8 @@
         <module>smartling-api-commons</module>
         <module>smartling-issues-api</module>
         <module>smartling-locales-api</module>
-        <module>smartling-api-sdk-all</module> <!-- keep last -->
         <module>smartling-jobs-api</module>
+        <module>smartling-api-sdk-all</module> <!-- keep last -->
     </modules>
 
     <developers>
