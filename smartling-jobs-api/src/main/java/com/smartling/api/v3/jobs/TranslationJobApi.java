@@ -199,10 +199,6 @@ public interface TranslationJobApi
     @Path(API_JOB_PRIORITY_ENDPOINT)
     EmptyData deleteTranslationJobPriority(@PathParam(PROJECT_ID) String projectId, @PathParam(TRANSLATION_JOB_UID) String translationJobUid);
 
-    @GET
-    @Path(API_PROJECT_CUSTOM_FIELDS_ENDPOINT)
-    ListResponse<CustomFieldPTO> getProjectActiveCustomFields(@PathParam(PROJECT_ID) String projectId);
-
     @POST
     @Path(API_PROJECT_CUSTOM_FIELDS_ENDPOINT)
     EmptyData assignCustomFieldsToProject(@PathParam(PROJECT_ID) String projectId, @BeanParam List<CustomFieldAssignmentPTO> customFieldAssignments);
