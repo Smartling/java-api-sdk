@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-jobs-api</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
+            <version>0.3.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
