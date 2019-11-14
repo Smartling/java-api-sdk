@@ -4,7 +4,7 @@
     <groupId>com.smartling.api</groupId>
     <artifactId>smartling-sdk-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.4.1-SNAPSHOT</version>
     <name>Smartling API Parent</name>
     <description>Smartling API SDK</description>
     <url>https://api-reference.smartling.com</url>
@@ -104,8 +104,9 @@
     <!-- list in alphabetical order, except api-sdk-all -->
     <modules>
         <module>smartling-api-commons</module>
-        <module>smartling-authorization-api</module>
         <module>smartling-issues-api</module>
+        <module>smartling-locales-api</module>
+        <module>smartling-jobs-api</module>
         <module>smartling-job-batches-api</module>
         <module>smartling-api-sdk-all</module> <!-- keep last -->
     </modules>
