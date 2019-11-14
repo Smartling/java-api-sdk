@@ -7,7 +7,7 @@ jobs:
             - checkout
             - run:
                   name: Build & Test
-                  command: './mvnw clean test'
+                  command: './mvnw clean test javadoc:javadoc'
             - run:
                   name: Collect Test Results
                   command: |
