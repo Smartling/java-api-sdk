@@ -1,9 +1,10 @@
 package com.smartling.api.jobbatches.v2;
 
-import com.smartling.api.jobbatches.v2.pto.BatchActionRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.BatchStatusResponsePTO;
+import com.smartling.api.jobbatches.v2.pto.CancelBatchActionRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.CreateBatchRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.CreateBatchResponsePTO;
+import com.smartling.api.jobbatches.v2.pto.RegisterBatchActionRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.StreamFileUploadPTO;
 import com.smartling.api.v2.client.exception.RestApiExceptionHandler;
 import com.smartling.api.jobbatches.v2.pto.BatchPTO;
@@ -65,36 +66,6 @@ public class FileUploadProxy implements JobBatchesApi
     }
 
     @Override
-    public void addFile(String projectId, String batchUid, FileUploadPTO fileUploadPTO)
-    {
-        MultipartFormDataOutput output = new MultipartFormDataOutput();
-        getFields(FileUploadPTO.class, output, fileUploadPTO);
-//        addClientLibIdIfNeeded(output);
-
-        String path = getPathAnnotationValue("addFile", String.class, String.class, FileUploadPTO.class);
-        Response response = sendRequest(path, projectId, batchUid, output);
-        releaseConnection(response);
-    }
-
-    @Override
-    public void addFileAsStream(String projectId, String batchUid, StreamFileUploadPTO streamFileUploadPTO)
-    {
-        MultipartFormDataOutput output = new MultipartFormDataOutput();
-        getFields(StreamFileUploadPTO.class, output, streamFileUploadPTO);
-//        addClientLibIdIfNeeded(output);
-
-        String path = getPathAnnotationValue("addFileAsStream", String.class, String.class, StreamFileUploadPTO.class);
-        Response response = sendRequest(path, projectId, batchUid, output);
-        releaseConnection(response);
-    }
-
-    @Override
-    public void executeBatch(String projectId, String batchUid, BatchActionRequestPTO request)
-    {
-        delegate.executeBatch(projectId, batchUid, request);
-    }
-
-    @Override
     public void addFileAsync(String projectId, String batchUid, FileUploadPTO fileUploadPTO)
     {
         MultipartFormDataOutput output = new MultipartFormDataOutput();
@@ -117,6 +88,17 @@ public class FileUploadProxy implements JobBatchesApi
         Response response = sendRequest(path, projectId, batchUid, output);
         releaseConnection(response);
     }
+
+    @Override
+    public void registerFile(String projectId, String batchUid, RegisterBatchActionRequestPTO request) {
+        delegate.registerFile(projectId, batchUid, request);
+    }
+
+    @Override
+    public void cancelFile(String projectId, String batchUid, CancelBatchActionRequestPTO request) {
+        delegate.cancelFile(projectId, batchUid, request);
+    }
+
 
 //    private void addClientLibIdIfNeeded(MultipartFormDataOutput requestData)
 //    {

@@ -5,17 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Calendar;
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BatchItemPTO implements ResponseData
+public class AddFileResponsePTO implements ResponseData
 {
-    private String status;
-    private Calendar updatedDate;
-    private String errors;
     private String fileUri;
-    private List<BatchItemLocalePTO> targetLocales;
+    private Long batchItemId;
+    private String batchUid;
 }

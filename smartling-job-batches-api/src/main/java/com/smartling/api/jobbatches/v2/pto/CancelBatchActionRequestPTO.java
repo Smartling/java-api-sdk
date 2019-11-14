@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkflowPTO
+public class CancelBatchActionRequestPTO
 {
-    private String targetLocaleId;
-    private String workflowUid;
+    private String action = "CANCEL_FILE";
+    private String fileUri;
+    private String reason;
 }

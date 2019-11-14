@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkflowPTO
+public class RegisterBatchActionRequestPTO
 {
-    private String targetLocaleId;
-    private String workflowUid;
+    private String action = "REGISTER_FILE";
+    private String fileUri;
 }

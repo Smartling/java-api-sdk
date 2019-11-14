@@ -2,15 +2,13 @@ package com.smartling.api.jobbatches.v2.pto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.ws.rs.QueryParam;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode
 public class SearchParamsPTO
 {
     @QueryParam("offset")

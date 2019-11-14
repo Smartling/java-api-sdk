@@ -2,7 +2,6 @@ package com.smartling.api.jobbatches.v2.pto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.jboss.resteasy.annotations.providers.multipart.PartFilename;
 import org.jboss.resteasy.annotations.providers.multipart.PartType;
@@ -12,10 +11,9 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode
 public class StreamFileUploadPTO
 {
     @FormParam("fileType")
