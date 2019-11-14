@@ -1,29 +1,21 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
         <version>0.3.3-SNAPSHOT</version>
     </parent>
-    <artifactId>smartling-api-sdk</artifactId>
+
+    <artifactId>smartling-jobs-api</artifactId>
     <version>0.3.3-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <name>Smartling API SDK</name>
+    <name>Smartling Jobs API</name>
+
     <dependencies>
         <dependency>
             <groupId>com.smartling.api</groupId>
-            <artifactId>smartling-issues-api</artifactId>
-            <version>0.3.3-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.smartling.api</groupId>
-            <artifactId>smartling-locales-api</artifactId>
-            <version>0.3.3-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.smartling.api</groupId>
-            <artifactId>smartling-jobs-api</artifactId>
+            <artifactId>smartling-api-commons</artifactId>
             <version>0.3.3-SNAPSHOT</version>
         </dependency>
     </dependencies>

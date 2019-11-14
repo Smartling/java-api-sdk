@@ -35,7 +35,7 @@ a API v2.0 identifier and a user secret to the API factory.
     SmartlingApi createSmartlingApi(String userIdentifier, String userSecret)
     {
         return new SmartlingApiFactory()
-            .buildApi(userIdentifier, userSecret);
+            .build(userIdentifier, userSecret);
     }
 
 ## Contributing
