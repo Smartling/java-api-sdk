@@ -12,9 +12,4 @@ import java.util.List;
 public class TranslationJobAuthorizeCommandPTO
 {
     private List<LocaleWorkflowCommandPTO> localeWorkflows;
-    /**
-     * @deprecated Ignored now, because we always refresh estimate and never "lock"
-     */
-    @Deprecated
-    private String estimateUid;
 }
