@@ -33,14 +33,14 @@ import java.security.AccessController;
 import java.util.Map;
 
 @Slf4j
-public class FileUploadProxy implements JobFacadeApi
+public class FileUploadProxy implements JobBatchesApi
 {
 //    public static final String CLIENT_LIB_ID = "smartling.client_lib_id";
 
-    private JobFacadeApi delegate;
+    private JobBatchesApi delegate;
     private ResteasyWebTarget client;
 
-    FileUploadProxy(JobFacadeApi delegate, ResteasyWebTarget client)
+    FileUploadProxy(JobBatchesApi delegate, ResteasyWebTarget client)
     {
         this.delegate = delegate;
         this.client = client;
@@ -224,7 +224,7 @@ public class FileUploadProxy implements JobFacadeApi
         Method method;
         try
         {
-            method = JobFacadeApi.class.getMethod(methodName, methodParameterTypes);
+            method = JobBatchesApi.class.getMethod(methodName, methodParameterTypes);
             if (method.isAnnotationPresent(Path.class))
             {
                 return method.getAnnotation(Path.class).value();

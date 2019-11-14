@@ -22,7 +22,7 @@ import javax.ws.rs.core.MediaType;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface JobFacadeApi
+public interface JobBatchesApi
 {
     @POST
     @Path("jobs-batch-api/v1/projects/{projectId}/batches")

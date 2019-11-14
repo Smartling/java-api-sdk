@@ -8,18 +8,18 @@ import javax.ws.rs.client.ClientRequestFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JobFacadeApiFactory extends AbstractApiFactory<JobFacadeApi>
+public class JobBatchesApiFactory extends AbstractApiFactory<JobBatchesApi>
 {
     private static final int FILE_UPLOAD_SOCKET_TIMEOUT = 30_000;
 
     @Override
-    protected Class<JobFacadeApi> getApiClass()
+    protected Class<JobBatchesApi> getApiClass()
     {
-        return JobFacadeApi.class;
+        return JobBatchesApi.class;
     }
 
     @Override
-    public JobFacadeApi buildApi(List<ClientRequestFilter> filterList, String hostAndProtocol, HttpClientConfiguration httpClientConfiguration)
+    public JobBatchesApi buildApi(List<ClientRequestFilter> filterList, String hostAndProtocol, HttpClientConfiguration httpClientConfiguration)
     {
         if (httpClientConfiguration.getSocketTimeout() == HttpClientConfiguration.DEFAULT_SOCKET_TIMEOUT)
         {
@@ -30,10 +30,10 @@ public class JobFacadeApiFactory extends AbstractApiFactory<JobFacadeApi>
         clientRequestFilters.addAll(filterList);
 //        clientRequestFilters.add(userAgentFilter());
 
-        JobFacadeApi jobFacadeApi = super.buildApi(clientRequestFilters, hostAndProtocol, httpClientConfiguration);
+        JobBatchesApi jobBatchesApi = super.buildApi(clientRequestFilters, hostAndProtocol, httpClientConfiguration);
         ResteasyWebTarget client = new FileUploadClientFactory().build(clientRequestFilters, hostAndProtocol, httpClientConfiguration);
 
-        return new FileUploadProxy(jobFacadeApi, client);
+        return new FileUploadProxy(jobBatchesApi, client);
     }
 
 //    private ClientRequestFilter userAgentFilter()
