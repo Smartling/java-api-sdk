@@ -1,5 +1,7 @@
 package com.smartling.api.sdk;
 
+import com.smartling.api.jobbatches.v2.JobBatchesApi;
+import com.smartling.api.jobbatches.v2.JobBatchesApiFactory;
 import com.smartling.api.jobs.v3.TranslationJobsApi;
 import com.smartling.api.jobs.v3.TranslationJobsApiFactory;
 import com.smartling.api.v2.issues.IssuesApi;
@@ -11,8 +13,8 @@ final class SmartlingApiImpl implements SmartlingApi
 {
     private final IssuesApi issuesApi;
     private final LocalesApi localesApi;
-
     private final TranslationJobsApi translationJobsApi;
+    private final JobBatchesApi jobBatchesApi;
 
     SmartlingApiImpl(String userIdentifier, String userSecret)
     {
@@ -20,6 +22,7 @@ final class SmartlingApiImpl implements SmartlingApi
         issuesApi = new IssuesApiFactory().buildApi(userIdentifier, userSecret);
         localesApi = new LocalesApiFactory().buildApi(userIdentifier, userSecret);
         translationJobsApi = new TranslationJobsApiFactory().buildApi(userIdentifier, userSecret);
+        jobBatchesApi = new JobBatchesApiFactory().buildApi(userIdentifier, userSecret);
     }
 
     @Override
@@ -38,5 +41,11 @@ final class SmartlingApiImpl implements SmartlingApi
     public TranslationJobsApi translationJobsApi()
     {
         return translationJobsApi;
+    }
+
+    @Override
+    public JobBatchesApi jobBatchesApi()
+    {
+        return jobBatchesApi;
     }
 }
