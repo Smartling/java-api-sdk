@@ -6,6 +6,7 @@ import com.smartling.api.jobbatches.v2.pto.CreateBatchRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.CreateBatchResponsePTO;
 import com.smartling.api.jobbatches.v2.pto.RegisterBatchActionRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.StreamFileUploadPTO;
+import com.smartling.api.jobbatches.v2.util.LibNameVersionHolder;
 import com.smartling.api.v2.client.exception.RestApiExceptionHandler;
 import com.smartling.api.jobbatches.v2.pto.BatchPTO;
 import com.smartling.api.jobbatches.v2.pto.FileUploadPTO;
@@ -36,7 +37,7 @@ import java.util.Map;
 @Slf4j
 public class FileUploadProxy implements JobBatchesApi
 {
-//    public static final String CLIENT_LIB_ID = "smartling.client_lib_id";
+    private static final String CLIENT_LIB_ID = "smartling.client_lib_id";
 
     private JobBatchesApi delegate;
     private ResteasyWebTarget client;
@@ -70,7 +71,7 @@ public class FileUploadProxy implements JobBatchesApi
     {
         MultipartFormDataOutput output = new MultipartFormDataOutput();
         getFields(FileUploadPTO.class, output, fileUploadPTO);
-//        addClientLibIdIfNeeded(output);
+        addClientLibIdIfNeeded(output);
 
         String path = getPathAnnotationValue("addFileAsync", String.class, String.class, FileUploadPTO.class);
         Response response = sendRequest(path, projectId, batchUid, output);
@@ -82,7 +83,7 @@ public class FileUploadProxy implements JobBatchesApi
     {
         MultipartFormDataOutput output = new MultipartFormDataOutput();
         getFields(StreamFileUploadPTO.class, output, streamFileUploadPTO);
-//        addClientLibIdIfNeeded(output);
+        addClientLibIdIfNeeded(output);
 
         String path = getPathAnnotationValue("addFileAsStreamAsync", String.class, String.class, StreamFileUploadPTO.class);
         Response response = sendRequest(path, projectId, batchUid, output);
@@ -99,15 +100,14 @@ public class FileUploadProxy implements JobBatchesApi
         delegate.cancelFile(projectId, batchUid, request);
     }
 
-
-//    private void addClientLibIdIfNeeded(MultipartFormDataOutput requestData)
-//    {
-//        if (!requestData.getFormData().containsKey(CLIENT_LIB_ID))
-//        {
-//            String clientLibId = LibNameVersionHolder.getClientLibName() + "/" + LibNameVersionHolder.getClientLibVersion();
-//            requestData.addFormData(CLIENT_LIB_ID, clientLibId, MediaType.TEXT_PLAIN_TYPE);
-//        }
-//    }
+    private void addClientLibIdIfNeeded(MultipartFormDataOutput requestData)
+    {
+        if (!requestData.getFormData().containsKey(CLIENT_LIB_ID))
+        {
+            String clientLibId = LibNameVersionHolder.getClientLibName() + "/" + LibNameVersionHolder.getClientLibVersion();
+            requestData.addFormData(CLIENT_LIB_ID, clientLibId, MediaType.TEXT_PLAIN_TYPE);
+        }
+    }
 
     private Response sendRequest(String path, String projectId, String batchUid, MultipartFormDataOutput output)
     {

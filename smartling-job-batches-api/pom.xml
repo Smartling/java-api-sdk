@@ -5,12 +5,24 @@
     <parent>
         <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
-        <version>0.1.1-SNAPSHOT</version>
+        <version>0.4.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>smartling-job-batches-api</artifactId>
     <version>0.1.1-SNAPSHOT</version>
     <name>Smartling Job Batches API</name>
+
+    <build>
+        <filters>
+            <filter>src/main/resources/sdk-project.properties</filter>
+        </filters>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
 
     <dependencies>
         <dependency>
