@@ -1,11 +1,9 @@
-package com.smartling.api.v2.jobbatches;
+package com.smartling.api.jobbatches.v2;
 
 import com.smartling.api.v2.client.AbstractApiFactory;
 import com.smartling.api.v2.client.HttpClientConfiguration;
-import org.apache.http.HttpHeaders;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
-import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import java.util.ArrayList;
 import java.util.List;

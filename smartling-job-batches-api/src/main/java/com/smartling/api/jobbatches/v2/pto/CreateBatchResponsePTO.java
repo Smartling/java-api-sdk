@@ -1,5 +1,6 @@
-package com.smartling.api.v2.jobbatches.pto;
+package com.smartling.api.jobbatches.v2.pto;
 
+import com.smartling.api.v2.response.ResponseData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,8 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode
-public class CreateBatchRequestPTO
+public class CreateBatchResponsePTO implements ResponseData
 {
-    private String translationJobUid;
-    private Boolean authorize;
+    private String batchUid;
 }

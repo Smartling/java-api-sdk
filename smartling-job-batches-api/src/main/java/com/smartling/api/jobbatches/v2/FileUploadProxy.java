@@ -1,14 +1,14 @@
-package com.smartling.api.v2.jobbatches;
+package com.smartling.api.jobbatches.v2;
 
+import com.smartling.api.jobbatches.v2.pto.BatchActionRequestPTO;
+import com.smartling.api.jobbatches.v2.pto.BatchStatusResponsePTO;
+import com.smartling.api.jobbatches.v2.pto.CreateBatchRequestPTO;
+import com.smartling.api.jobbatches.v2.pto.CreateBatchResponsePTO;
+import com.smartling.api.jobbatches.v2.pto.StreamFileUploadPTO;
 import com.smartling.api.v2.client.exception.RestApiExceptionHandler;
-import com.smartling.api.v2.jobbatches.pto.BatchActionRequestPTO;
-import com.smartling.api.v2.jobbatches.pto.BatchPTO;
-import com.smartling.api.v2.jobbatches.pto.BatchStatusResponsePTO;
-import com.smartling.api.v2.jobbatches.pto.CreateBatchRequestPTO;
-import com.smartling.api.v2.jobbatches.pto.CreateBatchResponsePTO;
-import com.smartling.api.v2.jobbatches.pto.FileUploadPTO;
-import com.smartling.api.v2.jobbatches.pto.SearchParamsPTO;
-import com.smartling.api.v2.jobbatches.pto.StreamFileUploadPTO;
+import com.smartling.api.jobbatches.v2.pto.BatchPTO;
+import com.smartling.api.jobbatches.v2.pto.FileUploadPTO;
+import com.smartling.api.jobbatches.v2.pto.SearchParamsPTO;
 import com.smartling.api.v2.response.ListResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;

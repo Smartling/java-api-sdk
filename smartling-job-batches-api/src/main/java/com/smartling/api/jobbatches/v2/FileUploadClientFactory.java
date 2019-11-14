@@ -1,4 +1,4 @@
-package com.smartling.api.v2.jobbatches;
+package com.smartling.api.jobbatches.v2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartling.api.v2.client.ClientFactory;

@@ -1,18 +1,16 @@
-package com.smartling.api.v2.jobbatches.pto;
+package com.smartling.api.jobbatches.v2.pto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode
-public class BatchActionRequestPTO
+public class WorkflowPTO
 {
-    private String action = "execute";
-    private List<WorkflowPTO> localeWorkflows;
+    private String targetLocaleId;
+    private String workflowUid;
 }

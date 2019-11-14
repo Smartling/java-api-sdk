@@ -1,4 +1,4 @@
-package com.smartling.api.v2.jobbatches.pto;
+package com.smartling.api.jobbatches.v2.pto;
 
 import com.smartling.api.v2.response.ResponseData;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode
-public class CreateBatchResponsePTO implements ResponseData
+public class BatchItemLocalePTO implements ResponseData
 {
-    private String batchUid;
+    private String localeId;
+    private int stringsAdded;
+    private int stringsSkipped;
 }
