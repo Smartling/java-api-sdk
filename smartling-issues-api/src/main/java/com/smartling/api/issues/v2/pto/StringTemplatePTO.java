@@ -1,4 +1,4 @@
-package com.smartling.api.v2.issues.pto;
+package com.smartling.api.issues.v2.pto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode
-public class WatcherTemplatePTO
+public class StringTemplatePTO
 {
-    private String email;
-    private String name;
-    private Boolean enabled;
+    private String hashcode;
+    private String localeId;
 }
