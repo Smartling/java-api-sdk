@@ -29,7 +29,7 @@
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-job-batches-api</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
+            <version>0.4.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
