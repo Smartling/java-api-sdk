@@ -3,6 +3,7 @@ package com.smartling.api.jobs.v3;
 import com.smartling.api.jobs.v3.pto.ContentProgressReportPTO;
 import com.smartling.api.jobs.v3.pto.CustomFieldAssignmentPTO;
 import com.smartling.api.jobs.v3.pto.CustomFieldCreatePTO;
+import com.smartling.api.jobs.v3.pto.CustomFieldFilterPTO;
 import com.smartling.api.jobs.v3.pto.CustomFieldPTO;
 import com.smartling.api.jobs.v3.pto.CustomFieldUpdatePTO;
 import com.smartling.api.jobs.v3.pto.PagingCommandPTO;
@@ -196,21 +197,21 @@ public interface TranslationJobsApi
 
     @POST
     @Path(API_PROJECT_CUSTOM_FIELDS_ENDPOINT)
-    EmptyData assignCustomFieldsToProject(@PathParam(PROJECT_ID) String projectId, @BeanParam List<CustomFieldAssignmentPTO> customFieldAssignments);
+    EmptyData assignCustomFieldsToProject(@PathParam(PROJECT_ID) String projectId, List<CustomFieldAssignmentPTO> customFieldAssignments);
 
     @GET
     @Path(API_ACCOUNT_CUSTOM_FIELDS_ENDPOINT)
-    ListResponse<CustomFieldPTO> getAccountCustomFields(@PathParam(ACCOUNT_UID) String accountUid, BeanParam filterPTO);
+    ListResponse<CustomFieldPTO> getAccountCustomFields(@PathParam(ACCOUNT_UID) String accountUid, @BeanParam CustomFieldFilterPTO filterPTO);
 
     @POST
     @Path(API_ACCOUNT_CUSTOM_FIELDS_ENDPOINT)
-    CustomFieldPTO createCustomField(@PathParam(ACCOUNT_UID) String accountUid, @BeanParam CustomFieldCreatePTO customFieldCreatePTO);
+    CustomFieldPTO createCustomField(@PathParam(ACCOUNT_UID) String accountUid, CustomFieldCreatePTO customFieldCreatePTO);
 
     @PUT
     @Path(API_ACCOUNT_CUSTOM_FIELDS_SINGLE_FIELD_ENDPOINT)
     CustomFieldPTO updateCustomField(@PathParam(ACCOUNT_UID) String accountUid,
                                      @PathParam(FIELD_UID) String fieldUid,
-                                     @BeanParam CustomFieldUpdatePTO customFieldUpdatePTO);
+                                     CustomFieldUpdatePTO customFieldUpdatePTO);
 
     @GET
     @Path(API_JOB_ASYNC_PROCESSES_ENDPOINT)
