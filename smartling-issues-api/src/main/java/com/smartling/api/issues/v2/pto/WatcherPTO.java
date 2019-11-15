@@ -1,4 +1,4 @@
-package com.smartling.api.v2.issues.pto;
+package com.smartling.api.issues.v2.pto;
 
 import com.smartling.api.v2.response.ResponseData;
 import lombok.AllArgsConstructor;

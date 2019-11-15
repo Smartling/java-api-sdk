@@ -1,22 +1,21 @@
-package com.smartling.api.v2.issues;
+package com.smartling.api.issues.v2;
 
-import com.smartling.api.v2.issues.pto.CountPTO;
-import com.smartling.api.v2.issues.pto.IssueAnsweredPTO;
-import com.smartling.api.v2.issues.pto.IssueAssignedUserPTO;
-import com.smartling.api.v2.issues.pto.IssueCommentPTO;
-import com.smartling.api.v2.issues.pto.IssueCommentTemplatePTO;
-import com.smartling.api.v2.issues.pto.IssuePTO;
-import com.smartling.api.v2.issues.pto.IssueSeverityLevelPTO;
-import com.smartling.api.v2.issues.pto.IssueStatePTO;
-import com.smartling.api.v2.issues.pto.IssueTemplatePTO;
-import com.smartling.api.v2.issues.pto.IssueTextPTO;
-import com.smartling.api.v2.issues.pto.IssueTextTemplatePTO;
-import com.smartling.api.v2.issues.pto.IssueTypePTO;
-import com.smartling.api.v2.issues.pto.IssuesFilterPTO;
-import com.smartling.api.v2.issues.pto.IssuesPagingFilterPTO;
-import com.smartling.api.v2.issues.pto.WatcherPTO;
-import com.smartling.api.v2.issues.pto.WatcherTemplatePTO;
-import com.smartling.api.v2.response.EmptyData;
+import com.smartling.api.issues.v2.pto.CountPTO;
+import com.smartling.api.issues.v2.pto.IssueAnsweredPTO;
+import com.smartling.api.issues.v2.pto.IssueAssignedUserPTO;
+import com.smartling.api.issues.v2.pto.IssueCommentPTO;
+import com.smartling.api.issues.v2.pto.IssueCommentTemplatePTO;
+import com.smartling.api.issues.v2.pto.IssuePTO;
+import com.smartling.api.issues.v2.pto.IssueSeverityLevelPTO;
+import com.smartling.api.issues.v2.pto.IssueStatePTO;
+import com.smartling.api.issues.v2.pto.IssueTemplatePTO;
+import com.smartling.api.issues.v2.pto.IssueTextPTO;
+import com.smartling.api.issues.v2.pto.IssueTextTemplatePTO;
+import com.smartling.api.issues.v2.pto.IssueTypePTO;
+import com.smartling.api.issues.v2.pto.IssuesFilterPTO;
+import com.smartling.api.issues.v2.pto.IssuesPagingFilterPTO;
+import com.smartling.api.issues.v2.pto.WatcherPTO;
+import com.smartling.api.issues.v2.pto.WatcherTemplatePTO;
 import com.smartling.api.v2.response.ListResponse;
 
 import javax.ws.rs.Consumes;
@@ -45,7 +44,7 @@ public interface IssuesApi
 
     @POST
     @Path("/projects/{projectId}/issues")
-    IssuePTO create(@PathParam("projectId") String projectId, IssueTemplatePTO issueTemplate);
+    IssuePTO createIssue(@PathParam("projectId") String projectId, IssueTemplatePTO issueTemplate);
 
     @PUT
     @Path("/projects/{projectId}/issues/{issueUid}/issueText")
@@ -61,7 +60,7 @@ public interface IssuesApi
 
     @GET
     @Path("/projects/{projectId}/issues/{issueUid}")
-    IssuePTO get(@PathParam("projectId") String projectId, @PathParam("issueUid") String issueUid);
+    IssuePTO getIssue(@PathParam("projectId") String projectId, @PathParam("issueUid") String issueUid);
 
     @PUT
     @Path("/projects/{projectId}/issues/{issueUid}/answered")

@@ -1,4 +1,4 @@
-package com.smartling.api.v2.issues.pto;
+package com.smartling.api.issues.v2.pto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode
-public class StringTemplatePTO
+public class StringPTO
 {
     private String hashcode;
     private String localeId;

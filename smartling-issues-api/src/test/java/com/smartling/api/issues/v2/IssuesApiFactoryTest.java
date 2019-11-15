@@ -1,11 +1,11 @@
-package com.smartling.api.v2.issues;
+package com.smartling.api.issues.v2;
 
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
-import com.smartling.api.v2.issues.pto.IssuePTO;
-import com.smartling.api.v2.issues.pto.IssueTemplatePTO;
-import com.smartling.api.v2.issues.pto.IssueTextPTO;
-import com.smartling.api.v2.issues.pto.IssueTextTemplatePTO;
-import com.smartling.api.v2.issues.pto.StringTemplatePTO;
+import com.smartling.api.issues.v2.pto.IssuePTO;
+import com.smartling.api.issues.v2.pto.IssueTemplatePTO;
+import com.smartling.api.issues.v2.pto.IssueTextPTO;
+import com.smartling.api.issues.v2.pto.IssueTextTemplatePTO;
+import com.smartling.api.issues.v2.pto.StringTemplatePTO;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -81,7 +81,7 @@ public class IssuesApiFactoryTest
 
         assignResponse(200, expectedResponse);
 
-        IssuePTO issue = issuesApi.create("projectId", new IssueTemplatePTO(
+        IssuePTO issue = issuesApi.createIssue("projectId", new IssueTemplatePTO(
             new StringTemplatePTO("hashcode", null),
             "SOURCE",
             "CLARIFICATION",
