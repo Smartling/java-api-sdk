@@ -4,27 +4,27 @@
     <parent>
         <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
-        <version>0.4.6</version>
+        <version>0.4.7-SNAPSHOT</version>
     </parent>
     <artifactId>smartling-api-sdk</artifactId>
-    <version>0.4.6</version>
+    <version>0.4.7-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Smartling API SDK</name>
     <dependencies>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-issues-api</artifactId>
-            <version>0.4.6</version>
+            <version>0.4.7-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-locales-api</artifactId>
-            <version>0.4.6</version>
+            <version>0.4.7-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-jobs-api</artifactId>
-            <version>0.4.6</version>
+            <version>0.4.7-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
