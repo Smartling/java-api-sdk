@@ -176,5 +176,4 @@ public class TranslationJobsApiTest
         assertTrue(request.getPath().startsWith(("/jobs-api/v3" + TranslationJobsApi.API_JOBS_ENDPOINT).replace("{projectId}", PROJECT_ID)));
 
     }
-
 }
