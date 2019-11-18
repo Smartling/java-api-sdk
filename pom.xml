@@ -120,6 +120,23 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <links>
+                        <link>https://docs.oracle.com/javaee/7/api/</link>
+                        <link>https://docs.jboss.org/resteasy/docs/3.0.24.Final/javadocs/</link>
+                        <link>https://fasterxml.github.io/jackson-core/javadoc/2.8/</link>
+                        <link>https://fasterxml.github.io/jackson-databind/javadoc/2.8/</link>
+                        <link>https://hc.apache.org/httpcomponents-client-4.5.x/httpclient/apidocs/</link>
+                    </links>
+                    <defaultAuthor>Smartling, Inc.</defaultAuthor>
+                    <version>true</version>
+                    <name>Smartling API SDK</name>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
