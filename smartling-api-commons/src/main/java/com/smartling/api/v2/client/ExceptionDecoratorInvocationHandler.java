@@ -1,16 +1,22 @@
-package com.smartling.api.v2.client.proxy;
+package com.smartling.api.v2.client;
 
 import com.smartling.api.v2.client.exception.RestApiExceptionHandler;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class ExceptionDecoratorInvocationHandler<T> implements InvocationHandler
+/**
+ * Provides a invocation handler to translate invocation target exceptions into
+ * API response exceptions.
+ *
+ * @param <T> the type being proxied
+ */
+class ExceptionDecoratorInvocationHandler<T> implements InvocationHandler
 {
     private final T delegate;
     private final RestApiExceptionHandler handler;
 
-    public ExceptionDecoratorInvocationHandler(final T delegate, final RestApiExceptionHandler handler)
+    ExceptionDecoratorInvocationHandler(final T delegate, final RestApiExceptionHandler handler)
     {
         this.delegate = delegate;
         this.handler = handler;
