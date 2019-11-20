@@ -12,14 +12,20 @@ import com.smartling.api.v2.response.ErrorIdDetails;
 import com.smartling.api.v2.response.FieldErrorDetails;
 import java.io.IOException;
 
+/**
+ * JSON deserializer extension to unmarshal error details if present on the response.
+ */
 public class DetailsDeserializer extends JsonDeserializer<Details>
 {
-    protected static final String ERROR_ID_NODE   = "errorId";
-    protected static final String FIELD_NODE      = "field";
-    protected static final String DEPENDENCY_NODE = "dependencies";
+    static final String ERROR_ID_NODE   = "errorId";
+    static final String FIELD_NODE      = "field";
+    static final String DEPENDENCY_NODE = "dependencies";
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Details deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException
     {
@@ -34,6 +40,14 @@ public class DetailsDeserializer extends JsonDeserializer<Details>
         return details;
     }
 
+    /**
+     * Returns the response details from the given JSON node.
+     *
+     * @param detailsNode the {@code JsonNode} containing the response details.
+     *
+     * @return the unmarshalled <code>Details</code>
+     * @throws JsonProcessingException if a JSON processing error occurs
+     */
     protected Details getDetails(final JsonNode detailsNode) throws JsonProcessingException
     {
         if (null != detailsNode.get(ERROR_ID_NODE))

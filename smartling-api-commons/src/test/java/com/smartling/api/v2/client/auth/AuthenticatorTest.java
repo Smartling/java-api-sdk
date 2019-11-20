@@ -40,8 +40,6 @@ public class AuthenticatorTest
         authenticator = new Authenticator(
             USER_IDENTIFIER,
             USER_SECRET,
-            "https://api.smartling.com",
-            new HttpClientSettings(),
             authenticationApi,
             clock
         );

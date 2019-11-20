@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Base factory for building proxied client objects
+ * Client factory for building JAX-RS proxied client APIs.
  */
 public class ClientFactory
 {
@@ -114,8 +114,9 @@ public class ClientFactory
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T build(final List<ClientRequestFilter> clientRequestFilters, final List<ClientResponseFilter> clientResponseFilters, final String domain, final Class<T> klass, final Map<Class<?>, JsonDeserializer<?>> deserializerMap,
-            final HttpClientConfiguration configuration, final ResteasyProviderFactory providerFactory)
+    <T> T build(final List<ClientRequestFilter> clientRequestFilters, final List<ClientResponseFilter> clientResponseFilters, final String domain,
+        final Class<T> klass, final Map<Class<?>, JsonDeserializer<?>> deserializerMap, final HttpClientConfiguration configuration,
+        final ResteasyProviderFactory providerFactory)
     {
         Objects.requireNonNull(clientRequestFilters, "clientRequestFilters must be defined");
         Objects.requireNonNull(clientResponseFilters, "clientResponseFilters must be defined");

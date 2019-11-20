@@ -8,14 +8,20 @@ import com.smartling.api.v2.authentication.pto.AuthenticationRefreshRequest;
 import com.smartling.api.v2.authentication.pto.AuthenticationRequest;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Objects;
 
 /**
  * Authenticates a given user identifier and user secret against Smartling's authentication service, returning a
- * valid OAuth 2 Bearer access token. This authenticator caches the result of calls to {@link #getAccessToken()}
- * and returns a reusable access token on subsequent calls until the access token is about to expire. If the access
- * token is expiring in less than 90 seconds, the access token is automatically refreshed before being returned to the
- * caller.
+ * valid OAuth 2 Bearer access token.
+ *
+ * <p>
+ *     This authenticator caches the result of calls to {@link #getAccessToken()}
+ *      and returns a reusable access token on subsequent calls until the access token is about to expire. If the access
+ *      token is expiring in less than 90 seconds, the access token is automatically refreshed before being returned to the
+ *      caller.
+ * </p>
  *
  * @author Scott Rossillo
  */
@@ -23,40 +29,32 @@ import java.util.Objects;
 public class Authenticator
 {
     static final int REFRESH_BEFORE_EXPIRES_MS = 90 * 1000;
-    private final Clock clock;
 
+    private final AuthenticationApi api;
+    private final Clock clock;
     private final String userIdentifier;
     private final String userSecret;
 
     private Authentication authentication;
-    private AuthenticationApi api;
 
     private volatile long expiresAt = -1;
     private volatile long refreshExpiresAt = -1;
 
-    public Authenticator(String userIdentifier, String userSecret)
+    /**
+     * Constructs a new authenticator for the given user identifier and secret.
+     *
+     * @param userIdentifier the user identifier to authenticate (required)
+     * @param userSecret the user secret to authenticate (required)
+     * @param authenticationApi the {@code AuthenticationApi} to use (required)
+     */
+    public Authenticator(String userIdentifier, String userSecret, AuthenticationApi authenticationApi)
     {
-        this(userIdentifier, userSecret, "https://api.smartling.com");
+        this(userIdentifier, userSecret, authenticationApi, new SystemClock());
     }
 
-    public Authenticator(String userIdentifier, String userSecret, String hostAndProtocol)
+    Authenticator(String userIdentifier, String userSecret, AuthenticationApi api, Clock clock)
     {
-        this(userIdentifier, userSecret, hostAndProtocol, new HttpClientSettings());
-    }
-
-    public Authenticator(String userIdentifier, String userSecret, String hostAndProtocol, HttpClientSettings httpClientSettings)
-    {
-        this(userIdentifier, userSecret, hostAndProtocol, httpClientSettings, new AuthenticationApiFactory().buildApi(hostAndProtocol));
-    }
-
-    Authenticator(String userIdentifier, String userSecret, String hostAndProtocol, HttpClientSettings httpClientSettings, AuthenticationApi api)
-    {
-        this(userIdentifier, userSecret, hostAndProtocol, httpClientSettings, api, new SystemClock());
-    }
-
-    Authenticator(String userIdentifier, String userSecret, String hostAndProtocol, HttpClientSettings httpClientSettings, AuthenticationApi api, Clock clock)
-    {
-        Objects.requireNonNull(userIdentifier, "userIdentifierRequired");
+        Objects.requireNonNull(userIdentifier, "userIdentifier required");
         Objects.requireNonNull(userSecret, "userSecret required");
         Objects.requireNonNull(api, "authentication API required");
         Objects.requireNonNull(clock, "clock required");

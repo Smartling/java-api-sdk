@@ -11,6 +11,7 @@ import org.apache.http.message.BasicHeader;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
@@ -20,6 +21,10 @@ import javax.ws.rs.ext.Provider;
 import javax.ws.rs.ext.ReaderInterceptor;
 import javax.ws.rs.ext.ReaderInterceptorContext;
 
+/**
+ * Provides a response reader interceptor to remove the response wrapper
+ * from Smartling API responses.
+ */
 @Provider
 @Priority(Priorities.USER)
 public class RestApiResponseReaderInterceptor implements ReaderInterceptor
@@ -46,7 +51,7 @@ public class RestApiResponseReaderInterceptor implements ReaderInterceptor
         if (node.isNull() && EmptyData.class.isAssignableFrom(context.getType()))
             return EMPTY_DATA;
 
-        context.setInputStream(new ByteArrayInputStream(node.toString().getBytes("UTF-8")));
+        context.setInputStream(new ByteArrayInputStream(node.toString().getBytes(StandardCharsets.UTF_8)));
         return context.proceed();
     }
 

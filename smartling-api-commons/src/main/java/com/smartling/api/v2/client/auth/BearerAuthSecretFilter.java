@@ -1,33 +1,20 @@
 package com.smartling.api.v2.client.auth;
 
+import com.smartling.api.v2.authentication.AuthenticationApi;
 import com.smartling.api.v2.client.HttpClientConfiguration;
 import com.smartling.api.client.context.HttpClientSettings;
+
+import java.net.URL;
+import java.util.Objects;
 
 public class BearerAuthSecretFilter extends AbstractBearerAuthFilter
 {
     private final Authenticator authenticator;
 
-    public BearerAuthSecretFilter(final String userIdentifier, final String userSecret)
+    public BearerAuthSecretFilter(Authenticator authenticator)
     {
-        authenticator = new Authenticator(userIdentifier, userSecret);
-    }
-
-    public BearerAuthSecretFilter(final String userIdentifier, final String userSecret, final String apiHost)
-    {
-        authenticator = new Authenticator(userIdentifier, userSecret, apiHost);
-    }
-
-    public BearerAuthSecretFilter(final String userIdentifier, final String userSecret, final String apiHost, HttpClientConfiguration httpClientConfiguration)
-    {
-        HttpClientSettings authenticatorHttpSettings = new HttpClientSettings();
-        authenticatorHttpSettings.setProxy(HttpClientSettings.Proxy.newProxy(
-                httpClientConfiguration.getProxyHost(),
-                httpClientConfiguration.getProxyPort(),
-                httpClientConfiguration.getProxyUser(),
-                httpClientConfiguration.getProxyPassword()
-        ));
-
-        this.authenticator = new Authenticator(userIdentifier, userSecret, apiHost, authenticatorHttpSettings);
+        Objects.requireNonNull(authenticator, "authenticator required");
+        this.authenticator = authenticator;
     }
 
     @Override

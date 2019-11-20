@@ -10,12 +10,21 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 
+/**
+ * Provides context resolver for rest API responses.
+ */
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 public class RestApiContextResolver implements ContextResolver<ObjectMapper>
 {
     private ObjectMapper objectMapper;
 
+    /**
+     * Constructs a new rest API context reesolver.
+     *
+     * @param classJsonDeserializerMap a map of classes to the {@code JsonDeserializer} to
+     *                                 use to unmarshal the JSON object
+     */
     @SuppressWarnings("unchecked")
     public RestApiContextResolver(final Map<Class<?>, JsonDeserializer<?>> classJsonDeserializerMap)
     {
