@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RegisterBatchActionRequestPTO
 {
-    private String action = "REGISTER_FILE";
+    private final String action = "REGISTER_FILE";
     private String fileUri;
 }

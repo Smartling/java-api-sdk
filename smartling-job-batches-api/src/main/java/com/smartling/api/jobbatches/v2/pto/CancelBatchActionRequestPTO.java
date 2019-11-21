@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CancelBatchActionRequestPTO
 {
-    private String action = "CANCEL_FILE";
+    private final String action = "CANCEL_FILE";
     private String fileUri;
     private String reason;
 }
