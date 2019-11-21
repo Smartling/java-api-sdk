@@ -1,27 +1,40 @@
 package com.smartling.api.client.context;
 
 /**
- * Groups any configuration related to the underlying HTTP client configuration:
- *  - proxy
- *  - ... (potentially: timeouts, connections reuse, etx)
+ * Configuration settings for the underlying HTTP client.
+ *
+ *  Enables proxy configuration, and potentially, timeouts, connection reuse, etc.
  */
 public class HttpClientSettings
 {
     private Proxy proxy = Proxy.NONE;
 
+    /**
+     * Sets the proxy server configuration.
+     *
+     * @param proxy the <code>Proxy</code> configuration
+     */
     public void setProxy(final Proxy proxy)
     {
         this.proxy = validateNotNull(proxy, "Proxy configuration can not be null");
     }
 
+    /**
+     * Returns the current proxy configuration.
+     *
+     * @return the current <code>Proxy</code> configuration
+     */
     public Proxy getProxy()
     {
         return proxy;
     }
 
+    /**
+     * Configuration settings for configuring the underlying HTTP client to use a proxy server.
+     */
     public static class Proxy
     {
-        public static final Proxy NONE = new Proxy(null, 0, null, null);
+        static final Proxy NONE = new Proxy(null, 0, null, null);
 
         private final String host;
         private final int port;
@@ -36,6 +49,14 @@ public class HttpClientSettings
             this.password = password;
         }
 
+        /**
+         * Creates a new anonymous proxy.
+         *
+         * @param host the proxy host (required)
+         * @param port the proxy port (required)
+         *
+         * @return a new proxy configuration
+         */
         public static Proxy anonymous(final String host, final int port)
         {
             validateNotEmpty(host, "Host must not be empty");
@@ -44,6 +65,16 @@ public class HttpClientSettings
             return new Proxy(host, port, null, null);
         }
 
+        /**
+         * Creates a new proxy authenticated with HTTP basic authentication.
+         *
+         * @param host the proxy host (required)
+         * @param port the proxy port (required)
+         * @param user the proxy user name (required)
+         * @param password the proxy password (required)
+         *
+         * @return a new proxy configuration
+         */
         public static Proxy withAuthentication(final String host, final int port, final String user, final String password)
         {
             validateNotEmpty(host, "Host must not be empty");
@@ -54,37 +85,41 @@ public class HttpClientSettings
             return new Proxy(host, port, user, password);
         }
 
-        public static Proxy newProxy(final String host, final Integer port, final String user, final String password)
-        {
-            if (host == null || host.isEmpty() || port == null)
-            {
-                return Proxy.NONE;
-            }
-            else if (user == null || user.isEmpty())
-            {
-                return Proxy.anonymous(host, port);
-            }
-            else
-            {
-                return Proxy.withAuthentication(host, port, user, password);
-            }
-        }
-
+        /**
+         * Returns the proxy server host.
+         *
+         * @return the proxy host
+         */
         public String getHost()
         {
             return host;
         }
 
+        /**
+         * Returns the proxy server port.
+         *
+         * @return the proxy port
+         */
         public int getPort()
         {
             return port;
         }
 
+        /**
+         * Returns the proxy server user name.
+         *
+         * @return the proxy user name
+         */
         public String getUser()
         {
             return user;
         }
 
+        /**
+         * Returns the proxy server password.
+         *
+         * @return the proxy password
+         */
         public String getPassword()
         {
             return password;
