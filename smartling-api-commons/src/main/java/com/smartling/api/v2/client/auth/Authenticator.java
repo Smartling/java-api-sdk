@@ -1,15 +1,11 @@
 package com.smartling.api.v2.client.auth;
 
-import com.smartling.api.client.context.HttpClientSettings;
 import com.smartling.api.v2.authentication.AuthenticationApi;
-import com.smartling.api.v2.authentication.AuthenticationApiFactory;
 import com.smartling.api.v2.authentication.pto.Authentication;
 import com.smartling.api.v2.authentication.pto.AuthenticationRefreshRequest;
 import com.smartling.api.v2.authentication.pto.AuthenticationRequest;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Objects;
 
 /**

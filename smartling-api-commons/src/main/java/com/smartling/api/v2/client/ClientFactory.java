@@ -3,7 +3,6 @@ package com.smartling.api.v2.client;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartling.api.v2.client.exception.RestApiExceptionHandler;
-import com.smartling.api.v2.client.proxy.ExceptionDecoratorInvocationHandler;
 import com.smartling.api.v2.client.unmarshal.DetailsDeserializer;
 import com.smartling.api.v2.client.unmarshal.RestApiContextResolver;
 import com.smartling.api.v2.client.unmarshal.RestApiResponseReaderInterceptor;
@@ -96,7 +95,7 @@ public class ClientFactory
         return ApacheHttpClient4EngineFactory.create(httpClient, true);
     }
 
-    protected Map<Class<?>, JsonDeserializer<?>> getDefaultDeserializerMap()
+    protected Map<Class<?>, JsonDeserializer<?>> getDeserializerMap()
     {
         final Map<Class<?>, JsonDeserializer<?>> classJsonDeserializerMap = new HashMap<>();
         classJsonDeserializerMap.put(Details.class, new DetailsDeserializer());
@@ -110,19 +109,23 @@ public class ClientFactory
 
     public <T> T build(final List<ClientRequestFilter> clientRequestFilters, final List<ClientResponseFilter> clientResponseFilters, final String domain, final Class<T> klass)
     {
-        return build(clientRequestFilters, clientResponseFilters, domain, klass, getDefaultDeserializerMap(), new HttpClientConfiguration(), null);
+        return build(clientRequestFilters, clientResponseFilters, domain, klass, new HttpClientConfiguration(), null);
     }
 
     @SuppressWarnings("unchecked")
-    <T> T build(final List<ClientRequestFilter> clientRequestFilters, final List<ClientResponseFilter> clientResponseFilters, final String domain,
-        final Class<T> klass, final Map<Class<?>, JsonDeserializer<?>> deserializerMap, final HttpClientConfiguration configuration,
+    <T> T build(
+        final List<ClientRequestFilter> clientRequestFilters,
+        final List<ClientResponseFilter> clientResponseFilters,
+        final String domain,
+        final Class<T> klass,
+        final HttpClientConfiguration configuration,
         final ResteasyProviderFactory providerFactory)
     {
         Objects.requireNonNull(clientRequestFilters, "clientRequestFilters must be defined");
         Objects.requireNonNull(clientResponseFilters, "clientResponseFilters must be defined");
         Objects.requireNonNull(domain, "domain must be defined");
         Objects.requireNonNull(klass, "klass must be defined");
-        Objects.requireNonNull(deserializerMap, "deserializerMap must be defined");
+        Objects.requireNonNull(this.getDeserializerMap(), "deserializerMap must be defined");
         Objects.requireNonNull(configuration, "configuration must be defined");
 
         if (clientRequestFilters.isEmpty())
@@ -134,7 +137,7 @@ public class ClientFactory
         if (providerFactory != null)
             builder.providerFactory(providerFactory);
 
-        final ContextResolver<ObjectMapper> contextResolver = getObjectMapperContextResolver(deserializerMap);
+        final ContextResolver<ObjectMapper> contextResolver = getObjectMapperContextResolver(getDeserializerMap());
 
         final ResteasyWebTarget client = builder.build()
                 .target(domain)

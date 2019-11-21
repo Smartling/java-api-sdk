@@ -1,16 +1,21 @@
 package com.smartling.api.v2.client.auth;
 
-import com.smartling.api.v2.authentication.AuthenticationApi;
-import com.smartling.api.v2.client.HttpClientConfiguration;
-import com.smartling.api.client.context.HttpClientSettings;
-
-import java.net.URL;
 import java.util.Objects;
 
+/**
+ * Provides an authorization filter that uses an authenticator
+ * to generate bearer tokens for API requests.
+ */
 public class BearerAuthSecretFilter extends AbstractBearerAuthFilter
 {
     private final Authenticator authenticator;
 
+    /**
+     * Constructs a new bearer authentication secret filter.
+     *
+     * @param authenticator the <code>Authenticator</code> to use for generating
+     *                      bearer tokens (required)
+     */
     public BearerAuthSecretFilter(Authenticator authenticator)
     {
         Objects.requireNonNull(authenticator, "authenticator required");
