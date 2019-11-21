@@ -1,6 +1,5 @@
-package com.smartling.api.v2.issues.pto;
+package com.smartling.api.issues.v2.pto;
 
-import com.smartling.api.v2.response.ResponseData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,7 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode
-public class IssueAnsweredPTO implements ResponseData
+public class WatcherTemplatePTO
 {
-    private Boolean answered;
+    private String email;
+    private String name;
+    private Boolean enabled;
 }

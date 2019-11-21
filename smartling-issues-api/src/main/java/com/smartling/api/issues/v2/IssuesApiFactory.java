@@ -1,4 +1,4 @@
-package com.smartling.api.v2.issues;
+package com.smartling.api.issues.v2;
 
 import com.smartling.api.v2.client.AbstractApiFactory;
 
