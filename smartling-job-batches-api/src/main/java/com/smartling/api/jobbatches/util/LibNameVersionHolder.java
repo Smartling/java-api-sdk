@@ -1,4 +1,4 @@
-package com.smartling.api.jobbatches.v2.util;
+package com.smartling.api.jobbatches.util;
 
 import lombok.extern.slf4j.Slf4j;
 

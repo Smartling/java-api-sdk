@@ -6,7 +6,7 @@ import com.smartling.api.jobbatches.v2.pto.CreateBatchRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.CreateBatchResponsePTO;
 import com.smartling.api.jobbatches.v2.pto.RegisterBatchActionRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.StreamFileUploadPTO;
-import com.smartling.api.jobbatches.v2.util.LibNameVersionHolder;
+import com.smartling.api.jobbatches.util.LibNameVersionHolder;
 import com.smartling.api.v2.client.exception.RestApiExceptionHandler;
 import com.smartling.api.jobbatches.v2.pto.BatchPTO;
 import com.smartling.api.jobbatches.v2.pto.FileUploadPTO;
