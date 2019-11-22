@@ -3,7 +3,10 @@ package com.smartling.api.jobbatches.v2;
 import com.smartling.api.jobbatches.util.FileUploadClientFactory;
 import com.smartling.api.jobbatches.util.LibNameVersionHolder;
 import com.smartling.api.v2.client.AbstractApiFactory;
+import com.smartling.api.v2.client.ClientConfiguration;
+import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.HttpClientConfiguration;
+import com.smartling.api.v2.client.auth.AuthorizationRequestFilter;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 import javax.ws.rs.client.ClientRequestContext;
@@ -23,19 +26,29 @@ public class JobBatchesApiFactory extends AbstractApiFactory<JobBatchesApi>
     }
 
     @Override
-    public JobBatchesApi buildApi(List<ClientRequestFilter> filterList, String hostAndProtocol, HttpClientConfiguration httpClientConfiguration)
+    public JobBatchesApi buildApi(AuthorizationRequestFilter authFilter, ClientConfiguration config)
     {
+        HttpClientConfiguration httpClientConfiguration = config.getHttpClientConfiguration();
+        
         if (httpClientConfiguration.getSocketTimeout() == HttpClientConfiguration.DEFAULT_SOCKET_TIMEOUT)
         {
             httpClientConfiguration.setSocketTimeout(FILE_UPLOAD_SOCKET_TIMEOUT);
         }
 
-        List<ClientRequestFilter> clientRequestFilters = new ArrayList<>(filterList.size() + 1);
-        clientRequestFilters.addAll(filterList);
+        List<ClientRequestFilter> clientRequestFilters = new ArrayList<>(config.getClientRequestFilters().size() + 1);
+        clientRequestFilters.addAll(config.getClientRequestFilters());
         clientRequestFilters.add(userAgentFilter());
 
-        JobBatchesApi jobBatchesApi = super.buildApi(clientRequestFilters, hostAndProtocol, httpClientConfiguration);
-        ResteasyWebTarget client = new FileUploadClientFactory().build(clientRequestFilters, hostAndProtocol, httpClientConfiguration);
+        ClientConfiguration jobsBatchConfig = DefaultClientConfiguration.builder()
+            .baseUrl(config.getBaseUrl())
+            .httpClientConfiguration(httpClientConfiguration)
+            .clientRequestFilters(clientRequestFilters)
+            .clientResponseFilters(config.getClientResponseFilters())
+            .resteasyProviderFactory(config.getResteasyProviderFactory())
+            .build();
+
+        JobBatchesApi jobBatchesApi = super.buildApi(authFilter, config);
+        ResteasyWebTarget client = new FileUploadClientFactory().build(clientRequestFilters, jobsBatchConfig.getBaseUrl().toString(), httpClientConfiguration);
 
         return new FileUploadProxy(jobBatchesApi, client);
     }

@@ -27,7 +27,7 @@ public class FileUploadClientFactory extends ClientFactory
         ResteasyClientBuilder builder = new ResteasyClientBuilder();
         builder.httpEngine(super.getClientHttpEngine(configuration));
 
-        ContextResolver<ObjectMapper> contextResolver = super.getObjectMapperContextResolver(super.getDefaultDeserializerMap());
+        ContextResolver<ObjectMapper> contextResolver = super.getObjectMapperContextResolver(super.getDeserializerMap());
         ResteasyWebTarget client = builder.build().target(domain).register(new RestApiResponseReaderInterceptor()).register(contextResolver);
 
         for (ClientRequestFilter filter : clientRequestFilters)

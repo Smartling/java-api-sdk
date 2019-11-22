@@ -132,7 +132,7 @@ public class ClientFactory
         return classJsonDeserializerMap;
     }
 
-    ContextResolver<ObjectMapper> getObjectMapperContextResolver(final Map<Class<?>, JsonDeserializer<?>> classJsonDeserializerMap)
+    protected ContextResolver<ObjectMapper> getObjectMapperContextResolver(final Map<Class<?>, JsonDeserializer<?>> classJsonDeserializerMap)
     {
         return new RestApiContextResolver(classJsonDeserializerMap);
     }

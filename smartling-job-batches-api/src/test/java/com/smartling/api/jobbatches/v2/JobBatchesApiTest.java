@@ -5,6 +5,8 @@ import com.smartling.api.jobbatches.v2.pto.CreateBatchRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.CreateBatchResponsePTO;
 import com.smartling.api.jobbatches.v2.pto.RegisterBatchActionRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.WorkflowPTO;
+import com.smartling.api.v2.client.ClientConfiguration;
+import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -40,8 +42,11 @@ public class JobBatchesApiTest
 
         final JobBatchesApiFactory factory = new JobBatchesApiFactory();
         final BearerAuthStaticTokenFilter tokenFilter = new BearerAuthStaticTokenFilter("foo");
+        final ClientConfiguration config = DefaultClientConfiguration.builder()
+            .baseUrl(mockWebServer.url("/").url())
+            .build();
 
-        jobBatchesApi = factory.buildApi(tokenFilter, mockWebServer.url("/").toString());
+        jobBatchesApi = factory.buildApi(tokenFilter, config);
     }
 
     @After
