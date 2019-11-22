@@ -4,6 +4,8 @@ import com.smartling.api.jobs.v3.pto.TranslationJobCreateCommandPTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobCreateResponsePTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobCustomFieldPTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobGetResponsePTO;
+import com.smartling.api.v2.client.ClientConfiguration;
+import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -64,8 +66,9 @@ public class TranslationJobsApiTest
 
         final TranslationJobsApiFactory factory = new TranslationJobsApiFactory();
         final BearerAuthStaticTokenFilter tokenFilter = new BearerAuthStaticTokenFilter("foo");
+        final ClientConfiguration config = DefaultClientConfiguration.builder().baseUrl(mockWebServer.url("/").url()).build();
 
-        translationJobsApi = factory.buildApi(tokenFilter, mockWebServer.url("/").toString());
+        translationJobsApi = factory.buildApi(tokenFilter, config);
     }
 
     @After

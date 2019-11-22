@@ -1,5 +1,7 @@
 package com.smartling.api.issues.v2;
 
+import com.smartling.api.v2.client.ClientConfiguration;
+import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
 import com.smartling.api.issues.v2.pto.IssuePTO;
 import com.smartling.api.issues.v2.pto.IssueTemplatePTO;
@@ -31,7 +33,9 @@ public class IssuesApiFactoryTest
         final IssuesApiFactory factory = new IssuesApiFactory();
         final BearerAuthStaticTokenFilter tokenFilter = new BearerAuthStaticTokenFilter("foo");
 
-        issuesApi = factory.buildApi(tokenFilter, mockWebServer.url("/").toString());
+        ClientConfiguration config = DefaultClientConfiguration.builder().baseUrl(mockWebServer.url("/").url()).build();
+
+        issuesApi = factory.buildApi(tokenFilter, config);
     }
 
     @After
