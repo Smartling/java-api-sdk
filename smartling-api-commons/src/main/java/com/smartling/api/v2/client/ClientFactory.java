@@ -38,6 +38,13 @@ import java.util.Objects;
  */
 public class ClientFactory
 {
+    /**
+     * Returns the HTTP client connection manager to use for API requests.
+     *
+     * @param configuration the <code>HttpClientConfiguration</code> for the
+     *                      <code>HttpClientConnectionManager</code>
+     * @return a configured <code>HttpClientConnectionManager</code>
+     */
     protected HttpClientConnectionManager getHttpClientConnectionManager(final HttpClientConfiguration configuration)
     {
         final SocketConfig socketConfig = SocketConfig.custom()
@@ -53,6 +60,12 @@ public class ClientFactory
         return connectionManager;
     }
 
+    /**
+     * Returns the request configuration to use for API requests.
+     *
+     * @param configuration the <code>HttpClientConfiguration</code> for the <code>RequestConfig</code>
+     * @return a configured <code>RequestConfig</code>
+     */
     protected RequestConfig getRequestConfig(final HttpClientConfiguration configuration)
     {
         return RequestConfig.custom()
@@ -63,6 +76,12 @@ public class ClientFactory
                 .build();
     }
 
+    /**
+     * Returns an HTTP client builder.
+     *
+     * @param configuration the <code>HttpClientConfiguration</code> for the <code>HttpClientBuilder</code>
+     * @return a configured <code>HttpClientBuilder</code>
+     */
     protected HttpClientBuilder getHttpClientBuilder(final HttpClientConfiguration configuration)
     {
         HttpClientBuilder httpClientBuilder = HttpClients.custom()
@@ -88,6 +107,12 @@ public class ClientFactory
         return httpClientBuilder;
     }
 
+    /**
+     * Returns the client HTTP engine for API requests.
+     *
+     * @param configuration the <code>HttpClientConfiguration</code> for the <code>ClientHttpEngine</code>
+     * @return a configured <code>HttpClientEngine</code>
+     */
     protected ClientHttpEngine getClientHttpEngine(final HttpClientConfiguration configuration)
     {
         final HttpClientBuilder httpClientBuilder = getHttpClientBuilder(configuration);
@@ -95,6 +120,11 @@ public class ClientFactory
         return ApacheHttpClient4EngineFactory.create(httpClient, true);
     }
 
+    /**
+     * Returns the JSON deserializer map for unmarshalling API responses.
+     *
+     * @return a <code>Map</code> of classes to custom <code>JsonDeserializer</code>s
+     */
     protected Map<Class<?>, JsonDeserializer<?>> getDeserializerMap()
     {
         final Map<Class<?>, JsonDeserializer<?>> classJsonDeserializerMap = new HashMap<>();
@@ -102,7 +132,7 @@ public class ClientFactory
         return classJsonDeserializerMap;
     }
 
-    protected ContextResolver<ObjectMapper> getObjectMapperContextResolver(final Map<Class<?>, JsonDeserializer<?>> classJsonDeserializerMap)
+    ContextResolver<ObjectMapper> getObjectMapperContextResolver(final Map<Class<?>, JsonDeserializer<?>> classJsonDeserializerMap)
     {
         return new RestApiContextResolver(classJsonDeserializerMap);
     }
@@ -112,6 +142,19 @@ public class ClientFactory
         return build(clientRequestFilters, clientResponseFilters, domain, klass, new HttpClientConfiguration(), null);
     }
 
+    /**
+     * Returns a fully configured JAX-RS proxy for an API of type <code>T</code>
+     *
+     * @param clientRequestFilters the <code>ClientRequestFilters</code> (required)
+     * @param clientResponseFilters the <code>ClientResponseFilters</code> (required)
+     * @param domain the API protocol and domain (required)
+     * @param klass the <code>Class</code> of type <code>T</code>
+     * @param configuration the <code>HttpClientConfiguration</code> (required)
+     * @param providerFactory the <code>ResteasyProviderFactory</code> (required)
+     * @param <T> the type of the API class
+     *
+     * @return a full configured JAX-RS proxy for <code>T</code>
+     */
     @SuppressWarnings("unchecked")
     <T> T build(
         final List<ClientRequestFilter> clientRequestFilters,
