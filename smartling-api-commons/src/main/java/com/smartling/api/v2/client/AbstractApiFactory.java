@@ -22,11 +22,19 @@ public abstract class AbstractApiFactory<T> implements ApiFactory<T>
 {
     private ClientFactory clientFactory;
 
+    /**
+     * Constructs a new abstract API factory.
+     */
     protected AbstractApiFactory()
     {
         this(new ClientFactory());
     }
 
+    /**
+     * Constructs a new abstract API factory with the given client factory.
+     *
+     * @param clientFactory the <code>ClientFactory</code> to use to construct JAX-RS proxies (required)
+     */
     protected AbstractApiFactory(final ClientFactory clientFactory)
     {
         Objects.requireNonNull(clientFactory, "clientFactory required");
@@ -73,13 +81,13 @@ public abstract class AbstractApiFactory<T> implements ApiFactory<T>
         return clientFactory.build(
             requestFilters,
             config.getClientResponseFilters(),
-            getHostAndProtocol(config.getBaseUrl()),
+            getProtocolAndHost(config.getBaseUrl()),
             getApiClass(),
             httpClientConfiguration,
             providerFactory);
     }
 
-    private static String getHostAndProtocol(URL baseUrl)
+    private static String getProtocolAndHost(URL baseUrl)
     {
         Objects.requireNonNull(baseUrl, "baseUrl required");
         return baseUrl.toString();
