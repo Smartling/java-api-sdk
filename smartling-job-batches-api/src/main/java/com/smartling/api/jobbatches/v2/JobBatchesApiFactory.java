@@ -1,5 +1,6 @@
 package com.smartling.api.jobbatches.v2;
 
+import com.smartling.api.jobbatches.util.FileUploadClientFactory;
 import com.smartling.api.jobbatches.util.LibNameVersionHolder;
 import com.smartling.api.v2.client.AbstractApiFactory;
 import com.smartling.api.v2.client.HttpClientConfiguration;
