@@ -146,7 +146,6 @@
         <module>smartling-issues-api</module>
         <module>smartling-jobs-api</module>
         <module>smartling-locales-api</module>
-        <module>smartling-job-batches-api</module>
         <module>smartling-api-sdk-all</module> <!-- keep last -->
     </modules>
 

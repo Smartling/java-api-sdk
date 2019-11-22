@@ -26,10 +26,5 @@
             <artifactId>smartling-jobs-api</artifactId>
             <version>0.4.7-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>com.smartling.api</groupId>
-            <artifactId>smartling-job-batches-api</artifactId>
-            <version>0.4.7-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 </project>
