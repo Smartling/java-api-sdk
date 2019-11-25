@@ -1,14 +1,14 @@
-package com.smartling.api.jobbatches.v2;
+package com.smartling.api.jobbatches.v1;
 
 import com.smartling.api.jobbatches.util.FileUploadClientFactory;
 import com.smartling.api.jobbatches.util.LibNameVersionHolder;
 import com.smartling.api.v2.client.AbstractApiFactory;
 import com.smartling.api.v2.client.HttpClientConfiguration;
+import org.apache.http.HttpHeaders;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.core.HttpHeaders;
 import java.util.ArrayList;
 import java.util.List;
 

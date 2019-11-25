@@ -22,37 +22,37 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Produces (MediaType.APPLICATION_JSON)
-@Consumes (MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public interface JobBatchesApi
 {
     @POST
     @Path("job-batches-api/v2/projects/{projectId}/batches")
-    CreateBatchResponsePTO createBatch(@PathParam ("projectId")String projectId, CreateBatchRequestPTO createBatchRequest);
+    CreateBatchResponsePTO createBatch(@PathParam("projectId") String projectId, CreateBatchRequestPTO createBatchRequest);
 
     @GET
-    @Path ("job-batches-api/v2/projects/{projectId}/batches/{batchUid}")
-    BatchStatusResponsePTO getBatchStatus(@PathParam("projectId")String projectId, @PathParam ("batchUid") String batchUid);
+    @Path("job-batches-api/v2/projects/{projectId}/batches/{batchUid}")
+    BatchStatusResponsePTO getBatchStatus(@PathParam("projectId") String projectId, @PathParam("batchUid") String batchUid);
 
     @GET
     @Path("job-batches-api/v2/projects/{projectId}/batches")
-    ListResponse<BatchPTO> listBatches(@PathParam("projectId")String projectId, @BeanParam SearchParamsPTO searchParams);
+    ListResponse<BatchPTO> listBatches(@PathParam("projectId") String projectId, @BeanParam SearchParamsPTO searchParams);
 
     @POST
-    @Path ("job-batches-api/v2/projects/{projectId}/batches/{batchUid}/file")
-    @Consumes (MediaType.MULTIPART_FORM_DATA)
+    @Path("job-batches-api/v2/projects/{projectId}/batches/{batchUid}/file")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     void addFileAsync(@PathParam("projectId") String projectId, @PathParam("batchUid") String batchUid, @MultipartForm FileUploadPTO fileUploadPTO);
 
     @POST
-    @Path ("job-batches-api/v2/projects/{projectId}/batches/{batchUid}/file")
-    @Consumes (MediaType.MULTIPART_FORM_DATA)
+    @Path("job-batches-api/v2/projects/{projectId}/batches/{batchUid}/file")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     void addFileAsStreamAsync(@PathParam("projectId") String projectId, @PathParam("batchUid") String batchUid, @MultipartForm StreamFileUploadPTO streamFileUploadPTO);
 
     @PUT
-    @Path ("job-batches-api/v2/projects/{projectId}/batches/{batchUid}")
+    @Path("job-batches-api/v2/projects/{projectId}/batches/{batchUid}")
     void registerFile(@PathParam("projectId") String projectId, @PathParam("batchUid") String batchUid, RegisterBatchActionRequestPTO request);
 
     @PUT
-    @Path ("job-batches-api/v2/projects/{projectId}/batches/{batchUid}")
+    @Path("job-batches-api/v2/projects/{projectId}/batches/{batchUid}")
     void cancelFile(@PathParam("projectId") String projectId, @PathParam("batchUid") String batchUid, CancelBatchActionRequestPTO request);
 }

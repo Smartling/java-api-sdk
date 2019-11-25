@@ -1,4 +1,4 @@
-package com.smartling.api.jobbatches.v2.pto;
+package com.smartling.api.jobbatches.v1.pto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
