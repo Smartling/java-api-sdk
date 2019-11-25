@@ -19,7 +19,8 @@ public class FileUploadClientFactory extends ClientFactory
         Objects.requireNonNull(clientRequestFilters, "clientRequestFilters must be defined");
         Objects.requireNonNull(domain, "domain must be defined");
         Objects.requireNonNull(configuration, "configuration must be defined");
-        if (clientRequestFilters.isEmpty())
+
+        if (!containsAuthFilter(clientRequestFilters))
         {
             throw new IllegalArgumentException("At least one request filter is required for authorization");
         }

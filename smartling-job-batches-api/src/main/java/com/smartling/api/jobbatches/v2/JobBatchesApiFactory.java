@@ -48,7 +48,11 @@ public class JobBatchesApiFactory extends AbstractApiFactory<JobBatchesApi>
             .build();
 
         JobBatchesApi jobBatchesApi = super.buildApi(authFilter, config);
-        ResteasyWebTarget client = new FileUploadClientFactory().build(clientRequestFilters, jobsBatchConfig.getBaseUrl().toString(), httpClientConfiguration);
+
+        List<ClientRequestFilter> fileUploadFilters = new ArrayList<>(clientRequestFilters.size() + 1);
+        fileUploadFilters.add(authFilter);
+
+        ResteasyWebTarget client = new FileUploadClientFactory().build(fileUploadFilters, jobsBatchConfig.getBaseUrl().toString(), httpClientConfiguration);
 
         return new FileUploadProxy(jobBatchesApi, client);
     }

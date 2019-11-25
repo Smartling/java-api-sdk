@@ -2,6 +2,7 @@ package com.smartling.api.v2.client;
 
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smartling.api.v2.client.auth.AuthorizationRequestFilter;
 import com.smartling.api.v2.client.exception.RestApiExceptionHandler;
 import com.smartling.api.v2.client.unmarshal.DetailsDeserializer;
 import com.smartling.api.v2.client.unmarshal.RestApiContextResolver;
@@ -38,6 +39,30 @@ import java.util.Objects;
  */
 public class ClientFactory
 {
+    /**
+     * Returns true if the given client request filter list contains an
+     * authorization filter.
+     *
+     * @param clientRequestFilters the <code>List</code> of <code>ClientRequestFilter</code>s to check
+     * @return <code>true</code> if the given <code>clientRequestFilters</code> contains an instance of
+     * {@link AuthorizationRequestFilter}; <code>false</code> otherwise
+     */
+    protected static boolean containsAuthFilter(List<ClientRequestFilter> clientRequestFilters)
+    {
+        if (clientRequestFilters == null)
+            return false;
+
+        for (ClientRequestFilter filter: clientRequestFilters)
+        {
+            if (filter instanceof AuthorizationRequestFilter)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Returns the HTTP client connection manager to use for API requests.
      *
@@ -171,7 +196,7 @@ public class ClientFactory
         Objects.requireNonNull(this.getDeserializerMap(), "deserializerMap must be defined");
         Objects.requireNonNull(configuration, "configuration must be defined");
 
-        if (clientRequestFilters.isEmpty())
+        if (!containsAuthFilter(clientRequestFilters))
             throw new IllegalArgumentException("At least one request filter is required for authorization");
 
         final ResteasyClientBuilder builder = new ResteasyClientBuilder();

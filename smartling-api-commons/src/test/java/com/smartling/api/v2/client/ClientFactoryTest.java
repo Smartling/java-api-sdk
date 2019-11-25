@@ -1,5 +1,6 @@
 package com.smartling.api.v2.client;
 
+import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
 import com.smartling.api.v2.response.EmptyData;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -38,6 +39,7 @@ public class ClientFactoryTest
         factory = new ClientFactory();
 
         final List<ClientRequestFilter> filters = new LinkedList<>();
+        filters.add(new BearerAuthStaticTokenFilter("foo"));
         filters.add(new Bar());
         this.requestFilters = filters;
 

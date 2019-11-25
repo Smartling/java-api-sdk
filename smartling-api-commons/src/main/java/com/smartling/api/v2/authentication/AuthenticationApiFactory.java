@@ -16,7 +16,7 @@ public final class AuthenticationApiFactory
      */
     public AuthenticationApi buildApi()
     {
-        return authApiFactory.buildApi(new NoOpClientRequestFilter());
+        return authApiFactory.buildApi(new NoOpAuthorizationFilter());
     }
 
     private static class AuthApiFactory extends AbstractApiFactory<AuthenticationApi>
