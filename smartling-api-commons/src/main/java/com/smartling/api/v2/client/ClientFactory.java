@@ -2,8 +2,8 @@ package com.smartling.api.v2.client;
 
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smartling.api.v2.client.auth.AuthorizationRequestFilter;
 import com.smartling.api.v2.client.exception.RestApiExceptionHandler;
-import com.smartling.api.v2.client.proxy.ExceptionDecoratorInvocationHandler;
 import com.smartling.api.v2.client.unmarshal.DetailsDeserializer;
 import com.smartling.api.v2.client.unmarshal.RestApiContextResolver;
 import com.smartling.api.v2.client.unmarshal.RestApiResponseReaderInterceptor;
@@ -35,10 +35,41 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Base factory for building proxied client objects
+ * Client factory for building JAX-RS proxied client APIs.
  */
 public class ClientFactory
 {
+    /**
+     * Returns true if the given client request filter list contains an
+     * authorization filter.
+     *
+     * @param clientRequestFilters the <code>List</code> of <code>ClientRequestFilter</code>s to check
+     * @return <code>true</code> if the given <code>clientRequestFilters</code> contains an instance of
+     * {@link AuthorizationRequestFilter}; <code>false</code> otherwise
+     */
+    protected static boolean containsAuthFilter(List<ClientRequestFilter> clientRequestFilters)
+    {
+        if (clientRequestFilters == null)
+            return false;
+
+        for (ClientRequestFilter filter: clientRequestFilters)
+        {
+            if (filter instanceof AuthorizationRequestFilter)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the HTTP client connection manager to use for API requests.
+     *
+     * @param configuration the <code>HttpClientConfiguration</code> for the
+     *                      <code>HttpClientConnectionManager</code>
+     * @return a configured <code>HttpClientConnectionManager</code>
+     */
     protected HttpClientConnectionManager getHttpClientConnectionManager(final HttpClientConfiguration configuration)
     {
         final SocketConfig socketConfig = SocketConfig.custom()
@@ -54,6 +85,12 @@ public class ClientFactory
         return connectionManager;
     }
 
+    /**
+     * Returns the request configuration to use for API requests.
+     *
+     * @param configuration the <code>HttpClientConfiguration</code> for the <code>RequestConfig</code>
+     * @return a configured <code>RequestConfig</code>
+     */
     protected RequestConfig getRequestConfig(final HttpClientConfiguration configuration)
     {
         return RequestConfig.custom()
@@ -64,6 +101,12 @@ public class ClientFactory
                 .build();
     }
 
+    /**
+     * Returns an HTTP client builder.
+     *
+     * @param configuration the <code>HttpClientConfiguration</code> for the <code>HttpClientBuilder</code>
+     * @return a configured <code>HttpClientBuilder</code>
+     */
     protected HttpClientBuilder getHttpClientBuilder(final HttpClientConfiguration configuration)
     {
         HttpClientBuilder httpClientBuilder = HttpClients.custom()
@@ -89,6 +132,12 @@ public class ClientFactory
         return httpClientBuilder;
     }
 
+    /**
+     * Returns the client HTTP engine for API requests.
+     *
+     * @param configuration the <code>HttpClientConfiguration</code> for the <code>ClientHttpEngine</code>
+     * @return a configured <code>HttpClientEngine</code>
+     */
     protected ClientHttpEngine getClientHttpEngine(final HttpClientConfiguration configuration)
     {
         final HttpClientBuilder httpClientBuilder = getHttpClientBuilder(configuration);
@@ -96,7 +145,12 @@ public class ClientFactory
         return ApacheHttpClient4EngineFactory.create(httpClient, true);
     }
 
-    protected Map<Class<?>, JsonDeserializer<?>> getDefaultDeserializerMap()
+    /**
+     * Returns the JSON deserializer map for unmarshalling API responses.
+     *
+     * @return a <code>Map</code> of classes to custom <code>JsonDeserializer</code>s
+     */
+    protected Map<Class<?>, JsonDeserializer<?>> getDeserializerMap()
     {
         final Map<Class<?>, JsonDeserializer<?>> classJsonDeserializerMap = new HashMap<>();
         classJsonDeserializerMap.put(Details.class, new DetailsDeserializer());
@@ -110,21 +164,39 @@ public class ClientFactory
 
     public <T> T build(final List<ClientRequestFilter> clientRequestFilters, final List<ClientResponseFilter> clientResponseFilters, final String domain, final Class<T> klass)
     {
-        return build(clientRequestFilters, clientResponseFilters, domain, klass, getDefaultDeserializerMap(), new HttpClientConfiguration(), null);
+        return build(clientRequestFilters, clientResponseFilters, domain, klass, new HttpClientConfiguration(), null);
     }
 
+    /**
+     * Returns a fully configured JAX-RS proxy for an API of type <code>T</code>
+     *
+     * @param clientRequestFilters the <code>ClientRequestFilters</code> (required)
+     * @param clientResponseFilters the <code>ClientResponseFilters</code> (required)
+     * @param domain the API protocol and domain (required)
+     * @param klass the <code>Class</code> of type <code>T</code>
+     * @param configuration the <code>HttpClientConfiguration</code> (required)
+     * @param providerFactory the <code>ResteasyProviderFactory</code> (required)
+     * @param <T> the type of the API class
+     *
+     * @return a full configured JAX-RS proxy for <code>T</code>
+     */
     @SuppressWarnings("unchecked")
-    public <T> T build(final List<ClientRequestFilter> clientRequestFilters, final List<ClientResponseFilter> clientResponseFilters, final String domain, final Class<T> klass, final Map<Class<?>, JsonDeserializer<?>> deserializerMap,
-            final HttpClientConfiguration configuration, final ResteasyProviderFactory providerFactory)
+    <T> T build(
+        final List<ClientRequestFilter> clientRequestFilters,
+        final List<ClientResponseFilter> clientResponseFilters,
+        final String domain,
+        final Class<T> klass,
+        final HttpClientConfiguration configuration,
+        final ResteasyProviderFactory providerFactory)
     {
         Objects.requireNonNull(clientRequestFilters, "clientRequestFilters must be defined");
         Objects.requireNonNull(clientResponseFilters, "clientResponseFilters must be defined");
         Objects.requireNonNull(domain, "domain must be defined");
         Objects.requireNonNull(klass, "klass must be defined");
-        Objects.requireNonNull(deserializerMap, "deserializerMap must be defined");
+        Objects.requireNonNull(this.getDeserializerMap(), "deserializerMap must be defined");
         Objects.requireNonNull(configuration, "configuration must be defined");
 
-        if (clientRequestFilters.isEmpty())
+        if (!containsAuthFilter(clientRequestFilters))
             throw new IllegalArgumentException("At least one request filter is required for authorization");
 
         final ResteasyClientBuilder builder = new ResteasyClientBuilder();
@@ -133,7 +205,7 @@ public class ClientFactory
         if (providerFactory != null)
             builder.providerFactory(providerFactory);
 
-        final ContextResolver<ObjectMapper> contextResolver = getObjectMapperContextResolver(deserializerMap);
+        final ContextResolver<ObjectMapper> contextResolver = getObjectMapperContextResolver(getDeserializerMap());
 
         final ResteasyWebTarget client = builder.build()
                 .target(domain)

@@ -1,33 +1,25 @@
 package com.smartling.api.v2.client.auth;
 
-import com.smartling.api.v2.client.HttpClientConfiguration;
-import com.smartling.api.client.context.HttpClientSettings;
+import java.util.Objects;
 
+/**
+ * Provides an authorization filter that uses an authenticator
+ * to generate bearer tokens for API requests.
+ */
 public class BearerAuthSecretFilter extends AbstractBearerAuthFilter
 {
     private final Authenticator authenticator;
 
-    public BearerAuthSecretFilter(final String userIdentifier, final String userSecret)
+    /**
+     * Constructs a new bearer authentication secret filter.
+     *
+     * @param authenticator the <code>Authenticator</code> to use for generating
+     *                      bearer tokens (required)
+     */
+    public BearerAuthSecretFilter(Authenticator authenticator)
     {
-        authenticator = new Authenticator(userIdentifier, userSecret);
-    }
-
-    public BearerAuthSecretFilter(final String userIdentifier, final String userSecret, final String apiHost)
-    {
-        authenticator = new Authenticator(userIdentifier, userSecret, apiHost);
-    }
-
-    public BearerAuthSecretFilter(final String userIdentifier, final String userSecret, final String apiHost, HttpClientConfiguration httpClientConfiguration)
-    {
-        HttpClientSettings authenticatorHttpSettings = new HttpClientSettings();
-        authenticatorHttpSettings.setProxy(HttpClientSettings.Proxy.newProxy(
-                httpClientConfiguration.getProxyHost(),
-                httpClientConfiguration.getProxyPort(),
-                httpClientConfiguration.getProxyUser(),
-                httpClientConfiguration.getProxyPassword()
-        ));
-
-        this.authenticator = new Authenticator(userIdentifier, userSecret, apiHost, authenticatorHttpSettings);
+        Objects.requireNonNull(authenticator, "authenticator required");
+        this.authenticator = authenticator;
     }
 
     @Override

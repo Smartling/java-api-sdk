@@ -3,17 +3,33 @@ package com.smartling.api.v2.client;
 import java.util.Objects;
 
 /**
- * Configuration for the underlying http client of the proxy.
- *
- * All timeouts are in milliseconds.  The defaults here are designed
- * for a service with a relatively low number of long running requests.
+ * Configuration for the underlying HTTP client of the JAX-RS proxy.
  */
 public class HttpClientConfiguration
 {
+    /**
+     * The default socket timeout (10,000 ms).
+     */
     public static final int DEFAULT_SOCKET_TIMEOUT = 10_000;
+
+    /**
+     * The default connection request timeout (60,000 ms)
+     */
     public static final int DEFAULT_CONNECTION_REQUEST_TIMEOUT = 60_000;
+
+    /**
+     * The default connection timeout (10,000 ms).
+     */
     public static final int DEFAULT_CONNECTION_TIMEOUT = 10_000;
+
+    /**
+     * The default maximum number of threads per route (20 threads).
+     */
     public static final int MAX_THREAD_PER_ROUTE = 20;
+
+    /**
+     * The default maximum number of thread total (20 threads).
+     */
     public static final int MAX_THREAD_TOTAL = 20;
 
     private int     connectionRequestTimeout    = DEFAULT_CONNECTION_REQUEST_TIMEOUT;

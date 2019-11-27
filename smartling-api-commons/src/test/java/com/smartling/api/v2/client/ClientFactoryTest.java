@@ -1,6 +1,6 @@
 package com.smartling.api.v2.client;
 
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
 import com.smartling.api.v2.response.EmptyData;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -18,12 +18,13 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 public class ClientFactoryTest
 {
@@ -38,6 +39,7 @@ public class ClientFactoryTest
         factory = new ClientFactory();
 
         final List<ClientRequestFilter> filters = new LinkedList<>();
+        filters.add(new BearerAuthStaticTokenFilter("foo"));
         filters.add(new Bar());
         this.requestFilters = filters;
 
@@ -63,7 +65,7 @@ public class ClientFactoryTest
             HttpClientConfiguration configuration = new HttpClientConfiguration();
             configuration.setProxyHost(mockProxyServer.getHostName());
             configuration.setProxyPort(mockProxyServer.getPort());
-            final Foo foo = factory.build(requestFilters, Collections.<ClientResponseFilter>emptyList(), "http://localhost:9595/", Foo.class, factory.getDefaultDeserializerMap(), configuration, null);
+            final Foo foo = factory.build(requestFilters, Collections.<ClientResponseFilter>emptyList(), "http://localhost:9595/", Foo.class, configuration, null);
             foo.getFoo("");
         }
         finally
@@ -105,13 +107,15 @@ public class ClientFactoryTest
     @Test(expected = NullPointerException.class)
     public void testBuildNullDeserializers() throws Exception
     {
-        factory.build(requestFilters, responseFilters, "foo", Foo.class, null, new HttpClientConfiguration(), null);
+        ClientFactory f = spy(factory);
+        when(f.getDeserializerMap()).thenReturn(null);
+        f.build(requestFilters, responseFilters, "foo", Foo.class, new HttpClientConfiguration(), null);
     }
 
     @Test(expected = NullPointerException.class)
     public void testBuildNullHttpConfiguration() throws Exception
     {
-        factory.build(requestFilters, responseFilters, "foo", Foo.class, new HashMap<Class<?>, JsonDeserializer<?>>(), null, null);
+        factory.build(requestFilters, responseFilters, "foo", Foo.class, null, null);
     }
 
     @Test
@@ -144,7 +148,6 @@ public class ClientFactoryTest
                 Collections.<ClientResponseFilter>emptyList(),
                 webServer.url("/").toString(),
                 Foo.class,
-                factory.getDefaultDeserializerMap(),
                 httpClientConfiguration,
                 null);
             Future<EmptyData> future = executorService.submit(new Callable<EmptyData>()

@@ -1,17 +1,18 @@
-package com.smartling.api.v2.client.proxy;
+package com.smartling.api.v2.client;
 
 import com.smartling.api.v2.client.exception.RestApiExceptionHandler;
 import com.smartling.api.v2.client.exception.RestApiRuntimeException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Proxy;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Proxy;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 
 public class ExceptionDecoratorInvocationHandlerTest

@@ -1,6 +1,5 @@
 package com.smartling.api.v2.client.auth;
 
-import com.smartling.api.client.context.HttpClientSettings;
 import com.smartling.api.v2.authentication.AuthenticationApi;
 import com.smartling.api.v2.authentication.pto.Authentication;
 import com.smartling.api.v2.authentication.pto.AuthenticationRefreshRequest;
@@ -40,8 +39,6 @@ public class AuthenticatorTest
         authenticator = new Authenticator(
             USER_IDENTIFIER,
             USER_SECRET,
-            "https://api.smartling.com",
-            new HttpClientSettings(),
             authenticationApi,
             clock
         );

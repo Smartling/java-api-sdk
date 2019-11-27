@@ -1,102 +1,95 @@
 package com.smartling.api.v2.client;
 
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.smartling.api.v2.client.auth.AbstractBearerAuthFilter;
+import com.smartling.api.v2.authentication.AuthenticationApi;
+import com.smartling.api.v2.authentication.AuthenticationApiFactory;
+import com.smartling.api.v2.client.auth.Authenticator;
+import com.smartling.api.v2.client.auth.AuthorizationRequestFilter;
 import com.smartling.api.v2.client.auth.BearerAuthSecretFilter;
-
-import java.util.*;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.client.ClientResponseFilter;
-
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
-public abstract class AbstractApiFactory<T>
+import javax.ws.rs.client.ClientRequestFilter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * Abstract factory to create JAX-RS proxies for Smartling APIs.
+ *
+ * @param <T> the API interface type to proxy
+ */
+public abstract class AbstractApiFactory<T> implements ApiFactory<T>
 {
-    private static final String DEFAULT_API_HOST              = "api.smartling.com";
-    protected static final String DEFAULT_API_HOST_AND_PROTOCOL = "https://" + DEFAULT_API_HOST;
+    private ClientFactory clientFactory;
 
-    private final ClientFactory clientFactory;
-
-    public AbstractApiFactory()
+    /**
+     * Constructs a new abstract API factory.
+     */
+    protected AbstractApiFactory()
     {
         this(new ClientFactory());
     }
 
+    /**
+     * Constructs a new abstract API factory with the given client factory.
+     *
+     * @param clientFactory the <code>ClientFactory</code> to use to construct JAX-RS proxies (required)
+     */
     protected AbstractApiFactory(final ClientFactory clientFactory)
     {
+        Objects.requireNonNull(clientFactory, "clientFactory required");
         this.clientFactory = clientFactory;
     }
 
+    /***
+     * Returns the class of type <code>T</code>.
+     *
+     * @return the class of <code>T</code>
+     */
     protected abstract Class<T> getApiClass();
 
-    protected List<ClientResponseFilter> getClientResponseFilters()
-    {
-        return Collections.emptyList();
-    }
-
-    protected Map<Class<?>, JsonDeserializer<?>> getDeserializerMap()
-    {
-        return clientFactory.getDefaultDeserializerMap();
-    }
-
-    protected HttpClientConfiguration getHttpClientConfiguration()
-    {
-        return new HttpClientConfiguration();
-    }
-
+    @Override
     public T buildApi(final String userIdentifier, final String userSecret)
     {
         Objects.requireNonNull(userIdentifier, "userIdentifier must be defined");
         Objects.requireNonNull(userSecret, "userSecret must be defined");
 
-        final BearerAuthSecretFilter bearerAuthSecretFilter = new BearerAuthSecretFilter(userIdentifier, userSecret, DEFAULT_API_HOST_AND_PROTOCOL);
+        final AuthenticationApi authenticationApi = new AuthenticationApiFactory().buildApi();
+        final Authenticator authenticator = new Authenticator(userIdentifier, userSecret, authenticationApi);
+        final BearerAuthSecretFilter bearerAuthSecretFilter = new BearerAuthSecretFilter(authenticator);
         return buildApi(bearerAuthSecretFilter);
     }
 
-    public T buildApi(final AbstractBearerAuthFilter authFilter)
+    @Override
+    public T buildApi(final AuthorizationRequestFilter authFilter)
     {
-        return buildApi(authFilter, DEFAULT_API_HOST_AND_PROTOCOL);
+        return buildApi(authFilter, new DefaultClientConfiguration());
     }
 
-    public T buildApi(final AbstractBearerAuthFilter authFilter, final String hostAndProtocol)
+    @Override
+    public T buildApi(final AuthorizationRequestFilter authFilter, ClientConfiguration config)
     {
+        List<ClientRequestFilter> requestFilters = new ArrayList<>(config.getClientRequestFilters());
+        HttpClientConfiguration httpClientConfiguration = config.getHttpClientConfiguration();
+        ResteasyProviderFactory providerFactory = config.getResteasyProviderFactory();
+
         Objects.requireNonNull(authFilter, "authFilter must be defined");
-
-        final List<ClientRequestFilter> filters = new LinkedList<>();
-        filters.add(authFilter);
-
-        return buildApi(filters, hostAndProtocol);
-    }
-
-    public T buildApi(final List<ClientRequestFilter> filterList, final String hostAndProtocol)
-    {
-        return buildApi(filterList, hostAndProtocol, getHttpClientConfiguration());
-    }
-
-    public T buildApi(final List<ClientRequestFilter> filterList, final String hostAndProtocol, final HttpClientConfiguration httpClientConfiguration)
-    {
-        Objects.requireNonNull(filterList, "filterList must be defined");
-        Objects.requireNonNull(hostAndProtocol, "hostAndProtocol must be defined");
         Objects.requireNonNull(httpClientConfiguration, "httpClientConfiguration must be defined");
 
-        return clientFactory.build(filterList, getClientResponseFilters(), hostAndProtocol, getApiClass(), getDeserializerMap(), httpClientConfiguration, null);
+        requestFilters.add(authFilter);
+
+        return clientFactory.build(
+            requestFilters,
+            config.getClientResponseFilters(),
+            getProtocolAndHost(config.getBaseUrl()),
+            getApiClass(),
+            httpClientConfiguration,
+            providerFactory);
     }
 
-
-    public T buildApi(final List<ClientRequestFilter> filterList, final String hostAndProtocol, final ResteasyProviderFactory providerFactory)
+    private static String getProtocolAndHost(URL baseUrl)
     {
-        Objects.requireNonNull(filterList, "filterList must be defined");
-        Objects.requireNonNull(hostAndProtocol, "hostAndProtocol must be defined");
-
-        return clientFactory.build(filterList, getClientResponseFilters(), hostAndProtocol, getApiClass(), getDeserializerMap(), getHttpClientConfiguration(), providerFactory);
-    }
-
-    public T buildApi(final List<ClientRequestFilter> filterList, final String hostAndProtocol, final HttpClientConfiguration httpClientConfiguration, final ResteasyProviderFactory providerFactory)
-    {
-        Objects.requireNonNull(filterList, "filterList must be defined");
-        Objects.requireNonNull(hostAndProtocol, "hostAndProtocol must be defined");
-        Objects.requireNonNull(httpClientConfiguration, "httpClientConfiguration must be defined");
-
-        return clientFactory.build(filterList, getClientResponseFilters(), hostAndProtocol, getApiClass(), getDeserializerMap(), httpClientConfiguration, providerFactory);
+        Objects.requireNonNull(baseUrl, "baseUrl required");
+        return baseUrl.toString();
     }
 }

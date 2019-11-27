@@ -2,6 +2,8 @@ package com.smartling.api.locales.v2;
 
 import com.smartling.api.locales.v2.pto.LanguagePTO;
 import com.smartling.api.locales.v2.pto.LocalePTO;
+import com.smartling.api.v2.client.ClientConfiguration;
+import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
 import com.smartling.api.v2.response.ListResponse;
 import okhttp3.mockwebserver.MockResponse;
@@ -161,8 +163,9 @@ public class LocalesApiFactoryTest
 
         final LocalesApiFactory factory = new LocalesApiFactory();
         final BearerAuthStaticTokenFilter tokenFilter = new BearerAuthStaticTokenFilter("foo");
+        final ClientConfiguration config = DefaultClientConfiguration.builder().baseUrl(mockWebServer.url("/").url()).build();
 
-        localesApi = factory.buildApi(tokenFilter, mockWebServer.url("/").toString());
+        localesApi = factory.buildApi(tokenFilter, config);
     }
 
     @After

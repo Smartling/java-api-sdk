@@ -7,6 +7,9 @@ import com.smartling.api.v2.authentication.pto.AuthenticationRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
+/**
+ * Provides an API to authenticate API v2 account and project tokens to Smartling.
+ */
 @Path("/auth-api/v2")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
