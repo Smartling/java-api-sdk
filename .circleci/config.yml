@@ -30,7 +30,9 @@ jobs:
                       git config --global user.name "Smartling, Inc."
             - run:
                   name: Import GPG Key
-                  command: gpg --batch --passphrase ${GPG_SIGNING_PASSWORD} --import .circleci/gpg.key.txt
+                  command: |
+                      echo -e $GPG_KEY > .circleci/gpg.key.txt
+                      gpg --batch --passphrase ${GPG_SIGNING_PASSWORD} --import .circleci/gpg.key.txt
             - run:
                   name: Release
                   command: |
