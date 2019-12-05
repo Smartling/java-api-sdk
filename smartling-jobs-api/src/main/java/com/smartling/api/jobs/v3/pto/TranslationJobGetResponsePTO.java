@@ -12,4 +12,6 @@ import java.util.List;
 public class TranslationJobGetResponsePTO extends TranslationJobResponsePTO
 {
     private List<SourceFilePTO> sourceFiles;
+
+    private Long priority;
 }

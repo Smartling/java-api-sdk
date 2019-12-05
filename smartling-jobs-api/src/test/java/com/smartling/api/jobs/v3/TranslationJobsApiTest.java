@@ -44,6 +44,7 @@ public class TranslationJobsApiTest
         + "            \"firstCompletedDate\": \"2015-11-21T0B1:51:17Z\",\n"
         + "            \"lastCompletedDate\": \"2015-11-21T0B1:51:17Z\",\n"
         + "            \"jobStatus\" : \"IN_PROGRESS\",\n"
+        + "            \"priority\" : 4,\n"
         + "            \"sourceFiles\" : [{\n"
         + "                \"uri\" : \"/file/app.properties\",\n"
         + "                \"name\" : \"/file/app.properties\"\n"
@@ -112,6 +113,7 @@ public class TranslationJobsApiTest
         assertEquals("2015-11-21T0B1:51:17Z", response.getFirstCompletedDate());
         assertEquals("2015-11-21T0B1:51:17Z", response.getLastCompletedDate());
         assertEquals("IN_PROGRESS", response.getJobStatus());
+        assertEquals(Long.valueOf(4), response.getPriority());
         assertEquals(1, response.getSourceFiles().size());
         assertEquals("/file/app.properties", response.getSourceFiles().get(0).getUri());
         assertEquals("/file/app.properties", response.getSourceFiles().get(0).getName());
