@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.smartling.api</groupId>
+        <artifactId>smartling-sdk-parent</artifactId>
+        <version>0.9.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>smartling-files-api</artifactId>
+    <version>0.9.1-SNAPSHOT</version>
+    <name>Smartling Content Files API</name>
+
+    <build>
+        <filters>
+            <filter>src/main/resources/sdk-project.properties</filter>
+        </filters>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.smartling.api</groupId>
+            <artifactId>smartling-api-commons</artifactId>
+            <version>0.9.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>2.25.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

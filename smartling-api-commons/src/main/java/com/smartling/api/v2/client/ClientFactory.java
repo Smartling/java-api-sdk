@@ -3,7 +3,10 @@ package com.smartling.api.v2.client;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartling.api.v2.client.auth.AuthorizationRequestFilter;
+import com.smartling.api.v2.client.directives.DirectivesAwareMultipartFormWriter;
+import com.smartling.api.v2.client.exception.DefaultRestApiExceptionMapper;
 import com.smartling.api.v2.client.exception.RestApiExceptionHandler;
+import com.smartling.api.v2.client.exception.RestApiExceptionMapper;
 import com.smartling.api.v2.client.unmarshal.DetailsDeserializer;
 import com.smartling.api.v2.client.unmarshal.RestApiContextResolver;
 import com.smartling.api.v2.client.unmarshal.RestApiResponseReaderInterceptor;
@@ -164,7 +167,7 @@ public class ClientFactory
 
     public <T> T build(final List<ClientRequestFilter> clientRequestFilters, final List<ClientResponseFilter> clientResponseFilters, final String domain, final Class<T> klass)
     {
-        return build(clientRequestFilters, clientResponseFilters, domain, klass, new HttpClientConfiguration(), null);
+        return build(clientRequestFilters, clientResponseFilters, domain, klass, new HttpClientConfiguration(), null, null);
     }
 
     /**
@@ -175,9 +178,8 @@ public class ClientFactory
      * @param domain the API protocol and domain (required)
      * @param klass the <code>Class</code> of type <code>T</code>
      * @param configuration the <code>HttpClientConfiguration</code> (required)
-     * @param providerFactory the <code>ResteasyProviderFactory</code> (required)
-     * @param <T> the type of the API class
-     *
+     * @param providerFactory the <code>ResteasyProviderFactory</code>
+     * @param exceptionMapper the <code>RestApiExceptionMapper</code>
      * @return a full configured JAX-RS proxy for <code>T</code>
      */
     @SuppressWarnings("unchecked")
@@ -187,7 +189,8 @@ public class ClientFactory
         final String domain,
         final Class<T> klass,
         final HttpClientConfiguration configuration,
-        final ResteasyProviderFactory providerFactory)
+        final ResteasyProviderFactory providerFactory,
+        final RestApiExceptionMapper exceptionMapper)
     {
         Objects.requireNonNull(clientRequestFilters, "clientRequestFilters must be defined");
         Objects.requireNonNull(clientResponseFilters, "clientResponseFilters must be defined");
@@ -210,6 +213,7 @@ public class ClientFactory
         final ResteasyWebTarget client = builder.build()
                 .target(domain)
                 .register(new RestApiResponseReaderInterceptor())
+                .register(new DirectivesAwareMultipartFormWriter())
                 .register(contextResolver);
 
         for (final ClientRequestFilter filter : clientRequestFilters)
@@ -219,8 +223,7 @@ public class ClientFactory
             client.register(filter);
 
         final T proxy = client.proxy(klass);
-
-        final RestApiExceptionHandler exceptionHandler = new RestApiExceptionHandler();
+        final RestApiExceptionHandler exceptionHandler = new RestApiExceptionHandler(exceptionMapper != null ? exceptionMapper : new DefaultRestApiExceptionMapper());
         final ExceptionDecoratorInvocationHandler<T> handler = new ExceptionDecoratorInvocationHandler<>(proxy, exceptionHandler);
 
         return (T)Proxy.newProxyInstance(klass.getClassLoader(), new Class[] {klass}, handler);

@@ -65,7 +65,7 @@ public class ClientFactoryTest
             HttpClientConfiguration configuration = new HttpClientConfiguration();
             configuration.setProxyHost(mockProxyServer.getHostName());
             configuration.setProxyPort(mockProxyServer.getPort());
-            final Foo foo = factory.build(requestFilters, Collections.<ClientResponseFilter>emptyList(), "http://localhost:9595/", Foo.class, configuration, null);
+            final Foo foo = factory.build(requestFilters, Collections.<ClientResponseFilter>emptyList(), "http://localhost:9595/", Foo.class, configuration, null, null);
             foo.getFoo("");
         }
         finally
@@ -109,13 +109,13 @@ public class ClientFactoryTest
     {
         ClientFactory f = spy(factory);
         when(f.getDeserializerMap()).thenReturn(null);
-        f.build(requestFilters, responseFilters, "foo", Foo.class, new HttpClientConfiguration(), null);
+        f.build(requestFilters, responseFilters, "foo", Foo.class, new HttpClientConfiguration(), null, null);
     }
 
     @Test(expected = NullPointerException.class)
     public void testBuildNullHttpConfiguration() throws Exception
     {
-        factory.build(requestFilters, responseFilters, "foo", Foo.class, null, null);
+        factory.build(requestFilters, responseFilters, "foo", Foo.class, null, null, null);
     }
 
     @Test
@@ -149,6 +149,7 @@ public class ClientFactoryTest
                 webServer.url("/").toString(),
                 Foo.class,
                 httpClientConfiguration,
+                null,
                 null);
             Future<EmptyData> future = executorService.submit(new Callable<EmptyData>()
             {

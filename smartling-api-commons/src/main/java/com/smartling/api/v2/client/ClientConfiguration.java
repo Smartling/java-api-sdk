@@ -1,5 +1,7 @@
 package com.smartling.api.v2.client;
 
+import com.smartling.api.v2.client.exception.RestApiExceptionMapper;
+import com.smartling.api.v2.client.useragent.LibNameVersionHolder;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import javax.ws.rs.client.ClientRequestFilter;
@@ -46,4 +48,18 @@ public interface ClientConfiguration
      * @return the {@link ResteasyProviderFactory} for API requests
      */
     ResteasyProviderFactory getResteasyProviderFactory();
+
+    /**
+     * Returns the Exception mapper for custom API errors.
+     *
+     * @return the {@link RestApiExceptionMapper} for API requests
+     */
+    RestApiExceptionMapper getExceptionMapper();
+
+    /**
+     * Holds library name and version for user-agent header.
+     *
+     * @return the {@link LibNameVersionHolder} for API requests
+     */
+    LibNameVersionHolder getLibNameVersionHolder();
 }

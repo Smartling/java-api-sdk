@@ -7,7 +7,6 @@ import com.smartling.api.v2.response.ResponseCode;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.Response;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,33 +48,10 @@ public class RestApiRuntimeExceptionTest
     @Test
     public void testExceptionWithResponseNullEntity() throws Exception
     {
-        final RestApiRuntimeException exception = new RestApiRuntimeException(new RuntimeException(), response);
+        final RestApiRuntimeException exception = new RestApiRuntimeException(new RuntimeException(), response, null);
         assertEquals(FAILURE_STATUS, exception.getStatus());
         assertEquals(DEFAULT_CODE, exception.getResponseCode());
         assertEquals(Collections.emptyList(), exception.getErrors());
-        verify(response, times(1)).readEntity(ErrorResponse.class);
-    }
-
-    @Test
-    public void testExceptionWithResponseIllegalStateException() throws Exception
-    {
-        when(response.readEntity(ErrorResponse.class)).thenThrow(new IllegalStateException());
-        final RestApiRuntimeException exception = new RestApiRuntimeException(new RuntimeException(), response);
-        assertEquals(FAILURE_STATUS, exception.getStatus());
-        assertEquals(DEFAULT_CODE, exception.getResponseCode());
-        assertEquals(Collections.emptyList(), exception.getErrors());
-        verify(response, times(1)).readEntity(ErrorResponse.class);
-    }
-
-    @Test
-    public void testExceptionWithResponseProcessingException() throws Exception
-    {
-        when(response.readEntity(ErrorResponse.class)).thenThrow(new ProcessingException("foo"));
-        final RestApiRuntimeException exception = new RestApiRuntimeException(new RuntimeException(), response);
-        assertEquals(FAILURE_STATUS, exception.getStatus());
-        assertEquals(DEFAULT_CODE, exception.getResponseCode());
-        assertEquals(Collections.emptyList(), exception.getErrors());
-        verify(response, times(1)).readEntity(ErrorResponse.class);
     }
 
     @Test
@@ -83,13 +59,12 @@ public class RestApiRuntimeExceptionTest
     {
         final List<Error> errors = new LinkedList<>();
         errors.add(new Error("foo"));
+        final ErrorResponse errorResponse = new ErrorResponse(ResponseCode.VALIDATION_ERROR, errors);
 
-        when(response.readEntity(ErrorResponse.class)).thenReturn(new ErrorResponse(ResponseCode.VALIDATION_ERROR, errors));
-        final RestApiRuntimeException exception = new RestApiRuntimeException(new RuntimeException(), response);
+        final RestApiRuntimeException exception = new RestApiRuntimeException(new RuntimeException(), response, errorResponse);
         assertEquals(FAILURE_STATUS, exception.getStatus());
         assertEquals(ResponseCode.VALIDATION_ERROR, exception.getResponseCode());
         assertEquals(errors, exception.getErrors());
-        verify(response, times(1)).readEntity(ErrorResponse.class);
     }
 
     @Test
@@ -100,11 +75,11 @@ public class RestApiRuntimeExceptionTest
         errors.add(new Error("foo2"));
         errors.add(new Error("foo3"));
         errors.add(new Error("foo4"));
+        final ErrorResponse errorResponse = new ErrorResponse(ResponseCode.VALIDATION_ERROR, errors);
 
-        when(response.readEntity(ErrorResponse.class)).thenReturn(new ErrorResponse(ResponseCode.VALIDATION_ERROR, errors));
         when(response.getHeaderString(anyString())).thenReturn("some request id");
 
-        final RestApiRuntimeException exception = new RestApiRuntimeException(new RuntimeException(), response);
+        final RestApiRuntimeException exception = new RestApiRuntimeException(new RuntimeException(), response, errorResponse);
 
         String message = exception.getMessage();
         assertThat(message, containsString("foo1"));

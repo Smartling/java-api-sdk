@@ -5,6 +5,10 @@ import com.smartling.api.v2.authentication.AuthenticationApiFactory;
 import com.smartling.api.v2.client.auth.Authenticator;
 import com.smartling.api.v2.client.auth.AuthorizationRequestFilter;
 import com.smartling.api.v2.client.auth.BearerAuthSecretFilter;
+import com.smartling.api.v2.client.useragent.LibNameVerionPropertiesReadError;
+import com.smartling.api.v2.client.useragent.LibNameVersionHolder;
+import com.smartling.api.v2.client.useragent.UserAgentFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import javax.ws.rs.client.ClientRequestFilter;
@@ -18,8 +22,10 @@ import java.util.Objects;
  *
  * @param <T> the API interface type to proxy
  */
+@Slf4j
 public abstract class AbstractApiFactory<T> implements ApiFactory<T>
 {
+    private LibNameVersionHolder defaultLibNameVersionHolder;
     private ClientFactory clientFactory;
 
     /**
@@ -39,6 +45,15 @@ public abstract class AbstractApiFactory<T> implements ApiFactory<T>
     {
         Objects.requireNonNull(clientFactory, "clientFactory required");
         this.clientFactory = clientFactory;
+        try
+        {
+            this.defaultLibNameVersionHolder = new LibNameVersionHolder(this.getApiClass());
+        }
+        catch (LibNameVerionPropertiesReadError e)
+        {
+            log.warn("Could not initialize LibNameVersionHolder from properties: {}", e.getMessage());
+
+        }
     }
 
     /***
@@ -78,13 +93,23 @@ public abstract class AbstractApiFactory<T> implements ApiFactory<T>
 
         requestFilters.add(authFilter);
 
+        if (config.getLibNameVersionHolder() != null)
+        {
+            requestFilters.add(new UserAgentFilter(config.getLibNameVersionHolder()));
+        }
+        else if (defaultLibNameVersionHolder != null)
+        {
+            requestFilters.add(new UserAgentFilter(defaultLibNameVersionHolder));
+        }
+
         return clientFactory.build(
             requestFilters,
             config.getClientResponseFilters(),
             getProtocolAndHost(config.getBaseUrl()),
             getApiClass(),
             httpClientConfiguration,
-            providerFactory);
+            providerFactory,
+            config.getExceptionMapper());
     }
 
     private static String getProtocolAndHost(URL baseUrl)
