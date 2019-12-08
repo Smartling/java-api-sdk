@@ -13,9 +13,6 @@
     <name>Smartling Content Files API</name>
 
     <build>
-        <filters>
-            <filter>src/main/resources/sdk-project.properties</filter>
-        </filters>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
