@@ -5,6 +5,9 @@ import com.smartling.api.v2.response.ErrorResponse;
 
 import javax.ws.rs.core.Response;
 
+/**
+ * Thrown to indicate that the requested file not found
+ */
 public class FileNotFoundException extends ValidationErrorException
 {
     public FileNotFoundException(Throwable cause, Response response, ErrorResponse errorResponse)
