@@ -18,7 +18,7 @@ public class DownloadTranslationPTO
     @QueryParam("fileUri")
     @FormParam("fileUri")
     @NonNull
-    String fileUri;
+    private String fileUri;
 
     @QueryParam("retrievalType")
     @FormParam("retrievalType")

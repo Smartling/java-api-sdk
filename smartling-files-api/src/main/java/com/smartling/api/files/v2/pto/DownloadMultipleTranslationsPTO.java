@@ -15,7 +15,7 @@ import java.util.List;
 public class DownloadMultipleTranslationsPTO
 {
     @QueryParam("fileUris")
-    List<String> fileUris;
+    private List<String> fileUris;
 
     @QueryParam("localeIds")
     private List<String> localeIds;

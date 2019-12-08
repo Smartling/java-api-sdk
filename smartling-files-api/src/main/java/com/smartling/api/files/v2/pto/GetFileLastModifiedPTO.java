@@ -6,8 +6,8 @@ import java.util.Calendar;
 public class GetFileLastModifiedPTO
 {
     @QueryParam("fileUri")
-    String fileUri;
+    private String fileUri;
 
     @QueryParam("lastModifiedAfter")
-    Calendar lastModifiedAfter;
+    private Calendar lastModifiedAfter;
 }

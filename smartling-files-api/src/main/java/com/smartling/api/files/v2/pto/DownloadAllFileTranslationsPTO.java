@@ -14,7 +14,7 @@ import javax.ws.rs.QueryParam;
 public class DownloadAllFileTranslationsPTO
 {
     @QueryParam("fileUri")
-    String fileUri;
+    private String fileUri;
 
     @QueryParam("retrievalType")
     private RetrievalType retrievalType;

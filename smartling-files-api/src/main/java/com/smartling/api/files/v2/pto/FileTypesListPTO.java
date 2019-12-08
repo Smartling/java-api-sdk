@@ -12,5 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 public class FileTypesListPTO implements ResponseData
 {
-    List<String> items;
+    private List<String> items;
 }
