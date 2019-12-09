@@ -1,4 +1,4 @@
-    package com.smartling.api.files.v2;
+package com.smartling.api.files.v2;
 
 import com.smartling.api.files.v2.exceptions.FilesApiExceptionMapper;
 import com.smartling.api.v2.client.AbstractApiFactory;

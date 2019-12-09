@@ -15,5 +15,4 @@ public class TranslationImportErrorItemPTO
     private String importKey;
     private String stringHashcode;
     private List<String> messages;
-
 }

@@ -52,7 +52,6 @@ public abstract class AbstractApiFactory<T> implements ApiFactory<T>
         catch (LibNameVerionPropertiesReadError e)
         {
             log.warn("Could not initialize LibNameVersionHolder from properties: {}", e.getMessage());
-
         }
     }
 

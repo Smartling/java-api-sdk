@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.ws.rs.QueryParam;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)

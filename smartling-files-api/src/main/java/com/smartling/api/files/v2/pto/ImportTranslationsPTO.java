@@ -9,6 +9,7 @@ import org.jboss.resteasy.annotations.providers.multipart.PartFilename;
 import org.jboss.resteasy.annotations.providers.multipart.PartType;
 
 import javax.ws.rs.FormParam;
+import java.io.InputStream;
 
 @Data
 @NoArgsConstructor
@@ -20,7 +21,7 @@ public class ImportTranslationsPTO
     @PartType("application/octet-stream")
     @PartFilename("file")
     @NonNull
-    private byte[] file;
+    private InputStream file;
 
     @FormParam("fileUri")
     @PartType("text/plain")

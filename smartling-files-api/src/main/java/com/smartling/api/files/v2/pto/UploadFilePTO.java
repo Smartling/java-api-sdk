@@ -9,6 +9,7 @@ import org.jboss.resteasy.annotations.providers.multipart.PartFilename;
 import org.jboss.resteasy.annotations.providers.multipart.PartType;
 
 import javax.ws.rs.FormParam;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public class UploadFilePTO
     @FormParam("file")
     @PartType("application/octet-stream")
     @PartFilename("file")
-    private byte[] file;
+    private InputStream file;
 
     @FormParam("fileUri")
     @PartType("text/plain")
@@ -43,7 +44,7 @@ public class UploadFilePTO
     @PartType("text/plain")
     private String callbackUrl;
 
-    @Directives(prefix="smartling")
+    @Directives(prefix="smartling.")
     @PartType("text/plain")
     private Map<String, String> directives;
 }

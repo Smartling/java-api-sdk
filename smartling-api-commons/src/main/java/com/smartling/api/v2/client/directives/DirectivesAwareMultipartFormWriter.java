@@ -54,7 +54,7 @@ public class DirectivesAwareMultipartFormWriter extends MultipartFormAnnotationW
                             String directiveKey = (String) directive.getKey();
                             String directiveValue = directive.getValue().toString();
 
-                            String directiveName = prefix + "." + directiveKey;
+                            String directiveName = prefix + directiveKey;
 
                             PartType partType = field.getAnnotation(PartType.class);
 

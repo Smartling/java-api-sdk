@@ -1,5 +1,6 @@
 package com.smartling.api.files.v2;
 
+import com.smartling.api.files.v2.pto.DeleteFilePTO;
 import com.smartling.api.files.v2.pto.DownloadAllFileTranslationsPTO;
 import com.smartling.api.files.v2.pto.DownloadMultipleTranslationsPTO;
 import com.smartling.api.files.v2.pto.DownloadTranslationPTO;
@@ -12,6 +13,7 @@ import com.smartling.api.files.v2.pto.GetFileLastModifiedPTO;
 import com.smartling.api.files.v2.pto.GetFilesListPTO;
 import com.smartling.api.files.v2.pto.ImportTranslationsPTO;
 import com.smartling.api.files.v2.pto.ImportTranslationsResponse;
+import com.smartling.api.files.v2.pto.RenameFilePto;
 import com.smartling.api.files.v2.pto.UploadFilePTO;
 import com.smartling.api.files.v2.pto.UploadFileResponse;
 import com.smartling.api.v2.response.EmptyData;
@@ -20,7 +22,6 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -40,7 +41,7 @@ public interface FilesApi
     @POST
     @Path("/projects/{projectId}/file")
     @Consumes(MULTIPART_FORM_DATA)
-    UploadFileResponse addFile(@PathParam("projectId") String projectId, @MultipartForm UploadFilePTO uploadFilePTO);
+    UploadFileResponse uploadFile(@PathParam("projectId") String projectId, @MultipartForm UploadFilePTO uploadFilePTO);
 
     @GET
     @Path("/projects/{projectId}/file")
@@ -80,13 +81,11 @@ public interface FilesApi
 
     @POST
     @Path("/projects/{projectId}/file/rename")
-    @Consumes(MULTIPART_FORM_DATA)
-    EmptyData renameFile(@PathParam("projectId") String projectId, @FormParam("fileUri") String fileUri, @FormParam("newFileUri") String newFileUri);
+    EmptyData renameFile(@PathParam("projectId") String projectId, @BeanParam RenameFilePto renameFilePto);
 
     @POST
     @Path("/projects/{projectId}/file/delete")
-    @Consumes(MULTIPART_FORM_DATA)
-    EmptyData deleteFile(@PathParam("projectId") String projectId, @FormParam("fileUri") String fileUri);
+    EmptyData deleteFile(@PathParam("projectId") String projectId, @BeanParam DeleteFilePTO deleteFilePTO);
 
     @GET
     @Path("/projects/{projectId}/file/last-modified")
@@ -99,11 +98,11 @@ public interface FilesApi
     @POST
     @Path("/projects/{projectId}/locales/{localeId}/file/import")
     @Consumes(MULTIPART_FORM_DATA)
-    ImportTranslationsResponse importTranslation(@PathParam("projectId") String projectId, @MultipartForm ImportTranslationsPTO importTranslationsPTO);
+    ImportTranslationsResponse importTranslation(@PathParam("projectId") String projectId, @PathParam("localeId") String localeId, @MultipartForm ImportTranslationsPTO importTranslationsPTO);
 
     @POST
     @Path("/projects/{projectId}/locales/{localeId}/file/get-translations")
     @Consumes(MULTIPART_FORM_DATA)
     @Produces(WILDCARD)
-    byte[] exportTranslation(@PathParam("projectId") String projectId, @MultipartForm DownloadTranslationPTO downloadTranslationPTO);
+    byte[] exportTranslation(@PathParam("projectId") String projectId, @PathParam("localeId") String localeId, @MultipartForm DownloadTranslationPTO downloadTranslationPTO);
 }

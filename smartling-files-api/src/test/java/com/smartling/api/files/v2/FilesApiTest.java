@@ -17,14 +17,13 @@ import com.smartling.api.v2.response.ListResponse;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import javax.ws.rs.core.HttpHeaders;
+import java.io.ByteArrayInputStream;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -303,11 +302,11 @@ public class FilesApiTest
         directives.put("dir.name.1", "dirValue1");
         directives.put("dir.name.2", "dirValue2");
 
-        UploadFileResponse uploadFileResponse = filesApi.addFile(PROJECT_ID, UploadFilePTO.builder()
+        UploadFileResponse uploadFileResponse = filesApi.uploadFile(PROJECT_ID, UploadFilePTO.builder()
             .authorize(true)
             .fileType(JSON)
             .fileUri(FILE_URI)
-            .file("{\"field\":\"value\"}".getBytes())
+            .file(new ByteArrayInputStream("{\"field\":\"value\"}".getBytes()))
             .directives(directives)
             .build());
 

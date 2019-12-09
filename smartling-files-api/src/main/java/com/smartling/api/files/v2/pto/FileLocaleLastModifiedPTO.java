@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Calendar;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -13,5 +13,5 @@ import java.util.Calendar;
 public class FileLocaleLastModifiedPTO implements ResponseData
 {
     private String localeId;
-    private Calendar lastModified;
+    private Date lastModified;
 }
