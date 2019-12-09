@@ -5,6 +5,7 @@ import com.smartling.api.v2.authentication.AuthenticationApiFactory;
 import com.smartling.api.v2.client.auth.Authenticator;
 import com.smartling.api.v2.client.auth.AuthorizationRequestFilter;
 import com.smartling.api.v2.client.auth.BearerAuthSecretFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import javax.ws.rs.client.ClientRequestFilter;
@@ -18,6 +19,7 @@ import java.util.Objects;
  *
  * @param <T> the API interface type to proxy
  */
+@Slf4j
 public abstract class AbstractApiFactory<T> implements ApiFactory<T>
 {
     private ClientFactory clientFactory;
@@ -54,7 +56,7 @@ public abstract class AbstractApiFactory<T> implements ApiFactory<T>
         Objects.requireNonNull(userIdentifier, "userIdentifier must be defined");
         Objects.requireNonNull(userSecret, "userSecret must be defined");
 
-        final AuthenticationApi authenticationApi = new AuthenticationApiFactory().buildApi();
+        final AuthenticationApi authenticationApi = new AuthenticationApiFactory(clientFactory).buildApi();
         final Authenticator authenticator = new Authenticator(userIdentifier, userSecret, authenticationApi);
         final BearerAuthSecretFilter bearerAuthSecretFilter = new BearerAuthSecretFilter(authenticator);
         return buildApi(bearerAuthSecretFilter);
