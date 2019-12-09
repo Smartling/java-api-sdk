@@ -3,12 +3,12 @@
 
     <artifactId>smartling-api-commons</artifactId>
     <packaging>jar</packaging>
-    <version>0.10.0</version>
+    <version>0.10.1-SNAPSHOT</version>
     <name>Smartling API Commons</name>
 
     <parent>
         <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
-        <version>0.10.0</version>
+        <version>0.10.1-SNAPSHOT</version>
     </parent>
 </project>
