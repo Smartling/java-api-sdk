@@ -22,24 +22,6 @@ import java.util.Objects;
 @Slf4j
 public abstract class AbstractApiFactory<T> implements ApiFactory<T>
 {
-    static ClientFactory defaultClientFactory()
-    {
-        try
-        {
-            Class<?> cls = Class.forName("net.smartling.api.internal.client.InternalClientFactory");
-            return (ClientFactory) cls.newInstance();
-        }
-        catch (ClassNotFoundException e)
-        {
-            log.debug("Using {}", ClientFactory.class);
-        }
-        catch (IllegalAccessException | InstantiationException e)
-        {
-            log.error("Unable to load instantiate internal client factory", e);
-        }
-
-        return new ClientFactory();
-    }
     private ClientFactory clientFactory;
 
     /**
@@ -47,7 +29,7 @@ public abstract class AbstractApiFactory<T> implements ApiFactory<T>
      */
     protected AbstractApiFactory()
     {
-        this(defaultClientFactory());
+        this(new ClientFactory());
     }
 
     /**
@@ -74,7 +56,7 @@ public abstract class AbstractApiFactory<T> implements ApiFactory<T>
         Objects.requireNonNull(userIdentifier, "userIdentifier must be defined");
         Objects.requireNonNull(userSecret, "userSecret must be defined");
 
-        final AuthenticationApi authenticationApi = new AuthenticationApiFactory().buildApi();
+        final AuthenticationApi authenticationApi = new AuthenticationApiFactory(clientFactory).buildApi();
         final Authenticator authenticator = new Authenticator(userIdentifier, userSecret, authenticationApi);
         final BearerAuthSecretFilter bearerAuthSecretFilter = new BearerAuthSecretFilter(authenticator);
         return buildApi(bearerAuthSecretFilter);
