@@ -5,6 +5,7 @@ import com.smartling.api.v2.authentication.AuthenticationApiFactory;
 import com.smartling.api.v2.client.auth.Authenticator;
 import com.smartling.api.v2.client.auth.AuthorizationRequestFilter;
 import com.smartling.api.v2.client.auth.BearerAuthSecretFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import javax.ws.rs.client.ClientRequestFilter;
@@ -18,8 +19,27 @@ import java.util.Objects;
  *
  * @param <T> the API interface type to proxy
  */
+@Slf4j
 public abstract class AbstractApiFactory<T> implements ApiFactory<T>
 {
+    static ClientFactory defaultClientFactory()
+    {
+        try
+        {
+            Class<?> cls = Class.forName("net.smartling.api.internal.client.InternalClientFactory");
+            return (ClientFactory) cls.newInstance();
+        }
+        catch (ClassNotFoundException e)
+        {
+            log.debug("Using {}", ClientFactory.class);
+        }
+        catch (IllegalAccessException | InstantiationException e)
+        {
+            log.error("Unable to load instantiate internal client factory", e);
+        }
+
+        return new ClientFactory();
+    }
     private ClientFactory clientFactory;
 
     /**
@@ -27,7 +47,7 @@ public abstract class AbstractApiFactory<T> implements ApiFactory<T>
      */
     protected AbstractApiFactory()
     {
-        this(new ClientFactory());
+        this(defaultClientFactory());
     }
 
     /**

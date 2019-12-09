@@ -11,7 +11,6 @@ import javax.ws.rs.client.ClientResponseFilter;
 
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 
@@ -20,7 +19,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
-@Ignore
 @SuppressWarnings("unchecked")
 public class AbstractApiFactoryTest
 {
@@ -93,9 +91,11 @@ public class AbstractApiFactoryTest
     {
         final BearerAuthStaticTokenFilter tokenFilter = new BearerAuthStaticTokenFilter(USER_IDENTIFIER);
         final String domain = "http://foo.com";
+        final ClientConfiguration config = DefaultClientConfiguration.builder()
+            .baseUrl(new URL(domain))
+            .build();
 
-        // FIXME: test somehow
-        //assertNotNull(fooFactory.buildApi(tokenFilter, domain));
+        assertNotNull(fooFactory.buildApi(tokenFilter, config));
         verify(clientFactory, times(1)).build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), any(HttpClientConfiguration.class), eq((ResteasyProviderFactory)null));
         verify(clientFactory, times(1)).build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), any(HttpClientConfiguration.class), eq((ResteasyProviderFactory)null));
     }
@@ -104,14 +104,16 @@ public class AbstractApiFactoryTest
     public void testBuildApiUserProviderFactory() throws Exception
     {
         final List<ClientRequestFilter> requestFilters = new LinkedList<>();
-        requestFilters.add(new BearerAuthStaticTokenFilter(USER_IDENTIFIER));
-
         final String domain = "http://foo.com";
 
+        final BearerAuthStaticTokenFilter tokenFilter = new BearerAuthStaticTokenFilter(USER_IDENTIFIER);
         ResteasyProviderFactory resteasyProviderFactory = new ResteasyProviderFactory();
-
-        // FIXME: test somehow
-        //assertNotNull(fooFactory.buildApi(requestFilters, domain, resteasyProviderFactory));
+        final ClientConfiguration config = DefaultClientConfiguration.builder()
+                                                                     .baseUrl(new URL(domain))
+                                                                     .resteasyProviderFactory(resteasyProviderFactory)
+                                                                     .build();
+        requestFilters.add(tokenFilter);
+        assertNotNull(fooFactory.buildApi(tokenFilter, config));
         verify(clientFactory, times(1)).build(eq(requestFilters), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), any(HttpClientConfiguration.class), eq(resteasyProviderFactory));
     }
 
