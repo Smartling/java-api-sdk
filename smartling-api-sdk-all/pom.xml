@@ -34,7 +34,7 @@
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-files-api</artifactId>
-            <version>0.9.1-SNAPSHOT</version>
+            <version>0.10.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

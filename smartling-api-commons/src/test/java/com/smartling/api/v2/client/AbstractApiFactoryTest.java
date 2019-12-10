@@ -3,27 +3,32 @@ package com.smartling.api.v2.client;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.smartling.api.v2.authentication.AuthenticationApi;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
-
-import java.net.URL;
-import java.util.*;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.client.ClientResponseFilter;
-
 import com.smartling.api.v2.client.exception.RestApiExceptionMapper;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Captor;
+import org.mockito.MockitoAnnotations;
 
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.ClientResponseFilter;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.isNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SuppressWarnings("unchecked")
 public class AbstractApiFactoryTest
@@ -35,9 +40,14 @@ public class AbstractApiFactoryTest
     private ClientFactory clientFactory;
     private FooFactory fooFactory;
 
+    @Captor
+    private ArgumentCaptor<List<ClientRequestFilter>> requestFiltersCaptor;
+
     @Before
     public void setUp()
     {
+        MockitoAnnotations.initMocks(this);
+
         clientFactory = mock(ClientFactory.class);
         when(clientFactory.getDeserializerMap()).thenReturn(new HashMap<Class<?>, JsonDeserializer<?>>());
 
@@ -51,12 +61,26 @@ public class AbstractApiFactoryTest
             anyString(), eq(AuthenticationApi.class),
             any(HttpClientConfiguration.class),
             (ResteasyProviderFactory) isNull(),
-            (RestApiExceptionMapper) isNull())
+            (RestApiExceptionMapper) any())
         ).thenReturn(mock(AuthenticationApi.class));
 
-        when(clientFactory.build(any(List.class), any(List.class), any(String.class), eq(Foo.class), any(HttpClientConfiguration.class), any(ResteasyProviderFactory.class), any(RestApiExceptionMapper.class))).thenReturn(foo);
-        when(clientFactory.build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), anyString(), eq(Foo.class), any(HttpClientConfiguration.class),
-            (ResteasyProviderFactory) isNull(), (RestApiExceptionMapper) isNull())).thenReturn(foo);
+        when(clientFactory.build(any(List.class),
+            any(List.class),
+            any(String.class),
+            eq(Foo.class),
+            any(HttpClientConfiguration.class),
+            any(ResteasyProviderFactory.class),
+            (RestApiExceptionMapper)any())
+        ).thenReturn(foo);
+
+        when(clientFactory.build(ArgumentMatchers.<ClientRequestFilter>anyList(),
+            ArgumentMatchers.<ClientResponseFilter>anyList(),
+            anyString(),
+            eq(Foo.class),
+            any(HttpClientConfiguration.class),
+            (ResteasyProviderFactory) isNull(),
+            (RestApiExceptionMapper)any())
+        ).thenReturn(foo);
     }
 
     @Test(expected = NullPointerException.class)
@@ -104,14 +128,13 @@ public class AbstractApiFactoryTest
             .build();
 
         assertNotNull(fooFactory.buildApi(tokenFilter, config));
-        verify(clientFactory, times(1)).build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), any(HttpClientConfiguration.class), eq((ResteasyProviderFactory)null), any(RestApiExceptionMapper.class));
-        verify(clientFactory, times(1)).build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), any(HttpClientConfiguration.class), eq((ResteasyProviderFactory)null), any(RestApiExceptionMapper.class));
+        verify(clientFactory, times(1)).build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), any(HttpClientConfiguration.class), eq((ResteasyProviderFactory)null), eq((RestApiExceptionMapper)null));
+        verify(clientFactory, times(1)).build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), any(HttpClientConfiguration.class), eq((ResteasyProviderFactory)null), eq((RestApiExceptionMapper)null));
     }
 
     @Test
     public void testBuildApiUserProviderFactory() throws Exception
     {
-        final List<ClientRequestFilter> requestFilters = new LinkedList<>();
         final String domain = "http://foo.com";
 
         final BearerAuthStaticTokenFilter tokenFilter = new BearerAuthStaticTokenFilter(USER_IDENTIFIER);
@@ -120,9 +143,9 @@ public class AbstractApiFactoryTest
                                                                      .baseUrl(new URL(domain))
                                                                      .resteasyProviderFactory(resteasyProviderFactory)
                                                                      .build();
-        requestFilters.add(tokenFilter);
         assertNotNull(fooFactory.buildApi(tokenFilter, config));
-        verify(clientFactory, times(1)).build(eq(requestFilters), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), any(HttpClientConfiguration.class), eq(resteasyProviderFactory), eq((RestApiExceptionMapper)null));
+        verify(clientFactory, times(1)).build(requestFiltersCaptor.capture(), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), any(HttpClientConfiguration.class), eq(resteasyProviderFactory), eq((RestApiExceptionMapper)null));
+        assertTrue(requestFiltersCaptor.getValue().contains(tokenFilter));
     }
 
     @Test
