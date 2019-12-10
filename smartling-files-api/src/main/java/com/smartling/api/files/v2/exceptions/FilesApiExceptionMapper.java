@@ -21,25 +21,25 @@ public class FilesApiExceptionMapper extends DefaultRestApiExceptionMapper
     @Override
     public RestApiRuntimeException toException(Throwable throwable, Response response, ErrorResponse errorResponse)
     {
-        if (errorResponse != null && errorResponse.getCode() != null)
+        if (errorResponse == null
+            || errorResponse.getCode() == null
+            || errorResponse.getCode() != VALIDATION_ERROR)
         {
-            final ResponseCode code = errorResponse.getCode();
-            if (code == VALIDATION_ERROR)
-            {
-                for (Error error : errorResponse.getErrors())
-                {
-                    if (Objects.equals(error.getKey(), KEY_FILE_NOT_FOUND))
-                    {
-                        return new FileNotFoundException(throwable, response, errorResponse);
-                    }
+            return super.toException(throwable, response, errorResponse);
+        }
 
-                    if (Objects.equals(error.getKey(), KEY_PARSE_ERROR)
-                        && error.getMessage() != null
-                        && error.getMessage().contains(MSG_NO_SOURCE_STRINGS_FOUND_ERROR))
-                    {
-                        return new NoSourceStringsFoundException(throwable, response, errorResponse);
-                    }
-                }
+        for (Error error : errorResponse.getErrors())
+        {
+            if (Objects.equals(error.getKey(), KEY_FILE_NOT_FOUND))
+            {
+                return new FileNotFoundException(throwable, response, errorResponse);
+            }
+
+            if (Objects.equals(error.getKey(), KEY_PARSE_ERROR)
+                && error.getMessage() != null
+                && error.getMessage().contains(MSG_NO_SOURCE_STRINGS_FOUND_ERROR))
+            {
+                return new NoSourceStringsFoundException(throwable, response, errorResponse);
             }
         }
 
