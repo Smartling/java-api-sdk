@@ -10,6 +10,7 @@ import com.smartling.api.issues.v2.IssuesApi;
 import com.smartling.api.issues.v2.IssuesApiFactory;
 import com.smartling.api.locales.v2.LocalesApi;
 import com.smartling.api.locales.v2.LocalesApiFactory;
+import com.smartling.api.v2.client.ClientFactory;
 
 final class SmartlingApiImpl implements SmartlingApi
 {
@@ -21,12 +22,17 @@ final class SmartlingApiImpl implements SmartlingApi
 
     SmartlingApiImpl(String userIdentifier, String userSecret)
     {
+        this(userIdentifier, userSecret, new ClientFactory());
+    }
+
+    SmartlingApiImpl(String userIdentifier, String userSecret, ClientFactory clientFactory)
+    {
         // FIXME: use a shared bearer filter
-        issuesApi = new IssuesApiFactory().buildApi(userIdentifier, userSecret);
-        localesApi = new LocalesApiFactory().buildApi(userIdentifier, userSecret);
-        translationJobsApi = new TranslationJobsApiFactory().buildApi(userIdentifier, userSecret);
-        jobBatchesApi = new JobBatchesApiFactory().buildApi(userIdentifier, userSecret);
-        filesApi = new FilesApiFactory().buildApi(userIdentifier, userSecret);
+        issuesApi = new IssuesApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
+        localesApi = new LocalesApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
+        translationJobsApi = new TranslationJobsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
+        jobBatchesApi = new JobBatchesApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
+        filesApi = new FilesApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
     }
 
     @Override

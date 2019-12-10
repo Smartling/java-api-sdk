@@ -2,10 +2,7 @@ package com.smartling.api.jobbatches.v2;
 
 import com.smartling.api.jobbatches.util.FileUploadClientFactory;
 import com.smartling.api.jobbatches.util.LibNameVersionHolder;
-import com.smartling.api.v2.client.AbstractApiFactory;
-import com.smartling.api.v2.client.ClientConfiguration;
-import com.smartling.api.v2.client.DefaultClientConfiguration;
-import com.smartling.api.v2.client.HttpClientConfiguration;
+import com.smartling.api.v2.client.*;
 import com.smartling.api.v2.client.auth.AuthorizationRequestFilter;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
@@ -18,6 +15,16 @@ import java.util.List;
 public class JobBatchesApiFactory extends AbstractApiFactory<JobBatchesApi>
 {
     private static final int FILE_UPLOAD_SOCKET_TIMEOUT = 30_000;
+
+    public  JobBatchesApiFactory()
+    {
+        super();
+    }
+
+    public JobBatchesApiFactory(ClientFactory clientFactory)
+    {
+        super(clientFactory);
+    }
 
     @Override
     protected Class<JobBatchesApi> getApiClass()

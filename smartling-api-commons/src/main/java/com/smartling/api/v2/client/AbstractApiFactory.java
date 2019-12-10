@@ -68,7 +68,7 @@ public abstract class AbstractApiFactory<T> implements ApiFactory<T>
         Objects.requireNonNull(userIdentifier, "userIdentifier must be defined");
         Objects.requireNonNull(userSecret, "userSecret must be defined");
 
-        final AuthenticationApi authenticationApi = new AuthenticationApiFactory().buildApi();
+        final AuthenticationApi authenticationApi = new AuthenticationApiFactory(clientFactory).buildApi();
         final Authenticator authenticator = new Authenticator(userIdentifier, userSecret, authenticationApi);
         final BearerAuthSecretFilter bearerAuthSecretFilter = new BearerAuthSecretFilter(authenticator);
         return buildApi(bearerAuthSecretFilter);

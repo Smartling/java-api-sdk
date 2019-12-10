@@ -1,7 +1,7 @@
 package com.smartling.api.v2.client;
 
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.smartling.api.v2.client.auth.Authenticator;
+import com.smartling.api.v2.authentication.AuthenticationApi;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
 
 import java.net.URL;
@@ -12,16 +12,19 @@ import javax.ws.rs.client.ClientResponseFilter;
 import com.smartling.api.v2.client.exception.RestApiExceptionMapper;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import javax.ws.rs.client.ClientRequestFilter;
+import javax.ws.rs.client.ClientResponseFilter;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
-@Ignore
 @SuppressWarnings("unchecked")
 public class AbstractApiFactoryTest
 {
@@ -29,25 +32,27 @@ public class AbstractApiFactoryTest
     private static final String USER_SECRET     = "userSecret";
     private static final String DEFAULT_DOMAIN  = "https://api.smartling.com";
 
-    private Authenticator authenticator;
     private ClientFactory clientFactory;
     private FooFactory fooFactory;
-
-    private Map<Class<?>, JsonDeserializer<?>> deserializerMap;
 
     @Before
     public void setUp()
     {
-        deserializerMap = new HashMap<>();
-
         clientFactory = mock(ClientFactory.class);
-        when(clientFactory.getDeserializerMap()).thenReturn(deserializerMap);
-
-        authenticator = mock(Authenticator.class);
+        when(clientFactory.getDeserializerMap()).thenReturn(new HashMap<Class<?>, JsonDeserializer<?>>());
 
         fooFactory = spy(new FooFactory(clientFactory));
 
         final Foo foo = mock(Foo.class);
+
+        when(clientFactory.build(
+            ArgumentMatchers.<ClientRequestFilter>anyList(),
+            ArgumentMatchers.<ClientResponseFilter>anyList(),
+            anyString(), eq(AuthenticationApi.class),
+            any(HttpClientConfiguration.class),
+            (ResteasyProviderFactory) isNull(),
+            (RestApiExceptionMapper) isNull())
+        ).thenReturn(mock(AuthenticationApi.class));
 
         when(clientFactory.build(any(List.class), any(List.class), any(String.class), eq(Foo.class), any(HttpClientConfiguration.class), any(ResteasyProviderFactory.class), any(RestApiExceptionMapper.class))).thenReturn(foo);
         when(clientFactory.build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), anyString(), eq(Foo.class), any(HttpClientConfiguration.class),
@@ -94,25 +99,29 @@ public class AbstractApiFactoryTest
     {
         final BearerAuthStaticTokenFilter tokenFilter = new BearerAuthStaticTokenFilter(USER_IDENTIFIER);
         final String domain = "http://foo.com";
+        final ClientConfiguration config = DefaultClientConfiguration.builder()
+            .baseUrl(new URL(domain))
+            .build();
 
-        // FIXME: test somehow
-        //assertNotNull(fooFactory.buildApi(tokenFilter, domain));
-        verify(clientFactory, times(1)).build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), any(HttpClientConfiguration.class), eq((ResteasyProviderFactory)null), eq((RestApiExceptionMapper)null));
-        verify(clientFactory, times(1)).build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), any(HttpClientConfiguration.class), eq((ResteasyProviderFactory)null), eq((RestApiExceptionMapper)null));
+        assertNotNull(fooFactory.buildApi(tokenFilter, config));
+        verify(clientFactory, times(1)).build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), any(HttpClientConfiguration.class), eq((ResteasyProviderFactory)null), any(RestApiExceptionMapper.class));
+        verify(clientFactory, times(1)).build(ArgumentMatchers.<ClientRequestFilter>anyList(), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), any(HttpClientConfiguration.class), eq((ResteasyProviderFactory)null), any(RestApiExceptionMapper.class));
     }
 
     @Test
     public void testBuildApiUserProviderFactory() throws Exception
     {
         final List<ClientRequestFilter> requestFilters = new LinkedList<>();
-        requestFilters.add(new BearerAuthStaticTokenFilter(USER_IDENTIFIER));
-
         final String domain = "http://foo.com";
 
+        final BearerAuthStaticTokenFilter tokenFilter = new BearerAuthStaticTokenFilter(USER_IDENTIFIER);
         ResteasyProviderFactory resteasyProviderFactory = new ResteasyProviderFactory();
-
-        // FIXME: test somehow
-        //assertNotNull(fooFactory.buildApi(requestFilters, domain, resteasyProviderFactory));
+        final ClientConfiguration config = DefaultClientConfiguration.builder()
+                                                                     .baseUrl(new URL(domain))
+                                                                     .resteasyProviderFactory(resteasyProviderFactory)
+                                                                     .build();
+        requestFilters.add(tokenFilter);
+        assertNotNull(fooFactory.buildApi(tokenFilter, config));
         verify(clientFactory, times(1)).build(eq(requestFilters), ArgumentMatchers.<ClientResponseFilter>anyList(), eq(domain), eq(Foo.class), any(HttpClientConfiguration.class), eq(resteasyProviderFactory), eq((RestApiExceptionMapper)null));
     }
 

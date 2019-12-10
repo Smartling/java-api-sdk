@@ -4,7 +4,7 @@
     <groupId>com.smartling.api</groupId>
     <artifactId>smartling-sdk-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.9.1-SNAPSHOT</version>
+    <version>0.10.1-SNAPSHOT</version>
     <name>Smartling API Parent</name>
     <description>Smartling API SDK</description>
     <url>https://api-reference.smartling.com</url>
