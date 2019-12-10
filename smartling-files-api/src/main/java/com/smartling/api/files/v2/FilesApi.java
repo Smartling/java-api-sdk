@@ -4,6 +4,7 @@ import com.smartling.api.files.v2.pto.DeleteFilePTO;
 import com.smartling.api.files.v2.pto.DownloadAllFileTranslationsPTO;
 import com.smartling.api.files.v2.pto.DownloadMultipleTranslationsPTO;
 import com.smartling.api.files.v2.pto.DownloadTranslationPTO;
+import com.smartling.api.files.v2.pto.ExportTranslationsPTO;
 import com.smartling.api.files.v2.pto.FileItemPTO;
 import com.smartling.api.files.v2.pto.FileLocaleLastModifiedPTO;
 import com.smartling.api.files.v2.pto.FileLocaleStatusResponse;
@@ -29,6 +30,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import java.io.InputStream;
+
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static javax.ws.rs.core.MediaType.WILDCARD;
@@ -46,7 +49,7 @@ public interface FilesApi
     @GET
     @Path("/projects/{projectId}/file")
     @Produces(WILDCARD)
-    byte[] downloadSourceFile(@PathParam("projectId") String projectId, @QueryParam("fileUri") String fileUri);
+    InputStream downloadSourceFile(@PathParam("projectId") String projectId, @QueryParam("fileUri") String fileUri);
 
     @GET
     @Path("/projects/{projectId}/file/status")
@@ -59,17 +62,17 @@ public interface FilesApi
     @GET
     @Path("/projects/{projectId}/locales/{localeId}/file")
     @Produces(WILDCARD)
-    byte[] downloadTranslatedFile(@PathParam("projectId") String projectId, @PathParam("localeId") String localeId, @BeanParam DownloadTranslationPTO downloadTranslationPTO);
+    InputStream downloadTranslatedFile(@PathParam("projectId") String projectId, @PathParam("localeId") String localeId, @BeanParam DownloadTranslationPTO downloadTranslationPTO);
 
     @GET
     @Path("/projects/{projectId}/locales/all/file/zip")
     @Produces(WILDCARD)
-    byte[] downloadAllFileTranslations(@PathParam("projectId") String projectId, @BeanParam DownloadAllFileTranslationsPTO downloadAllFileTranslationsPTO);
+    InputStream downloadAllFileTranslations(@PathParam("projectId") String projectId, @BeanParam DownloadAllFileTranslationsPTO downloadAllFileTranslationsPTO);
 
     @GET
     @Path("/projects/{projectId}/files/zip")
     @Produces(WILDCARD)
-    byte[] downloadMultipleFileTranslations(@PathParam("projectId") String projectId, @BeanParam DownloadMultipleTranslationsPTO downloadMultipleTranslationsPTO);
+    InputStream downloadMultipleFileTranslations(@PathParam("projectId") String projectId, @BeanParam DownloadMultipleTranslationsPTO downloadMultipleTranslationsPTO);
 
     @GET
     @Path("/projects/{projectId}/files/list")
@@ -81,11 +84,11 @@ public interface FilesApi
 
     @POST
     @Path("/projects/{projectId}/file/rename")
-    EmptyData renameFile(@PathParam("projectId") String projectId, @BeanParam RenameFilePto renameFilePto);
+    EmptyData renameFile(@PathParam("projectId") String projectId, RenameFilePto renameFilePto);
 
     @POST
     @Path("/projects/{projectId}/file/delete")
-    EmptyData deleteFile(@PathParam("projectId") String projectId, @BeanParam DeleteFilePTO deleteFilePTO);
+    EmptyData deleteFile(@PathParam("projectId") String projectId, DeleteFilePTO deleteFilePTO);
 
     @GET
     @Path("/projects/{projectId}/file/last-modified")
@@ -98,11 +101,11 @@ public interface FilesApi
     @POST
     @Path("/projects/{projectId}/locales/{localeId}/file/import")
     @Consumes(MULTIPART_FORM_DATA)
-    ImportTranslationsResponse importTranslation(@PathParam("projectId") String projectId, @PathParam("localeId") String localeId, @MultipartForm ImportTranslationsPTO importTranslationsPTO);
+    ImportTranslationsResponse importTranslations(@PathParam("projectId") String projectId, @PathParam("localeId") String localeId, @MultipartForm ImportTranslationsPTO importTranslationsPTO);
 
     @POST
     @Path("/projects/{projectId}/locales/{localeId}/file/get-translations")
     @Consumes(MULTIPART_FORM_DATA)
     @Produces(WILDCARD)
-    byte[] exportTranslation(@PathParam("projectId") String projectId, @PathParam("localeId") String localeId, @MultipartForm DownloadTranslationPTO downloadTranslationPTO);
+    InputStream exportTranslations(@PathParam("projectId") String projectId, @PathParam("localeId") String localeId, @MultipartForm ExportTranslationsPTO exportTranslationsPTO);
 }

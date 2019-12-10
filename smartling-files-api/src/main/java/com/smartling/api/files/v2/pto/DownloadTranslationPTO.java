@@ -16,15 +16,12 @@ import javax.ws.rs.QueryParam;
 public class DownloadTranslationPTO
 {
     @QueryParam("fileUri")
-    @FormParam("fileUri")
     @NonNull
     private String fileUri;
 
     @QueryParam("retrievalType")
-    @FormParam("retrievalType")
     private RetrievalType retrievalType;
 
     @QueryParam("includeOriginalStrings")
-    @FormParam("includeOriginalStrings")
     private Boolean includeOriginalStrings;
 }
