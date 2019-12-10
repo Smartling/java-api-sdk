@@ -1,5 +1,6 @@
 package com.smartling.api.sdk;
 
+import com.smartling.api.files.v2.FilesApi;
 import com.smartling.api.issues.v2.IssuesApi;
 import com.smartling.api.jobbatches.v2.JobBatchesApi;
 import com.smartling.api.locales.v2.LocalesApi;
@@ -41,4 +42,12 @@ public interface SmartlingApi
      * @return {@link JobBatchesApi}
      */
     JobBatchesApi jobBatchesApi();
+
+    /**
+     * Returns an API for working with Smartling
+     * <a href="https://api-reference.smartling.com/#tag/Files">content files</a>.
+     *
+     * @return {@link JobBatchesApi}
+     */
+    FilesApi filesApi();
 }

@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.List;
-import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
@@ -25,31 +24,10 @@ public class RestApiRuntimeException extends WebApplicationException
         this.errorResponse = null;
     }
 
-    public RestApiRuntimeException(final Throwable cause, final Response response)
+    public RestApiRuntimeException(final Throwable cause, final Response response, final ErrorResponse errorResponse)
     {
         super(cause, response);
-        errorResponse = getErrorResponse(response);
-    }
-
-    private ErrorResponse getErrorResponse(final Response response)
-    {
-        if (response == null)
-            return null;
-
-        try
-        {
-            return response.readEntity(ErrorResponse.class);
-        }
-        catch (IllegalStateException ex)
-        {
-            // No body; no errors will be available
-        }
-        catch (ProcessingException ex)
-        {
-            log.warn("Failed to process JSON: {}", ex.getMessage());
-        }
-
-        return null;
+        this.errorResponse = errorResponse;
     }
 
     public int getStatus()
@@ -90,7 +68,7 @@ public class RestApiRuntimeException extends WebApplicationException
         if (requestId != null)
             errorMessage.append(", requestId=").append(requestId);
 
-        if (errorResponse != null)
+        if (errorResponse != null && errorResponse.getErrors() != null)
         {
             errorMessage.append(", top errors:");
             for (int i = 0; i < errorResponse.getErrors().size() && i < ERRORS_LOG_LIMIT; i++)

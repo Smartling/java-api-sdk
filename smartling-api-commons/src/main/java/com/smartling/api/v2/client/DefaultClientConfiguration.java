@@ -1,5 +1,7 @@
 package com.smartling.api.v2.client;
 
+import com.smartling.api.v2.client.exception.RestApiExceptionMapper;
+import com.smartling.api.v2.client.useragent.LibNameVersionHolder;
 import lombok.*;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
@@ -52,4 +54,8 @@ public class DefaultClientConfiguration implements ClientConfiguration
     private HttpClientConfiguration httpClientConfiguration = new HttpClientConfiguration();
 
     private ResteasyProviderFactory resteasyProviderFactory = null;
+
+    private RestApiExceptionMapper exceptionMapper = null;
+
+    private LibNameVersionHolder libNameVersionHolder = null;
 }
