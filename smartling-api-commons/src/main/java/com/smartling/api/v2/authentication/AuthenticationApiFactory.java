@@ -1,10 +1,10 @@
 package com.smartling.api.v2.authentication;
 
 import com.smartling.api.v2.client.AbstractApiFactory;
+import com.smartling.api.v2.client.ClientConfiguration;
 import com.smartling.api.v2.client.ClientFactory;
-import com.smartling.api.v2.client.DefaultClientConfiguration;
 
-import java.net.URL;
+import java.util.Objects;
 
 /**
  * Provides an authentication API factory.
@@ -36,17 +36,15 @@ public final class AuthenticationApiFactory
     }
 
     /**
-     * Returns an authentication API proxy for the given base API url.
+     * Returns an authentication API proxy with the given client configuration.
      *
-     * @param baseUrl base API URL
+     * @param clientConfiguration a custom client configiration
      * @return a configured {@link AuthenticationApi} JAX-RS proxy
      */
-    public AuthenticationApi buildApi(URL baseUrl)
+    public AuthenticationApi buildApi(ClientConfiguration clientConfiguration)
     {
-        final DefaultClientConfiguration config = DefaultClientConfiguration.builder()
-            .baseUrl(baseUrl)
-            .build();
-        return authApiFactory.buildApi(new NoOpAuthorizationFilter(), config);
+        Objects.requireNonNull(clientConfiguration, "clientConfiguration must be defined");
+        return authApiFactory.buildApi(new NoOpAuthorizationFilter(), clientConfiguration);
     }
 
     private static class AuthApiFactory extends AbstractApiFactory<AuthenticationApi>
