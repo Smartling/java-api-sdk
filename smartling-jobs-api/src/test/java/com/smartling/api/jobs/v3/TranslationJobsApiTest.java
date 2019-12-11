@@ -122,7 +122,6 @@ public class TranslationJobsApiTest
         assertEquals("2015-11-21T0B1:51:17Z", response.getFirstCompletedDate());
         assertEquals("2015-11-21T0B1:51:17Z", response.getLastCompletedDate());
         assertEquals("IN_PROGRESS", response.getJobStatus());
-        assertEquals(Long.valueOf(4), response.getPriority());
         assertEquals(1, response.getSourceFiles().size());
         assertEquals("/file/app.properties", response.getSourceFiles().get(0).getUri());
         assertEquals("/file/app.properties", response.getSourceFiles().get(0).getName());
@@ -555,8 +554,8 @@ public class TranslationJobsApiTest
         assertTrue(request.getPath().startsWith(
             ("/jobs-api/v3" + TranslationJobsApi.API_JOB_FILE_PROGRESS_ENDPOINT).replace("{projectId}", PROJECT_ID)
                 .replace("{translationJobUid}", TRANSLATION_JOB_UID)));
-        request.getPath().contains("fileUri=fileUri");
-        request.getPath().contains("targetLocaleId=$TARGET_LOCALE_ID");
+        assertTrue(request.getPath().contains("fileUri=fileUri"));
+        assertTrue(request.getPath().contains("targetLocaleId=" + TARGET_LOCALE_ID));
     }
 
     @Test
@@ -687,6 +686,6 @@ public class TranslationJobsApiTest
         assertEquals(GET, request.getMethod());
         assertTrue(request.getPath().startsWith(("/jobs-api/v3" + TranslationJobsApi.API_JOB_PROGRESS_ENDPOINT).replace("{projectId}", PROJECT_ID)
             .replace("{translationJobUid}", TRANSLATION_JOB_UID)));
-        request.getPath().contains("targetLocaleId=$TARGET_LOCALE_ID");
+        assertTrue(request.getPath().contains("targetLocaleId=" + TARGET_LOCALE_ID));
     }
 }
