@@ -1,6 +1,7 @@
 package com.smartling.api.files.v2.pto;
 
-import com.smartling.api.v2.client.directives.Directives;
+import com.smartling.resteasy.ext.DynamicFormParam;
+import com.smartling.resteasy.ext.ListFormParam;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,7 +37,7 @@ public class UploadFilePTO
     @PartType("text/plain")
     private Boolean authorize;
 
-    @FormParam("localeIdsToAuthorize[]")
+    @ListFormParam("localeIdsToAuthorize[]")
     @PartType("text/plain")
     private List<String> localeIdsToAuthorize;
 
@@ -44,7 +45,7 @@ public class UploadFilePTO
     @PartType("text/plain")
     private String callbackUrl;
 
-    @Directives(prefix="smartling.")
+    @DynamicFormParam()
     @PartType("text/plain")
     private Map<String, String> directives;
 }
