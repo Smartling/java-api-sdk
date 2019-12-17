@@ -39,12 +39,12 @@ public class ExtendedMultipartFormWriter extends MultipartFormAnnotationWriter
             {
                 AccessController.doPrivileged(new FieldEnablerPrivilegedAction(field));
 
-                PartType partType = field.getAnnotation(PartType.class);
-
                 Object value = safeExtractValue(obj, field);
 
                 if (value instanceof Map)
                 {
+                    PartType partType = field.getAnnotation(PartType.class);
+
                     Map<Object, Object> directives = (Map<Object, Object>) value;
 
                     for (Map.Entry<Object, Object> directive : directives.entrySet())
@@ -66,13 +66,13 @@ public class ExtendedMultipartFormWriter extends MultipartFormAnnotationWriter
             if (field.isAnnotationPresent(ListFormParam.class) && field.isAnnotationPresent(PartType.class))
             {
                 AccessController.doPrivileged(new FieldEnablerPrivilegedAction(field));
-
-                ListFormParam param = field.getAnnotation(ListFormParam.class);
-                PartType partType = field.getAnnotation(PartType.class);
                 Object value = safeExtractValue(obj, field);
 
                 if (value instanceof List)
                 {
+                    ListFormParam param = field.getAnnotation(ListFormParam.class);
+                    PartType partType = field.getAnnotation(PartType.class);
+
                     List<Object> array = (List<Object>) value;
 
                     for (Object item : array)
