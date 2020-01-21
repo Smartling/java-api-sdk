@@ -19,10 +19,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class ProjectsApiFactoryTest
+public class ProjectsApiTest
 {
     private static final String SUCCESS_RESPONSE_ENVELOPE = "{ \"response\": { \"code\": \"SUCCESS\", \"data\": %s } })";
 
+    // language=JSON
     private static final String GET_PROJECTS_DETAILS_DATA_JSON =
         "{\n" +
             "      \"accountUid\": \"at724e365\",\n" +
