@@ -5,6 +5,7 @@ import com.smartling.api.issues.v2.IssuesApi;
 import com.smartling.api.jobbatches.v2.JobBatchesApi;
 import com.smartling.api.locales.v2.LocalesApi;
 import com.smartling.api.jobs.v3.TranslationJobsApi;
+import com.smartling.api.projects.v2.ProjectsApi;
 
 /**
  * Provides APIs for working with the Smartling Platform.
@@ -47,7 +48,15 @@ public interface SmartlingApi
      * Returns an API for working with Smartling
      * <a href="https://api-reference.smartling.com/#tag/Files">content files</a>.
      *
-     * @return {@link JobBatchesApi}
+     * @return {@link FilesApi}
      */
     FilesApi filesApi();
+
+    /**
+     * Returns an API for working with Smartling
+     * <a href="https://api-reference.smartling.com/#tag/Account-and-Projects">accounts and projects</a>.
+     *
+     * @return {@link ProjectsApi}
+     */
+    ProjectsApi projectsApi();
 }
