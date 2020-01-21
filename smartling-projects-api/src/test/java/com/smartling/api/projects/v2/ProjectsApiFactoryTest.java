@@ -27,9 +27,11 @@ public class ProjectsApiFactoryTest
         "{\n" +
             "      \"accountUid\": \"at724e365\",\n" +
             "      \"archived\": true,\n" +
+            "      \"packageUid\": \"ed7544765\",\n" +
             "      \"projectId\": \"fd7244365\",\n" +
             "      \"projectName\": \"Android XML Content\",\n" +
             "      \"projectTypeCode\": \"APPLICATION_RESOURCES\",\n" +
+            "      \"projectTypeDisplayValue\": \"Application resources\",\n" +
             "      \"sourceLocaleDescription\": \"English\",\n" +
             "      \"sourceLocaleId\": \"en-US\",\n" +
             "      \"targetLocales\": [\n" +
@@ -96,8 +98,10 @@ public class ProjectsApiFactoryTest
         assertEquals(projectDetails.getAccountUid(), "at724e365");
         assertEquals(projectDetails.getProjectId(), "fd7244365");
         assertTrue(projectDetails.getArchived());
+        assertEquals(projectDetails.getPackageUid(), "ed7544765");
         assertEquals(projectDetails.getProjectName(), "Android XML Content");
         assertEquals(projectDetails.getProjectTypeCode(), "APPLICATION_RESOURCES");
+        assertEquals(projectDetails.getProjectTypeDisplayValue(), "Application resources");
         assertEquals(projectDetails.getSourceLocaleDescription(), "English");
         assertEquals(projectDetails.getSourceLocaleId(), "en-US");
         assertEquals(projectDetails.getTargetLocales().size(), 2);

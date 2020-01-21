@@ -12,9 +12,11 @@ public class ProjectDetailsPTO implements ResponseData
 {
     private String accountUid;
     private Boolean archived;
+    private String packageUid;
     private String projectId;
     private String projectName;
     private String projectTypeCode;
+    private String projectTypeDisplayValue;
     private String sourceLocaleDescription;
     private String sourceLocaleId;
     private List<LocaleDetailsPTO> targetLocales;
