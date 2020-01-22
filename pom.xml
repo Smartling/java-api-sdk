@@ -4,7 +4,7 @@
     <groupId>com.smartling.api</groupId>
     <artifactId>smartling-sdk-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.11.3-SNAPSHOT</version>
+    <version>0.12.0</version>
     <name>Smartling API Parent</name>
     <description>Smartling API SDK</description>
     <url>https://api-reference.smartling.com</url>
@@ -12,7 +12,7 @@
     <scm>
         <url>https://github.com/Smartling/java-api-sdk</url>
         <developerConnection>scm:git:ssh://git@github.com/Smartling/java-api-sdk</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v0.12.0</tag>
     </scm>
 
     <licenses>
