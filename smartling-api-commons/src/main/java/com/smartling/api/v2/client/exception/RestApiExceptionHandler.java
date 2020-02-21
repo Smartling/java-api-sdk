@@ -3,10 +3,10 @@ package com.smartling.api.v2.client.exception;
 import com.smartling.api.v2.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.InvocationTargetException;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.lang.reflect.InvocationTargetException;
 
 @Slf4j
 public class RestApiExceptionHandler
@@ -29,6 +29,10 @@ public class RestApiExceptionHandler
             final ErrorResponse errorResponse = getErrorResponse(response);
 
             restApiRuntimeException = exceptionMapper.toException(throwable, response, errorResponse);
+        }
+        else if (throwable instanceof ProcessingException && throwable.getCause() instanceof RestApiRuntimeException)
+        {
+            restApiRuntimeException = (RestApiRuntimeException)throwable.getCause();
         }
         else
         {
