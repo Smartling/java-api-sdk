@@ -54,6 +54,16 @@ public class DefaultRestApiExceptionMapperTest
     }
 
     @Test
+    public void testCreateAuthenticationErrorException() throws Exception
+    {
+        when(response.getStatus()).thenReturn(401);
+        when(errorResponse.getCode()).thenReturn(ResponseCode.VALIDATION_ERROR);
+
+        RestApiRuntimeException ex = exceptionMapper.toException(throwable, response, errorResponse);
+        assertTrue(ex instanceof ClientApiException);
+    }
+
+    @Test
     public void testCreateGenericServerException() throws Exception
     {
         when(response.getStatus()).thenReturn(584);

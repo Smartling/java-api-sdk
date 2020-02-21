@@ -40,7 +40,14 @@ public class DefaultRestApiExceptionMapper implements RestApiExceptionMapper
                     restApiRuntimeException = new NotFoundErrorException(throwable, response, errorResponse);
                     break;
                 case VALIDATION_ERROR:
-                    restApiRuntimeException = new ValidationErrorException(throwable, response, errorResponse);
+                    if (response.getStatus() == 401)
+                    {
+                        restApiRuntimeException = new AuthenticationErrorException(throwable, response, errorResponse);
+                    }
+                    else
+                    {
+                        restApiRuntimeException = new ValidationErrorException(throwable, response, errorResponse);
+                    }
                     break;
                 case MAX_OPERATIONS_LIMIT_EXCEEDED:
                     restApiRuntimeException = new TooManyRequestsException(throwable, response, errorResponse);

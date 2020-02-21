@@ -11,7 +11,7 @@ import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.auth.Authenticator;
 import com.smartling.api.v2.client.auth.BearerAuthSecretFilter;
 import com.smartling.api.v2.client.exception.RestApiRuntimeException;
-import com.smartling.api.v2.client.exception.client.ValidationErrorException;
+import com.smartling.api.v2.client.exception.client.AuthenticationErrorException;
 import com.smartling.api.v2.client.exception.server.MaintanenceModeErrorException;
 import com.smartling.api.v2.client.exception.server.ServerApiException;
 import org.junit.Before;
@@ -134,7 +134,7 @@ public class AuthenticationIntegrationTest
             )
         );
 
-        thrown.expect(ValidationErrorException.class);
+        thrown.expect(AuthenticationErrorException.class);
 
         dummyApi("invalidUser", "invalidSecret").dummy();
 
