@@ -14,6 +14,7 @@ import com.smartling.api.v2.client.exception.RestApiRuntimeException;
 import com.smartling.api.v2.client.exception.client.AuthenticationErrorException;
 import com.smartling.api.v2.client.exception.server.MaintanenceModeErrorException;
 import com.smartling.api.v2.client.exception.server.ServerApiException;
+import com.smartling.api.v2.response.ResponseCode;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,12 +27,13 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
-import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
-import static com.github.tomakehurst.wiremock.client.WireMock.unauthorized;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.smartling.api.v2.auth.DummyApi.DUMMY_API;
+import static com.smartling.api.v2.wiremock.SmartlingWireMock.error;
+import static com.smartling.api.v2.wiremock.SmartlingWireMock.postJson;
+import static com.smartling.api.v2.wiremock.SmartlingWireMock.success;
+import static java.lang.Thread.sleep;
 
 public class AuthenticationIntegrationTest
 {
@@ -77,25 +79,19 @@ public class AuthenticationIntegrationTest
     @Test
     public void shouldAuthenticate() throws Exception
     {
-        smartlingApi.stubFor(post(urlEqualTo("/auth-api/v2/authenticate"))
-            .withHeader("Content-Type", equalTo("application/json"))
+        smartlingApi.stubFor(postJson(urlEqualTo("/auth-api/v2/authenticate"))
             .withRequestBody(equalToJson("{\n" +
                 "  \"userIdentifier\": \"user\",\n" +
                 "  \"userSecret\": \"secret\"\n" +
                 "}")
             )
             // language=JSON
-            .willReturn(okJson("{\n" +
-                "  \"response\": {\n" +
-                "    \"code\": \"SUCCESS\",\n" +
-                "    \"data\": {\n" +
-                "      \"accessToken\": \"accessTokenValue\",\n" +
-                "      \"refreshToken\": \"refreshTokenValue\",\n" +
-                "      \"expiresIn\": 480,\n" +
-                "      \"refreshExpiresIn\": 21600,\n" +
-                "      \"tokenType\": \"Bearer\"\n" +
-                "    }\n" +
-                "  }\n" +
+            .willReturn(success("{\n" +
+                "  \"accessToken\": \"accessTokenValue\",\n" +
+                "  \"refreshToken\": \"refreshTokenValue\",\n" +
+                "  \"expiresIn\": 480,\n" +
+                "  \"refreshExpiresIn\": 21600,\n" +
+                "  \"tokenType\": \"Bearer\"\n" +
                 "}")
             )
         );
@@ -107,30 +103,71 @@ public class AuthenticationIntegrationTest
     }
 
     @Test
+    public void shouldRefreshToken() throws Exception
+    {
+        smartlingApi.stubFor(postJson(urlEqualTo("/auth-api/v2/authenticate"))
+            .withRequestBody(equalToJson("{\n" +
+                "  \"userIdentifier\": \"user\",\n" +
+                "  \"userSecret\": \"secret\"\n" +
+                "}")
+            )
+            // language=JSON
+            .willReturn(success("{\n" +
+                "  \"accessToken\": \"accessTokenValue\",\n" +
+                "  \"refreshToken\": \"refreshTokenValue\",\n" +
+                "  \"expiresIn\": 1,\n" +
+                "  \"refreshExpiresIn\": 21600,\n" +
+                "  \"tokenType\": \"Bearer\"\n" +
+                "}")
+            )
+        );
+
+        smartlingApi.stubFor(postJson(urlEqualTo("/auth-api/v2/authenticate/refresh"))
+            .withRequestBody(equalToJson("{\n" +
+                "  \"refreshToken\": \"refreshTokenValue\"\n" +
+                "}")
+            )
+            // language=JSON
+            .willReturn(success("{\n" +
+                "  \"accessToken\": \"refreshedAccessTokenValue\",\n" +
+                "  \"refreshToken\": \"refreshedRefreshTokenValue\",\n" +
+                "  \"expiresIn\": 1,\n" +
+                "  \"refreshExpiresIn\": 21600,\n" +
+                "  \"tokenType\": \"Bearer\"\n" +
+                "}")
+            )
+        );
+
+        DummyApi dummyApi = dummyApi();
+        dummyApi.dummy();
+
+        smartlingApi.verify(1, getRequestedFor(urlEqualTo(DUMMY_API))
+            .withHeader("Authorization", equalTo("Bearer accessTokenValue")));
+
+        sleep(1001);
+        dummyApi.dummy();
+
+        smartlingApi.verify(1, getRequestedFor(urlEqualTo(DUMMY_API))
+            .withHeader("Authorization", equalTo("Bearer refreshedAccessTokenValue")));
+    }
+
+    @Test
     public void shouldThrowValidationErrorExceptionOnInvalidCredentials() throws Exception
     {
-        smartlingApi.stubFor(post(urlEqualTo("/auth-api/v2/authenticate"))
-            .withHeader("Content-Type", equalTo("application/json"))
+        smartlingApi.stubFor(postJson(urlEqualTo("/auth-api/v2/authenticate"))
             .withRequestBody(equalToJson("{\n" +
                 "  \"userIdentifier\": \"invalidUser\",\n" +
                 "  \"userSecret\": \"invalidSecret\"\n" +
                 "}")
             )
-            .willReturn(unauthorized()
-                .withHeader("Content-Type", "application/json")
-                // language=JSON
-                .withBody("{\n" +
-                    "  \"response\": {\n" +
-                    "    \"code\": \"VALIDATION_ERROR\",\n" +
-                    "    \"errors\": [\n" +
-                    "      {\n" +
-                    "        \"key\": null,\n" +
-                    "        \"message\": \"HTTP 401 Unauthorized\",\n" +
-                    "        \"details\": null\n" +
-                    "      }\n" +
-                    "    ]\n" +
+            .willReturn(error(ResponseCode.VALIDATION_ERROR, "[\n" +
+                    "  {\n" +
+                    "    \"key\": null,\n" +
+                    "    \"message\": \"HTTP 401 Unauthorized\",\n" +
+                    "    \"details\": null\n" +
                     "  }\n" +
-                    "}\n")
+                    "]")
+                .withStatus(401)
             )
         );
 
@@ -144,16 +181,9 @@ public class AuthenticationIntegrationTest
     @Test
     public void shouldThrowServerApiException() throws Exception
     {
-        smartlingApi.stubFor(post(urlEqualTo("/auth-api/v2/authenticate"))
-            .willReturn(serverError()
-            .withHeader("Content-Type", "application/json")
-            // language=JSON
-            .withBody("{\n" +
-                "  \"response\": {\n" +
-                "    \"code\": \"GENERAL_ERROR\",\n" +
-                "    \"errors\": []\n" +
-                "  }\n" +
-                "}")
+        smartlingApi.stubFor(postJson(urlEqualTo("/auth-api/v2/authenticate"))
+            .willReturn(error(ResponseCode.GENERAL_ERROR, "[]")
+                .withStatus(500)
             )
         );
 
@@ -167,16 +197,9 @@ public class AuthenticationIntegrationTest
     @Test
     public void shouldThrowMaintanenceModeErrorException() throws Exception
     {
-        smartlingApi.stubFor(post(urlEqualTo("/auth-api/v2/authenticate"))
-            .willReturn(serverError()
-                .withHeader("Content-Type", "application/json")
-                // language=JSON
-                .withBody("{\n" +
-                    "  \"response\": {\n" +
-                    "    \"code\": \"MAINTENANCE_MODE_ERROR\",\n" +
-                    "    \"errors\": []\n" +
-                    "  }\n" +
-                    "}")
+        smartlingApi.stubFor(postJson(urlEqualTo("/auth-api/v2/authenticate"))
+            .willReturn(error(ResponseCode.MAINTENANCE_MODE_ERROR, "[]")
+                .withStatus(500)
             )
         );
 
@@ -187,11 +210,10 @@ public class AuthenticationIntegrationTest
         smartlingApi.verify(0, getRequestedFor(urlEqualTo(DUMMY_API)));
     }
 
-
     @Test
     public void shouldThrowGenericRuntimeException() throws Exception
     {
-        smartlingApi.stubFor(post(urlEqualTo("/auth-api/v2/authenticate"))
+        smartlingApi.stubFor(postJson(urlEqualTo("/auth-api/v2/authenticate"))
             .willReturn(serverError()));
 
         thrown.expect(RestApiRuntimeException.class);
