@@ -45,20 +45,20 @@ public class ExtendedMultipartFormWriter extends MultipartFormAnnotationWriter
                 {
                     PartType partType = field.getAnnotation(PartType.class);
 
-                    Map<Object, Object> directives = (Map<Object, Object>) value;
+                    Map<Object, Object> dynamicFields = (Map<Object, Object>) value;
 
-                    for (Map.Entry<Object, Object> directive : directives.entrySet())
+                    for (Map.Entry<Object, Object> dynamicField : dynamicFields.entrySet())
                     {
-                        if (directive.getKey() instanceof String &&
-                            (directive.getValue() instanceof String ||
-                             directive.getValue() instanceof Integer ||
-                             directive.getValue() instanceof Boolean)
+                        if (dynamicField.getKey() instanceof String &&
+                            (dynamicField.getValue() instanceof String ||
+                             dynamicField.getValue() instanceof Integer ||
+                             dynamicField.getValue() instanceof Boolean)
                         )
                         {
-                            String directiveKey = (String) directive.getKey();
-                            String directiveValue = directive.getValue().toString();
+                            String fieldKey = (String) dynamicField.getKey();
+                            String fieldValue = dynamicField.getValue().toString();
 
-                            output.addFormData(directiveKey, directiveValue, String.class, String.class, MediaType.valueOf(partType.value()), null);
+                            output.addFormData(fieldKey, fieldValue, String.class, String.class, MediaType.valueOf(partType.value()), null);
                         }
                     }
                 }
