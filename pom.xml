@@ -180,31 +180,31 @@
         </repository>
    </distributionManagement>
 
-<!--    <profiles>-->
-<!--        <profile>-->
-<!--            <id>release</id>-->
-<!--            <build>-->
-<!--                <plugins>-->
-<!--                    <plugin>-->
-<!--                        <groupId>com.smartling.cc4j</groupId>-->
-<!--                        <artifactId>conventional-commits-maven-plugin</artifactId>-->
-<!--                        <version>0.1.0</version>-->
-<!--                    </plugin>-->
-<!--                    <plugin>-->
-<!--                        <groupId>org.apache.maven.plugins</groupId>-->
-<!--                        <artifactId>maven-release-plugin</artifactId>-->
-<!--                        <version>2.5.3</version>-->
-<!--                        <configuration>-->
-<!--                            <autoVersionSubmodules>true</autoVersionSubmodules>-->
-<!--                            <dryRun>false</dryRun>-->
-<!--                            <pushChanges>true</pushChanges>-->
-<!--                            <tagNameFormat>v@{project.version}</tagNameFormat>-->
-<!--                            <allowTimestampedSnapshots>false</allowTimestampedSnapshots>-->
-<!--                            <scmCommentPrefix xml:space="preserve">ci: </scmCommentPrefix>-->
-<!--                        </configuration>-->
-<!--                    </plugin>-->
-<!--                </plugins>-->
-<!--            </build>-->
-<!--        </profile>-->
-<!--    </profiles>-->
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.smartling.cc4j</groupId>
+                        <artifactId>conventional-commits-maven-plugin</artifactId>
+                        <version>0.1.0</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>2.5.3</version>
+                        <configuration>
+                            <autoVersionSubmodules>true</autoVersionSubmodules>
+                            <dryRun>false</dryRun>
+                            <pushChanges>true</pushChanges>
+                            <tagNameFormat>v@{project.version}</tagNameFormat>
+                            <allowTimestampedSnapshots>false</allowTimestampedSnapshots>
+                            <scmCommentPrefix xml:space="preserve">ci: </scmCommentPrefix>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
