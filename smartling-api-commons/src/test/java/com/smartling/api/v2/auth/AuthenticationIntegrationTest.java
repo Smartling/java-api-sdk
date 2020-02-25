@@ -14,8 +14,8 @@ import com.smartling.api.v2.client.exception.RestApiRuntimeException;
 import com.smartling.api.v2.client.exception.server.MaintanenceModeErrorException;
 import com.smartling.api.v2.client.exception.server.ServerApiException;
 import com.smartling.api.v2.response.ResponseCode;
+import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -224,7 +224,7 @@ public class AuthenticationIntegrationTest
         smartlingApi.verify(0, getRequestedFor(urlEqualTo(DUMMY_API)));
     }
 
-    public class ExceptionMatcher implements Matcher<RestApiRuntimeException>
+    public class ExceptionMatcher extends BaseMatcher<RestApiRuntimeException>
     {
         private final int status;
         private final String message;
@@ -242,18 +242,6 @@ public class AuthenticationIntegrationTest
             RestApiRuntimeException ex = (RestApiRuntimeException)o;
 
             return ex.getStatus() == this.status && ex.getMessage().equals(this.message);
-        }
-
-        @Override
-        public void describeMismatch(Object o, Description description)
-        {
-
-        }
-
-        @Override
-        public void _dont_implement_Matcher___instead_extend_BaseMatcher_()
-        {
-
         }
 
         @Override
