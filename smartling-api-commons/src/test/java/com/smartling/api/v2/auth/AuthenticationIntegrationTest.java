@@ -11,10 +11,11 @@ import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.auth.Authenticator;
 import com.smartling.api.v2.client.auth.BearerAuthSecretFilter;
 import com.smartling.api.v2.client.exception.RestApiRuntimeException;
-import com.smartling.api.v2.client.exception.client.AuthenticationErrorException;
 import com.smartling.api.v2.client.exception.server.MaintanenceModeErrorException;
 import com.smartling.api.v2.client.exception.server.ServerApiException;
 import com.smartling.api.v2.response.ResponseCode;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -152,7 +153,7 @@ public class AuthenticationIntegrationTest
     }
 
     @Test
-    public void shouldThrowValidationErrorExceptionOnInvalidCredentials() throws Exception
+    public void shouldThrowAuthenticationErrorExceptionOnInvalidCredentials() throws Exception
     {
         smartlingApi.stubFor(postJson(urlEqualTo("/auth-api/v2/authenticate"))
             .withRequestBody(equalToJson("{\n" +
@@ -171,7 +172,7 @@ public class AuthenticationIntegrationTest
             )
         );
 
-        thrown.expect(AuthenticationErrorException.class);
+        thrown.expect(new ExceptionMatcher(401, "http_status=401, top errors: 'HTTP 401 Unauthorized'"));
 
         dummyApi("invalidUser", "invalidSecret").dummy();
 
@@ -195,7 +196,7 @@ public class AuthenticationIntegrationTest
     }
 
     @Test
-    public void shouldThrowMaintanenceModeErrorException() throws Exception
+    public void shouldThrowMaintenanceModeErrorException() throws Exception
     {
         smartlingApi.stubFor(postJson(urlEqualTo("/auth-api/v2/authenticate"))
             .willReturn(error(ResponseCode.MAINTENANCE_MODE_ERROR, "[]")
@@ -221,5 +222,44 @@ public class AuthenticationIntegrationTest
         dummyApi().dummy();
 
         smartlingApi.verify(0, getRequestedFor(urlEqualTo(DUMMY_API)));
+    }
+
+    public class ExceptionMatcher implements Matcher<RestApiRuntimeException>
+    {
+        private final int status;
+        private final String message;
+
+        public ExceptionMatcher(int status, String message)
+        {
+
+            this.status = status;
+            this.message = message;
+        }
+
+        @Override
+        public boolean matches(Object o)
+        {
+            RestApiRuntimeException ex = (RestApiRuntimeException)o;
+
+            return ex.getStatus() == this.status && ex.getMessage().equals(this.message);
+        }
+
+        @Override
+        public void describeMismatch(Object o, Description description)
+        {
+
+        }
+
+        @Override
+        public void _dont_implement_Matcher___instead_extend_BaseMatcher_()
+        {
+
+        }
+
+        @Override
+        public void describeTo(Description description)
+        {
+
+        }
     }
 }
