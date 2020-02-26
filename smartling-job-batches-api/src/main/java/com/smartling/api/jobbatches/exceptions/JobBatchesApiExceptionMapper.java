@@ -4,11 +4,10 @@ import com.smartling.api.v2.client.exception.DefaultRestApiExceptionMapper;
 import com.smartling.api.v2.client.exception.RestApiRuntimeException;
 import com.smartling.api.v2.response.Error;
 import com.smartling.api.v2.response.ErrorResponse;
+import com.smartling.api.v2.response.ResponseCode;
+import org.apache.http.HttpStatus;
 
 import javax.ws.rs.core.Response;
-
-import static com.smartling.api.v2.response.ResponseCode.GENERAL_ERROR;
-import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 
 public class JobBatchesApiExceptionMapper extends DefaultRestApiExceptionMapper
 {
@@ -20,8 +19,8 @@ public class JobBatchesApiExceptionMapper extends DefaultRestApiExceptionMapper
     {
         if (errorResponse == null
             || errorResponse.getCode() == null
-            || errorResponse.getCode() != GENERAL_ERROR
-            || response.getStatus() != SC_BAD_REQUEST)
+            || errorResponse.getCode() != ResponseCode.GENERAL_ERROR
+            || response.getStatus() != HttpStatus.SC_BAD_REQUEST)
         {
             return super.toException(throwable, response, errorResponse);
         }

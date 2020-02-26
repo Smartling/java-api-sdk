@@ -14,6 +14,7 @@ import com.smartling.api.v2.client.exception.RestApiRuntimeException;
 import com.smartling.api.v2.client.exception.server.MaintanenceModeErrorException;
 import com.smartling.api.v2.client.exception.server.ServerApiException;
 import com.smartling.api.v2.response.ResponseCode;
+import org.apache.http.HttpStatus;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Before;
@@ -168,11 +169,11 @@ public class AuthenticationIntegrationTest
                     "    \"details\": null\n" +
                     "  }\n" +
                     "]")
-                .withStatus(401)
+                .withStatus(HttpStatus.SC_UNAUTHORIZED)
             )
         );
 
-        thrown.expect(new ExceptionMatcher(401, "http_status=401, top errors: 'HTTP 401 Unauthorized'"));
+        thrown.expect(new ExceptionMatcher(HttpStatus.SC_UNAUTHORIZED, "http_status=401, top errors: 'HTTP 401 Unauthorized'"));
 
         dummyApi("invalidUser", "invalidSecret").dummy();
 
@@ -184,7 +185,7 @@ public class AuthenticationIntegrationTest
     {
         smartlingApi.stubFor(postJson(urlEqualTo("/auth-api/v2/authenticate"))
             .willReturn(error(ResponseCode.GENERAL_ERROR, "[]")
-                .withStatus(500)
+                .withStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR)
             )
         );
 
@@ -200,7 +201,7 @@ public class AuthenticationIntegrationTest
     {
         smartlingApi.stubFor(postJson(urlEqualTo("/auth-api/v2/authenticate"))
             .willReturn(error(ResponseCode.MAINTENANCE_MODE_ERROR, "[]")
-                .withStatus(500)
+                .withStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR)
             )
         );
 

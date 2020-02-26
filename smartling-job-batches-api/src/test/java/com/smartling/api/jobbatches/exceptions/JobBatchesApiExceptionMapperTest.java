@@ -5,13 +5,12 @@ import com.smartling.api.v2.client.exception.RestApiRuntimeException;
 import com.smartling.api.v2.response.Error;
 import com.smartling.api.v2.response.ErrorResponse;
 import com.smartling.api.v2.response.ResponseCode;
+import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
 
-import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -26,7 +25,7 @@ public class JobBatchesApiExceptionMapperTest
     public void init()
     {
         response = mock(Response.class);
-        when(response.getStatus()).thenReturn(SC_BAD_REQUEST);
+        when(response.getStatus()).thenReturn(HttpStatus.SC_BAD_REQUEST);
         when(response.getStatusInfo()).thenReturn(Response.Status.BAD_REQUEST);
         exceptionMapper = new JobBatchesApiExceptionMapper();
     }
@@ -78,7 +77,7 @@ public class JobBatchesApiExceptionMapperTest
     @Test
     public void shouldPassAllExceptBadRequestResponse()
     {
-        when(response.getStatus()).thenReturn(SC_NOT_FOUND);
+        when(response.getStatus()).thenReturn(HttpStatus.SC_NOT_FOUND);
         when(response.getStatusInfo()).thenReturn(Response.Status.NOT_FOUND);
         Exception throwable = new Exception();
         ErrorResponse errorResponse = new ErrorResponse(ResponseCode.GENERAL_ERROR, new Error("parse.error", "parse.error" + "Some error description;"));

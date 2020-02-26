@@ -13,10 +13,9 @@ import com.smartling.api.v2.client.exception.server.ServiceBusyErrorException;
 import com.smartling.api.v2.response.ErrorResponse;
 import com.smartling.api.v2.response.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 
 import javax.ws.rs.core.Response;
-
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 
 @Slf4j
 public class DefaultRestApiExceptionMapper implements RestApiExceptionMapper
@@ -42,11 +41,11 @@ public class DefaultRestApiExceptionMapper implements RestApiExceptionMapper
                     restApiRuntimeException = new NotFoundErrorException(throwable, response, errorResponse);
                     break;
                 case VALIDATION_ERROR:
-                    if (response.getStatus() == 401)
+                    if (response.getStatus() == HttpStatus.SC_UNAUTHORIZED)
                     {
                         restApiRuntimeException = new AuthenticationErrorException(throwable, response, errorResponse);
                     }
-                    else if (response.getStatus() == SC_NOT_FOUND)
+                    else if (response.getStatus() == HttpStatus.SC_NOT_FOUND)
                     {
                         restApiRuntimeException = new NotFoundErrorException(throwable, response, errorResponse);
                     }
