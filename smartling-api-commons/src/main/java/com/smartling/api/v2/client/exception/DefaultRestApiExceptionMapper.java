@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.ws.rs.core.Response;
 
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+
 @Slf4j
 public class DefaultRestApiExceptionMapper implements RestApiExceptionMapper
 {
@@ -43,6 +45,10 @@ public class DefaultRestApiExceptionMapper implements RestApiExceptionMapper
                     if (response.getStatus() == 401)
                     {
                         restApiRuntimeException = new AuthenticationErrorException(throwable, response, errorResponse);
+                    }
+                    else if (response.getStatus() == SC_NOT_FOUND)
+                    {
+                        restApiRuntimeException = new NotFoundErrorException(throwable, response, errorResponse);
                     }
                     else
                     {
