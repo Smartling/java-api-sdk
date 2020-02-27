@@ -1,19 +1,26 @@
 package com.smartling.api.v2.client.exception;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-
 import com.smartling.api.v2.response.ErrorResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.isNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 public class RestApiExceptionHandlerTest
@@ -134,5 +141,26 @@ public class RestApiExceptionHandlerTest
 
         final RestApiRuntimeException restApiRuntimeException = handler.createRestApiException(invocationTargetException);
         verify(exceptionMapper, times(1)).toException(eq(ex), eq(response), (ErrorResponse)isNull());
+    }
+
+    @Test
+    public void shouldUnwrapRestApiException()
+    {
+        RestApiRuntimeException original = new RestApiRuntimeException(new Exception());
+        ProcessingException processingException = new ProcessingException(original);
+        final InvocationTargetException invocationTargetException = new InvocationTargetException(processingException);
+
+        final RestApiRuntimeException restApiRuntimeException = handler.createRestApiException(invocationTargetException);
+        assertEquals(restApiRuntimeException, original);
+    }
+
+    @Test
+    public void shouldntUnwrapNullCause()
+    {
+        ProcessingException processingException = new ProcessingException("No Cause");
+        final InvocationTargetException invocationTargetException = new InvocationTargetException(processingException);
+
+        final RestApiRuntimeException restApiRuntimeException = handler.createRestApiException(invocationTargetException);
+        assertEquals(restApiRuntimeException.getCause(), processingException);
     }
 }
