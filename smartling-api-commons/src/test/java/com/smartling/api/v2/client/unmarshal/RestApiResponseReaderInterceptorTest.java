@@ -105,6 +105,16 @@ public class RestApiResponseReaderInterceptorTest
     }
 
     @Test
+    public void testAroundReadFromInputStreamResponse() throws Exception
+    {
+        doReturn(InputStream.class).when(context).getType();
+        interceptor.aroundReadFrom(context);
+
+        verify(context, times(1)).proceed();
+        verify(context, never()).setInputStream(any(InputStream.class));
+    }
+
+    @Test
     public void testAroundReadFromResponse() throws Exception
     {
         doReturn(Response.class).when(context).getType();
