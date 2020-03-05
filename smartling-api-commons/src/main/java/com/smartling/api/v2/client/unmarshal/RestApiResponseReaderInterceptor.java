@@ -11,6 +11,7 @@ import org.apache.http.message.BasicHeader;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import javax.annotation.Priority;
@@ -38,6 +39,9 @@ public class RestApiResponseReaderInterceptor implements ReaderInterceptor
             return context.proceed();
 
         if (RestApiResponse.class.isAssignableFrom(context.getType()))
+            return context.proceed();
+
+        if (InputStream.class.isAssignableFrom(context.getType()))
             return context.proceed();
 
         final ObjectMapper mapper = new ObjectMapper();
