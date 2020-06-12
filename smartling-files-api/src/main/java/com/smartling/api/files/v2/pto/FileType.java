@@ -36,7 +36,8 @@ public enum FileType
     PHP_RESOURCE("text/plain", false),              // PHP resources
     TMX("application/xml", false),                  // TMX translation memory file format
     XLIFF_CAT("application/xml", false),            // XLIFF for offline CAT integration
-    DITA("application/xml", false);                 // DITA file format
+    DITA("application/xml", false),                 // DITA file format
+    PDF("application/octet-stream", false);         // PDF file format
 
     private final String identifier;
     private final String mimeType;
