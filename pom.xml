@@ -27,7 +27,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <org.powermock.version>2.0.4</org.powermock.version>
-        <org.jboss.resteasy.version>3.0.24.Final</org.jboss.resteasy.version>
+        <org.jboss.resteasy.version>3.11.0.Final</org.jboss.resteasy.version>
     </properties>
 
     <dependencies>
