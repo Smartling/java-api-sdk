@@ -10,6 +10,8 @@ import com.smartling.api.issues.v2.IssuesApi;
 import com.smartling.api.issues.v2.IssuesApiFactory;
 import com.smartling.api.locales.v2.LocalesApi;
 import com.smartling.api.locales.v2.LocalesApiFactory;
+import com.smartling.api.projects.v2.ProjectsApi;
+import com.smartling.api.projects.v2.ProjectsApiFactory;
 import com.smartling.api.v2.client.ClientFactory;
 
 final class SmartlingApiImpl implements SmartlingApi
@@ -19,6 +21,7 @@ final class SmartlingApiImpl implements SmartlingApi
     private final TranslationJobsApi translationJobsApi;
     private final JobBatchesApi jobBatchesApi;
     private final FilesApi filesApi;
+    private final ProjectsApi projectsApi;
 
     SmartlingApiImpl(String userIdentifier, String userSecret)
     {
@@ -33,6 +36,7 @@ final class SmartlingApiImpl implements SmartlingApi
         translationJobsApi = new TranslationJobsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
         jobBatchesApi = new JobBatchesApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
         filesApi = new FilesApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
+        projectsApi = new ProjectsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
     }
 
     @Override
@@ -63,5 +67,11 @@ final class SmartlingApiImpl implements SmartlingApi
     public FilesApi filesApi()
     {
         return filesApi;
+    }
+
+    @Override
+    public ProjectsApi projectsApi()
+    {
+        return projectsApi;
     }
 }

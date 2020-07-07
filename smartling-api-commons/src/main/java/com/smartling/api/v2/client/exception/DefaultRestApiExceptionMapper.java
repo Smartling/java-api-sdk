@@ -13,6 +13,7 @@ import com.smartling.api.v2.client.exception.server.ServiceBusyErrorException;
 import com.smartling.api.v2.response.ErrorResponse;
 import com.smartling.api.v2.response.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 
 import javax.ws.rs.core.Response;
 
@@ -40,7 +41,7 @@ public class DefaultRestApiExceptionMapper implements RestApiExceptionMapper
                     restApiRuntimeException = new NotFoundErrorException(throwable, response, errorResponse);
                     break;
                 case VALIDATION_ERROR:
-                    restApiRuntimeException = new ValidationErrorException(throwable, response, errorResponse);
+                    restApiRuntimeException = toExceptionByStatus(throwable, response, errorResponse);
                     break;
                 case MAX_OPERATIONS_LIMIT_EXCEEDED:
                     restApiRuntimeException = new TooManyRequestsException(throwable, response, errorResponse);
@@ -70,6 +71,24 @@ public class DefaultRestApiExceptionMapper implements RestApiExceptionMapper
             restApiRuntimeException = createGenericException(throwable, response, errorResponse);
         }
 
+        return restApiRuntimeException;
+    }
+
+    private RestApiRuntimeException toExceptionByStatus(Throwable throwable, Response response, ErrorResponse errorResponse)
+    {
+        RestApiRuntimeException restApiRuntimeException;
+        switch (response.getStatus())
+        {
+            case HttpStatus.SC_UNAUTHORIZED:
+                restApiRuntimeException = new AuthenticationErrorException(throwable, response, errorResponse);
+                break;
+            case HttpStatus.SC_NOT_FOUND:
+                restApiRuntimeException = new NotFoundErrorException(throwable, response, errorResponse);
+                break;
+            default:
+                restApiRuntimeException = new ValidationErrorException(throwable, response, errorResponse);
+                break;
+        }
         return restApiRuntimeException;
     }
 

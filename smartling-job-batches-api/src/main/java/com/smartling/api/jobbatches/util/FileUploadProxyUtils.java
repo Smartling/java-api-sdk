@@ -1,6 +1,6 @@
 package com.smartling.api.jobbatches.util;
 
-import com.smartling.api.v2.client.exception.DefaultRestApiExceptionMapper;
+import com.smartling.api.jobbatches.exceptions.JobBatchesApiExceptionMapper;
 import com.smartling.api.v2.client.exception.RestApiExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
@@ -40,7 +40,7 @@ public class FileUploadProxyUtils
 
     public static Response sendRequest(ResteasyWebTarget client, String path, String projectId, String batchUid, MultipartFormDataOutput output)
     {
-        RestApiExceptionHandler exceptionHandler = new RestApiExceptionHandler(new DefaultRestApiExceptionMapper());
+        RestApiExceptionHandler exceptionHandler = new RestApiExceptionHandler(new JobBatchesApiExceptionMapper());
         try
         {
             Response response = client.path(path)
