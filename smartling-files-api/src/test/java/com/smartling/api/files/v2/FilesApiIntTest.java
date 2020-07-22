@@ -3,6 +3,7 @@ package com.smartling.api.files.v2;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.smartling.api.files.v2.pto.DownloadTranslationPTO;
 import com.smartling.api.files.v2.pto.FileLocaleLastModifiedPTO;
+import com.smartling.api.files.v2.pto.FileLocaleStatusResponse;
 import com.smartling.api.files.v2.pto.GetFileLastModifiedPTO;
 import com.smartling.api.files.v2.pto.UploadFilePTO;
 import com.smartling.api.files.v2.pto.UploadFileResponse;
@@ -40,7 +41,7 @@ import static org.junit.Assert.assertEquals;
 public class FilesApiIntTest
 {
     private final static String PROJECT_ID = "4bca2a7b8";
-    private final static String FILE_URI = "file_uri.json";
+    private final static String FILE_URI = "Formatting content 🎨 йцукенг 中国象形文字";
 
     private FilesApi filesApi;
 
@@ -153,7 +154,9 @@ public class FilesApiIntTest
     @Test
     public void shouldGetLastModified() throws Exception
     {
-        smartlingApi.stubFor(get(urlPathMatching("/files-api/v2/projects/" + PROJECT_ID + "/locales/fr-FR/file/last-modified"))
+        String locale = "fr-FR";
+
+        smartlingApi.stubFor(get(urlPathMatching("/files-api/v2/projects/" + PROJECT_ID + "/locales/" + locale + "/file/last-modified"))
             // language=JSON
             .willReturn(success( "{\n" +
                 "    \"localeId\": \"fr-FR\",\n" +
@@ -164,11 +167,54 @@ public class FilesApiIntTest
 
         FileLocaleLastModifiedPTO fileLocaleLastModified = filesApi.getFileLocaleLastModified(PROJECT_ID, "fr-FR",
             GetFileLastModifiedPTO.builder()
-                .fileUri("Formatting content 🎨-ARTICLE-360006599374")
+                .fileUri(FILE_URI)
                 .build());
 
         smartlingApi.verify(getRequestedFor(urlEqualTo("/files-api/v2/projects/" + PROJECT_ID + "/locales/fr-FR/file/last-modified"))
-            .withQueryParam("fileUri", equalTo("Formatting content 🎨-ARTICLE-360006599374"))
+            .withQueryParam("fileUri", equalTo(FILE_URI))
+        );
+    }
+
+    @Test
+    public void shouldGetFileLocaleStatus() throws Exception
+    {
+        String locale = "fr-FR";
+
+        smartlingApi.stubFor(get(urlPathMatching("/files-api/v2/projects/" + PROJECT_ID + "/locales/" + locale + "/file/status"))
+            // language=JSON
+            .willReturn(success( "" +
+                "{\n" +
+                "    \"fileUri\": \"" + FILE_URI + "\",\n" +
+                "    \"lastUploaded\": \"2018-07-21T00:56:35Z\",\n" +
+                "    \"created\": \"2018-07-21T00:56:34Z\",\n" +
+                "    \"fileType\": \"xml\",\n" +
+                "    \"parserVersion\": 4,\n" +
+                "    \"hasInstructions\": true,\n" +
+                "    \"directives\": {\n" +
+                "        \"namespace\": \"smt-test-page\",\n" +
+                "        \"client_lib_id\": \"{\\\"client\\\":\\\"hybris-connector\\\",\\\"version\\\":\\\"2.0.8-2-ge785e88f\\\"}\"\n" +
+                "    },\n" +
+                "    \"namespace\": {\n" +
+                "        \"name\": \"smt-test-page\"\n" +
+                "    },\n" +
+                "    \"totalStringCount\": 6,\n" +
+                "    \"totalWordCount\": 20,\n" +
+                "    \"localeId\": \"de-DE\",\n" +
+                "    \"authorizedStringCount\": 10,\n" +
+                "    \"authorizedWordCount\": 12,\n" +
+                "    \"completedStringCount\": 5,\n" +
+                "    \"completedWordCount\": 15,\n" +
+                "    \"excludedStringCount\": 1,\n" +
+                "    \"excludedWordCount\": 11\n" +
+                "}\n"
+                )
+            )
+        );
+
+        FileLocaleStatusResponse fileLocaleStatus = filesApi.getFileLocaleStatus(PROJECT_ID, locale, FILE_URI);
+
+        smartlingApi.verify(getRequestedFor(urlEqualTo("/files-api/v2/projects/" + PROJECT_ID + "/locales/" + locale + "/file/status"))
+            .withQueryParam("fileUri", equalTo(FILE_URI))
         );
     }
 }
