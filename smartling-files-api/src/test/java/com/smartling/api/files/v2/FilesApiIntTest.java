@@ -2,6 +2,8 @@ package com.smartling.api.files.v2;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.smartling.api.files.v2.pto.DownloadTranslationPTO;
+import com.smartling.api.files.v2.pto.FileLocaleLastModifiedPTO;
+import com.smartling.api.files.v2.pto.GetFileLastModifiedPTO;
 import com.smartling.api.files.v2.pto.UploadFilePTO;
 import com.smartling.api.files.v2.pto.UploadFileResponse;
 import com.smartling.api.v2.client.ClientConfiguration;
@@ -24,6 +26,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aMultipart;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -144,6 +147,28 @@ public class FilesApiIntTest
                 .withName("file")
                 .withBody(equalTo(rawBody))
                 .build())
+        );
+    }
+
+    @Test
+    public void shouldGetLastModified() throws Exception
+    {
+        smartlingApi.stubFor(get(urlPathMatching("/files-api/v2/projects/" + PROJECT_ID + "/locales/fr-FR/file/last-modified"))
+            // language=JSON
+            .willReturn(success( "{\n" +
+                "    \"localeId\": \"fr-FR\",\n" +
+                "    \"lastModified\": \"2018-07-21T00:56:35Z\"\n" +
+                "}")
+            )
+        );
+
+        FileLocaleLastModifiedPTO fileLocaleLastModified = filesApi.getFileLocaleLastModified(PROJECT_ID, "fr-FR",
+            GetFileLastModifiedPTO.builder()
+                .fileUri("Formatting content 🎨-ARTICLE-360006599374")
+                .build());
+
+        smartlingApi.verify(getRequestedFor(urlEqualTo("/files-api/v2/projects/" + PROJECT_ID + "/locales/fr-FR/file/last-modified"))
+            .withQueryParam("fileUri", equalTo("Formatting content 🎨-ARTICLE-360006599374"))
         );
     }
 }
