@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -29,6 +30,17 @@
         <org.powermock.version>2.0.4</org.powermock.version>
         <org.jboss.resteasy.version>3.11.0.Final</org.jboss.resteasy.version>
     </properties>
+
+    <!-- [+] TODO: ALX Revert this -->
+    <repositories>
+      <repository>
+        <id>resolve-parent</id>
+        <url>https://artifactory.smartling.net/artifactory/repo</url>
+        <releases><enabled>true</enabled></releases>
+        <snapshots><enabled>true</enabled></snapshots>
+      </repository>
+    </repositories>
+    <!-- [-] TODO: ALX Revert this -->
 
     <dependencies>
         <dependency>
@@ -155,6 +167,7 @@
         <module>smartling-job-batches-api</module>
         <module>smartling-files-api</module>
         <module>smartling-projects-api</module>
+        <module>smartling-strings-api</module>
         <module>smartling-api-sdk-all</module> <!-- keep last -->
     </modules>
 
