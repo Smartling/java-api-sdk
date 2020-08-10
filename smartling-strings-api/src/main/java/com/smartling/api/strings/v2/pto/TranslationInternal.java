@@ -1,17 +1,15 @@
 package com.smartling.api.strings.v2.pto;
 
-
-import com.smartling.api.v2.response.ResponseData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SourceStringListPTO implements ResponseData
+public class TranslationInternal
 {
-    private List<SourceStringPTO> items;
+    private String pluralForm;
+    private String translation;
+    private String modifiedDate;
 }

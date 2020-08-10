@@ -31,17 +31,6 @@
         <org.jboss.resteasy.version>3.11.0.Final</org.jboss.resteasy.version>
     </properties>
 
-    <!-- [+] TODO: ALX Revert this -->
-    <repositories>
-      <repository>
-        <id>resolve-parent</id>
-        <url>https://artifactory.smartling.net/artifactory/repo</url>
-        <releases><enabled>true</enabled></releases>
-        <snapshots><enabled>true</enabled></snapshots>
-      </repository>
-    </repositories>
-    <!-- [-] TODO: ALX Revert this -->
-
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>

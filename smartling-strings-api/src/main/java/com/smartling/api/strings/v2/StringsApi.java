@@ -29,7 +29,7 @@ public interface StringsApi
 
     @GET
     @Path("/projects/{projectUid}/processes/{processUid}")
-    AsyncStatusResponsePTO asyncProcess(@PathParam("projectUid") String projectUid, @PathParam("processUid") String processUid);
+    AsyncStatusResponsePTO checkStatus(@PathParam("projectUid") String projectUid, @PathParam("processUid") String processUid);
 
     @GET
     @Path("/projects/{projectUid}/source-strings")

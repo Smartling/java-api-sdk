@@ -172,11 +172,11 @@ public class StringsApiTest
     }
 
     @Test
-    public void testAsyncProcess() throws Exception
+    public void testCheckStatus() throws Exception
     {
         assignResponse(HttpStatus.SC_OK, ASYNC_PROCESSES);
 
-        AsyncStatusResponsePTO asyncProcesses = stringsApi.asyncProcess(PROJECT_UID, "process-uid");
+        AsyncStatusResponsePTO asyncProcesses = stringsApi.checkStatus(PROJECT_UID, "process-uid");
         assertNotNull(asyncProcesses);
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals("GET", request.getMethod());
