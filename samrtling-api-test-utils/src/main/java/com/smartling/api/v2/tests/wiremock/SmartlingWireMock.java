@@ -1,4 +1,4 @@
-package com.smartling.api.files.v2;
+package com.smartling.api.v2.tests.wiremock;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -28,7 +28,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
-import static com.smartling.api.files.v2.SmartlingWireMock.success;
+import static com.smartling.api.v2.tests.wiremock.SmartlingWireMock.success;
 import static com.smartling.api.files.v2.pto.FileType.JSON;
 import static com.smartling.api.files.v2.pto.RetrievalType.PUBLISHED;
 import static java.nio.charset.StandardCharsets.UTF_8;
