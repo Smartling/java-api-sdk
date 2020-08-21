@@ -32,9 +32,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.smartling.api.v2.auth.DummyApi.DUMMY_API;
-import static com.smartling.api.v2.wiremock.SmartlingWireMock.error;
-import static com.smartling.api.v2.wiremock.SmartlingWireMock.postJson;
-import static com.smartling.api.v2.wiremock.SmartlingWireMock.success;
+import static com.smartling.api.v2.tests.wiremock.SmartlingWireMock.error;
+import static com.smartling.api.v2.tests.wiremock.SmartlingWireMock.postJson;
+import static com.smartling.api.v2.tests.wiremock.SmartlingWireMock.success;
 import static java.lang.Thread.sleep;
 
 public class AuthenticationIntegrationTest
