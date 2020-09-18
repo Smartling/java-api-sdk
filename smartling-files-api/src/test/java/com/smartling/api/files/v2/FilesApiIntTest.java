@@ -31,6 +31,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static com.smartling.api.v2.tests.wiremock.SmartlingWireMock.success;
 import static com.smartling.api.files.v2.pto.FileType.JSON;
@@ -170,7 +171,7 @@ public class FilesApiIntTest
                 .fileUri(FILE_URI)
                 .build());
 
-        smartlingApi.verify(getRequestedFor(urlEqualTo("/files-api/v2/projects/" + PROJECT_ID + "/locales/fr-FR/file/last-modified"))
+        smartlingApi.verify(getRequestedFor(urlPathEqualTo("/files-api/v2/projects/" + PROJECT_ID + "/locales/fr-FR/file/last-modified"))
             .withQueryParam("fileUri", equalTo(FILE_URI))
         );
     }
@@ -213,7 +214,7 @@ public class FilesApiIntTest
 
         FileLocaleStatusResponse fileLocaleStatus = filesApi.getFileLocaleStatus(PROJECT_ID, locale, FILE_URI);
 
-        smartlingApi.verify(getRequestedFor(urlEqualTo("/files-api/v2/projects/" + PROJECT_ID + "/locales/" + locale + "/file/status"))
+        smartlingApi.verify(getRequestedFor(urlPathEqualTo("/files-api/v2/projects/" + PROJECT_ID + "/locales/" + locale + "/file/status"))
             .withQueryParam("fileUri", equalTo(FILE_URI))
         );
     }
