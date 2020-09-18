@@ -6,9 +6,9 @@
         <artifactId>smartling-sdk-parent</artifactId>
         <version>0.14.1-SNAPSHOT</version>
     </parent>
-    <artifactId>smartling-projects-api</artifactId>
+    <artifactId>smartling-strings-api</artifactId>
     <version>0.14.1-SNAPSHOT</version>
-    <name>Smartling Projects API</name>
+    <name>Smartling Strings API</name>
     <dependencies>
         <dependency>
             <groupId>com.smartling.api</groupId>

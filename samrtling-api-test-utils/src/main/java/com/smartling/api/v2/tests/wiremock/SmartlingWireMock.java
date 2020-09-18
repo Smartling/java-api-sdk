@@ -1,4 +1,4 @@
-package com.smartling.api.files.v2;
+package com.smartling.api.v2.tests.wiremock;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,6 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.UrlPattern;
-import com.smartling.api.v2.response.ResponseCode;
 
 import java.io.IOException;
 
@@ -22,7 +21,7 @@ public class SmartlingWireMock extends WireMock
         "  }\n" +
         "}";
 
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     private static JsonNode readTree(String object)
     {
@@ -47,7 +46,7 @@ public class SmartlingWireMock extends WireMock
             .withHeader("Content-Type", equalTo("application/json"));
     }
 
-    public static ResponseDefinitionBuilder smartlingResponse(ResponseCode responseCode, String data, String errors)
+    public static <T extends Enum<T>> ResponseDefinitionBuilder smartlingResponse(Enum<T> responseCode, String data, String errors)
     {
         ObjectNode response = responseTemplate();
         ((ObjectNode) response.get("response"))
@@ -75,8 +74,13 @@ public class SmartlingWireMock extends WireMock
         return smartlingResponse(ResponseCode.SUCCESS, data, null);
     }
 
-    public static ResponseDefinitionBuilder error(ResponseCode responseCode, String errors)
+    public static  <T extends Enum<T>> ResponseDefinitionBuilder error(Enum<T> responseCode, String errors)
     {
         return smartlingResponse(responseCode,null, errors);
+    }
+
+    private enum ResponseCode
+    {
+        SUCCESS
     }
 }

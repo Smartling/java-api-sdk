@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.smartling.api</groupId>
     <artifactId>smartling-sdk-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.13.5-SNAPSHOT</version>
+    <version>0.14.1-SNAPSHOT</version>
     <name>Smartling API Parent</name>
     <description>Smartling API SDK</description>
     <url>https://api-reference.smartling.com</url>
@@ -148,6 +149,7 @@
 
     <!-- list in alphabetical order, except api-sdk-all -->
     <modules>
+        <module>samrtling-api-test-utils</module>
         <module>smartling-api-commons</module>
         <module>smartling-issues-api</module>
         <module>smartling-jobs-api</module>
@@ -155,6 +157,7 @@
         <module>smartling-job-batches-api</module>
         <module>smartling-files-api</module>
         <module>smartling-projects-api</module>
+        <module>smartling-strings-api</module>
         <module>smartling-api-sdk-all</module> <!-- keep last -->
     </modules>
 

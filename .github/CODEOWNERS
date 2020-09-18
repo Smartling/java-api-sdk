@@ -3,6 +3,10 @@
 
 smartling-authorization-api/    @foo4u
 smartling-jobs-api/             @foo4u @vlinetskiysml @andreyfurdylo @PavloMyrotiuk @ishulyak-smartling
-smartling-job-batches-api/      @dimitrystd @dkBrazz @sl-mmuradov @rmalyona @iskrypka-smartling @borys-lukianov
-smartling-files-api/            @dimitrystd @dkBrazz @sl-mmuradov @rmalyona @iskrypka-smartling @borys-lukianov
-smartling-projects-api/         @dimitrystd @dkBrazz @sl-mmuradov @rmalyona @iskrypka-smartling @borys-lukianov
+smartling-job-batches-api/      @dimitrystd @dkBrazz @sl-mmuradov @rmalyona @iskrypka-smartling
+smartling-files-api/            @dimitrystd @dkBrazz @sl-mmuradov @rmalyona @iskrypka-smartling
+smartling-projects-api/         @dimitrystd @dkBrazz @sl-mmuradov @rmalyona @iskrypka-smartling
+smartling-locales-api/
+smartling-issues-api/           @pshander
+smartling-api-test-utils/       @dkBrazz
+smartling-strigns-api/          @klegins-smartling @AlexanderNovak
