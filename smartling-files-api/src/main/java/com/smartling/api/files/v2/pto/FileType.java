@@ -38,7 +38,7 @@ public enum FileType
     XLIFF_CAT("application/xml", false),            // XLIFF for offline CAT integration
     DITA("application/xml", false),                 // DITA file format
     PDF("application/octet-stream", false),         // PDF file format
-    FLUENT("text/plain", true);
+    FLUENT("text/plain", true);                     // MOZILLA FLUENT format
 
     private final String identifier;
     private final String mimeType;
