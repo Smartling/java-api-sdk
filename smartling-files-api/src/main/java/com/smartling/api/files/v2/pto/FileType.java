@@ -37,7 +37,8 @@ public enum FileType
     TMX("application/xml", false),                  // TMX translation memory file format
     XLIFF_CAT("application/xml", false),            // XLIFF for offline CAT integration
     DITA("application/xml", false),                 // DITA file format
-    PDF("application/octet-stream", false);         // PDF file format
+    PDF("application/octet-stream", false),         // PDF file format
+    FLUENT("text/plain", true);
 
     private final String identifier;
     private final String mimeType;
