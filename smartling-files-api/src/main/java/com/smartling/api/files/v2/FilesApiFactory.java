@@ -32,6 +32,7 @@ public class FilesApiFactory extends AbstractApiFactory<FilesApi>
             .baseUrl(config.getBaseUrl())
             .clientRequestFilters(config.getClientRequestFilters())
             .clientResponseFilters(config.getClientResponseFilters())
+            .libNameVersionHolder(config.getLibNameVersionHolder())
             .httpClientConfiguration(config.getHttpClientConfiguration())
             .resteasyProviderFactory(config.getResteasyProviderFactory())
             .exceptionMapper(new FilesApiExceptionMapper())
