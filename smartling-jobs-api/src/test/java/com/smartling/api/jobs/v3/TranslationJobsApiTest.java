@@ -8,6 +8,7 @@ import com.smartling.api.jobs.v3.pto.FileUriPTO;
 import com.smartling.api.jobs.v3.pto.HashcodesAndLocalesPTO;
 import com.smartling.api.jobs.v3.pto.LocaleAndHashcodeListCommandPTO;
 import com.smartling.api.jobs.v3.pto.LocaleContentProgressReportPTO;
+import com.smartling.api.jobs.v3.pto.LocaleHashcodePairPTO;
 import com.smartling.api.jobs.v3.pto.LocaleWorkflowCommandPTO;
 import com.smartling.api.jobs.v3.pto.PagingCommandPTO;
 import com.smartling.api.jobs.v3.pto.SortCommandPTO;
@@ -18,6 +19,8 @@ import com.smartling.api.jobs.v3.pto.TranslationJobCancelCommandPTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobCreateCommandPTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobCreateResponsePTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobCustomFieldPTO;
+import com.smartling.api.jobs.v3.pto.TranslationJobFindByLocalesAndHashcodesCommandPTO;
+import com.smartling.api.jobs.v3.pto.TranslationJobFoundByStringsAndLocalesResponsePTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobGetResponsePTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobListCommandPTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobListItemPTO;
@@ -40,6 +43,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.ws.rs.core.HttpHeaders;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.smartling.api.jobs.v3.SampleApiResponses.GET_TRANSLATION_JOB_RESPONSE_BODY;
@@ -687,5 +691,73 @@ public class TranslationJobsApiTest
         assertTrue(request.getPath().startsWith(("/jobs-api/v3" + TranslationJobsApi.API_JOB_PROGRESS_ENDPOINT).replace("{projectId}", PROJECT_ID)
             .replace("{translationJobUid}", TRANSLATION_JOB_UID)));
         assertTrue(request.getPath().contains("targetLocaleId=" + TARGET_LOCALE_ID));
+    }
+
+
+    @Test
+    public void testFindTranslationJobsByLocalesAndHashcodes() throws Exception
+    {
+        assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, SampleApiResponses.FIND_JOB_BY_LOCALES_AND_HASHCODES_RESPONSE_BODY));
+
+        TranslationJobFindByLocalesAndHashcodesCommandPTO command = new TranslationJobFindByLocalesAndHashcodesCommandPTO(Arrays.asList("en-US", "fr-FR"),
+            Arrays.asList("h1", "h2", "h3"));
+
+        ListResponse<TranslationJobFoundByStringsAndLocalesResponsePTO> response = translationJobsApi
+            .findTranslationJobsByLocalesAndHashcodes(PROJECT_ID, command);
+
+        assertEquals(3, response.getTotalCount());
+        assertEquals(2, response.getItems().size());
+
+        assertEquals("translationJobUid1", response.getItems().get(0).getTranslationJobUid());
+        assertEquals("2015-11-21T11:51:17Z", response.getItems().get(0).getDueDate());
+        assertEquals("jobName1", response.getItems().get(0).getJobName());
+        assertEquals(2, response.getItems().get(0).getHashcodesByLocale().size());
+        assertEquals("fr-FR", response.getItems().get(0).getHashcodesByLocale().get(0).getLocaleId());
+        assertEquals("hashcode1", response.getItems().get(0).getHashcodesByLocale().get(0).getHashcodes().get(0));
+        assertEquals("hashcode3", response.getItems().get(0).getHashcodesByLocale().get(0).getHashcodes().get(1));
+        assertEquals("de-DE", response.getItems().get(0).getHashcodesByLocale().get(1).getLocaleId());
+        assertEquals("hashcode4", response.getItems().get(0).getHashcodesByLocale().get(1).getHashcodes().get(0));
+        assertEquals("hashcode3", response.getItems().get(0).getHashcodesByLocale().get(1).getHashcodes().get(1));
+
+        assertEquals("translationJobUid2", response.getItems().get(1).getTranslationJobUid());
+        assertEquals("2015-11-23T11:51:17Z", response.getItems().get(1).getDueDate());
+        assertEquals("jobName2", response.getItems().get(1).getJobName());
+        assertEquals(2, response.getItems().get(1).getHashcodesByLocale().size());
+        assertEquals("es-ES", response.getItems().get(1).getHashcodesByLocale().get(0).getLocaleId());
+        assertEquals("hashcode5", response.getItems().get(1).getHashcodesByLocale().get(0).getHashcodes().get(0));
+        assertEquals("hashcode6", response.getItems().get(1).getHashcodesByLocale().get(0).getHashcodes().get(1));
+        assertEquals("it-IT", response.getItems().get(1).getHashcodesByLocale().get(1).getLocaleId());
+        assertEquals("hashcode7", response.getItems().get(1).getHashcodesByLocale().get(1).getHashcodes().get(0));
+        assertEquals("hashcode8", response.getItems().get(1).getHashcodesByLocale().get(1).getHashcodes().get(1));
+
+        final RecordedRequest request = mockWebServer.takeRequest();
+        assertEquals("POST", request.getMethod());
+        assertTrue(request.getPath()
+            .contains(TranslationJobsApi.API_JOB_FIND_BY_LOCALES_AND_HASHCODES_ENDPOINT.replace("{projectId}", PROJECT_ID)));
+    }
+
+    @Test
+    public void testGetStringsForTranslationJob() throws Exception
+    {
+        assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, SampleApiResponses.FIND_STRINGS_FOR_JOB_RESPONSE_BODY));
+
+        ListResponse<LocaleHashcodePairPTO> response = translationJobsApi
+            .getStringsForTranslationJob(PROJECT_ID, TRANSLATION_JOB_UID, null, new PagingCommandPTO(0, 100));
+
+        assertEquals(2, response.getTotalCount());
+        assertEquals(2, response.getItems().size());
+
+        assertEquals("hashcode1", response.getItems().get(0).getHashcode());
+        assertEquals("aa-AA", response.getItems().get(0).getTargetLocaleId());
+
+        assertEquals("hashcode2", response.getItems().get(1).getHashcode());
+        assertEquals("aa-AA", response.getItems().get(1).getTargetLocaleId());
+
+        final RecordedRequest request = mockWebServer.takeRequest();
+        assertEquals("GET", request.getMethod());
+        assertTrue(request.getPath()
+            .contains(TranslationJobsApi.API_JOB_CONTENTS_ENDPOINT.replace("{projectId}", PROJECT_ID).replace("{translationJobUid}", TRANSLATION_JOB_UID)));
+        assertTrue(request.getPath().contains("limit=100"));
+        assertTrue(request.getPath().contains("offset=0"));
     }
 }
