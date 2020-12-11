@@ -6,11 +6,14 @@ import com.smartling.api.jobs.v3.pto.CustomFieldCreatePTO;
 import com.smartling.api.jobs.v3.pto.CustomFieldFilterPTO;
 import com.smartling.api.jobs.v3.pto.CustomFieldPTO;
 import com.smartling.api.jobs.v3.pto.CustomFieldUpdatePTO;
+import com.smartling.api.jobs.v3.pto.LocaleHashcodePairPTO;
 import com.smartling.api.jobs.v3.pto.PagingCommandPTO;
 import com.smartling.api.jobs.v3.pto.AddLocaleCommandPTO;
 import com.smartling.api.jobs.v3.pto.AsyncProcessDTO;
 import com.smartling.api.jobs.v3.pto.AsyncResponsePTO;
 import com.smartling.api.jobs.v3.pto.SortCommandPTO;
+import com.smartling.api.jobs.v3.pto.TranslationJobFindByLocalesAndHashcodesCommandPTO;
+import com.smartling.api.jobs.v3.pto.TranslationJobFoundByStringsAndLocalesResponsePTO;
 import com.smartling.api.v2.response.EmptyData;
 import com.smartling.api.v2.response.ListResponse;
 import com.smartling.api.jobs.v3.pto.FileUriPTO;
@@ -53,6 +56,8 @@ public interface TranslationJobsApi
     String API_JOBS_ENDPOINT = "/projects/{projectId}/jobs";
     String API_JOBS_SEARCH_ENDPOINT = API_JOBS_ENDPOINT + "/search";
     String API_SINGLE_JOB_ENDPOINT = API_JOBS_ENDPOINT + "/{translationJobUid}";
+    String API_JOB_FIND_BY_LOCALES_AND_HASHCODES_ENDPOINT = API_JOBS_ENDPOINT + "/find-jobs-by-strings";
+    String API_JOB_CONTENTS_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/strings";
     String API_JOB_ADD_STRINGS_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/strings/add";
     String API_JOB_REMOVE_STRINGS_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/strings/remove";
     String API_JOB_ADD_LOCALE_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/locales/{localeId}";
@@ -106,6 +111,19 @@ public interface TranslationJobsApi
     @Path(API_SINGLE_JOB_ENDPOINT)
     TranslationJobGetResponsePTO updateTranslationJob(@PathParam(PROJECT_ID) String projectId, @PathParam(TRANSLATION_JOB_UID) String translationJobUid,
                                                       TranslationJobUpdateCommandPTO translationJobUpdateCommand);
+
+    @POST
+    @Path(API_JOB_FIND_BY_LOCALES_AND_HASHCODES_ENDPOINT)
+    ListResponse<TranslationJobFoundByStringsAndLocalesResponsePTO> findTranslationJobsByLocalesAndHashcodes(@PathParam(PROJECT_ID) String projectId,
+                                                                                                             TranslationJobFindByLocalesAndHashcodesCommandPTO commandPTO);
+
+
+    @GET
+    @Path(API_JOB_CONTENTS_ENDPOINT)
+    ListResponse<LocaleHashcodePairPTO> getStringsForTranslationJob(@PathParam(PROJECT_ID) String projectId,
+                                                                    @PathParam(TRANSLATION_JOB_UID) String translationJobUid,
+                                                                    @QueryParam(TARGET_LOCALE_ID) String targetLocaleId,
+                                                                    @BeanParam PagingCommandPTO pagingCommand);
 
     @POST
     @Path(API_JOB_REMOVE_FILE_ENDPOINT)

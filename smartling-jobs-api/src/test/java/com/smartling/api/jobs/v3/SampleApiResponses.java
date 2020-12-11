@@ -234,6 +234,55 @@ interface SampleApiResponses
         + "          ]\n"
         + "    }";
 
+    String FIND_JOB_BY_LOCALES_AND_HASHCODES_RESPONSE_BODY =
+        "{" +
+            "    \"totalCount\": 3," +
+            "    \"items\": [" +
+            "          {" +
+            "           \"translationJobUid\":\"translationJobUid1\"," +
+            "           \"jobName\":\"jobName1\"," +
+            "           \"dueDate\":\"2015-11-21T11:51:17Z\"," +
+            "           \"hashcodesByLocale\": [" +
+            "             {" +
+            "                 \"localeId\": \"fr-FR\"," +
+            "                 \"hashcodes\": [\"hashcode1\", \"hashcode3\"]" +
+            "             }, {" +
+            "                 \"localeId\": \"de-DE\"," +
+            "                 \"hashcodes\": [\"hashcode4\", \"hashcode3\"]" +
+            "             }" +
+            "           ]" +
+            "        }," +
+            "        {" +
+            "           \"translationJobUid\":\"translationJobUid2\"," +
+            "           \"jobName\":\"jobName2\"," +
+            "           \"dueDate\":\"2015-11-23T11:51:17Z\"," +
+            "           \"hashcodesByLocale\": [" +
+            "             {" +
+            "                 \"localeId\": \"es-ES\"," +
+            "                 \"hashcodes\": [\"hashcode5\", \"hashcode6\"]" +
+            "             }, {" +
+            "                 \"localeId\": \"it-IT\"," +
+            "                 \"hashcodes\": [\"hashcode7\", \"hashcode8\"]" +
+            "             }" +
+            "           ]" +
+            "        }" +
+            "    ]" +
+            "}";
+
+    String FIND_STRINGS_FOR_JOB_RESPONSE_BODY =
+        "{" +
+            "    \"totalCount\": 2," +
+            "    \"items\": [" +
+            "          {" +
+            "           \"targetLocaleId\":\"aa-AA\"," +
+            "           \"hashcode\":\"hashcode1\"" +
+            "        }," +
+            "          {" +
+            "           \"targetLocaleId\":\"aa-AA\"," +
+            "           \"hashcode\":\"hashcode2\"" +
+            "        }" +
+            "    ]" +
+            "}";
 }
 
 
