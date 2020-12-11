@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.smartling.api.example;
-
 import com.smartling.api.files.v2.FilesApi;
 import com.smartling.api.files.v2.FilesApiFactory;
 import com.smartling.api.files.v2.pto.DeleteFilePTO;
