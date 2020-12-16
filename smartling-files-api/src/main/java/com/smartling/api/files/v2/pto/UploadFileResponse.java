@@ -14,4 +14,5 @@ public class UploadFileResponse implements ResponseData
     private Integer stringCount;
     private Integer wordCount;
     private String message;
+    private String fileUri;
 }

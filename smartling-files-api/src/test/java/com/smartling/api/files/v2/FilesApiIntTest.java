@@ -98,6 +98,7 @@ public class FilesApiIntTest
                     "    \"overWritten\": true,\n" +
                     "    \"stringCount\": 10,\n" +
                     "    \"wordCount\": 3,\n" +
+                    "    \"fileUri\": \"" + FILE_URI + "\",\n" +
                     "    \"message\" : \"uploaded\"\n" +
                     "}")
                 )
@@ -115,6 +116,8 @@ public class FilesApiIntTest
             .directives(directives)
             .localeIdsToAuthorize(Arrays.asList("de-DE", "fr"))
             .build());
+
+        assertEquals(uploadFileResponse.getFileUri(), FILE_URI);
 
         smartlingApi.verify(postRequestedFor(urlEqualTo("/files-api/v2/projects/" + PROJECT_ID + "/file"))
             .withRequestBodyPart(aMultipart()
