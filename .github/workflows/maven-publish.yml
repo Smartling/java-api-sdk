@@ -1,28 +1,30 @@
 # This workflow will build and publish snapshots to our GitHub repository
-name: Maven Package
+name: Maven Publish PR Snapshot
 
 on:
-  pull_request:
-    branches: master
+    pull_request:
+        branches: master
 
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up JDK
+              uses: actions/setup-java@v1
+              with:
+                  java-version: 11
+                  server-id: github
+                  settings-path: ${{ github.workspace }} # location for the settings.xml file
 
-    runs-on: ubuntu-latest
+            - name: Build with Maven
+              run: ./mvnw clean test javadoc:javadoc
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-        server-id: github
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
-
-    - name: Build with Maven
-      run: ./mvnw clean test javadoc:javadoc
-
-    - name: Publish to GitHub Packages Apache Maven
-      run: ./mvnw -Pgithub -DskipTests deploy -s $GITHUB_WORKSPACE/settings.xml
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+            - name: Publish to GitHub Packages
+              run: |
+                  SL_SDK_VERSION=$(./mvnw -B help:evaluate -Dexpression=project.version -q -DforceStdout | cut -f1 -d'-')
+                  SL_SDK_SNAPSHOT_VERSION="${SL_SDK_VERSION}-${GITHUB_SHA}-SNAPSHOT"
+                  ./mvnw versions:set -DnewVersion=${SL_SDK_SNAPSHOT_VERSION} # this should be done in memory
+                  ./mvnw -Pgithub -DskipTests deploy -s $GITHUB_WORKSPACE/settings.xml
+              env:
+                  GITHUB_TOKEN: ${{ github.token }}
