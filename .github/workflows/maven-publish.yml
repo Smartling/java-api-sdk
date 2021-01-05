@@ -23,7 +23,9 @@ jobs:
             - name: Publish to GitHub Packages
               run: |
                   SL_SDK_VERSION=$(./mvnw -B help:evaluate -Dexpression=project.version -q -DforceStdout | cut -f1 -d'-')
-                  SL_SDK_SNAPSHOT_VERSION="${SL_SDK_VERSION}-${GITHUB_SHA}-SNAPSHOT"
+                  PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+                  PR_REV=${PR_NUMBER:-$GITHUB_SHA}
+                  SL_SDK_SNAPSHOT_VERSION="${SL_SDK_VERSION}.${PR_REV}-SNAPSHOT"
                   ./mvnw versions:set -DnewVersion=${SL_SDK_SNAPSHOT_VERSION} # this should be done in memory
                   ./mvnw -Pgithub -DskipTests deploy -s $GITHUB_WORKSPACE/settings.xml
               env:
