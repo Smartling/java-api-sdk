@@ -18,7 +18,7 @@ jobs:
                   settings-path: ${{ github.workspace }}
 
             - name: Build with Maven
-              run: ./mvnw clean test javadoc:javadoc
+              run: ./mvnw -B clean test javadoc:javadoc
 
             - name: Publish to GitHub Packages
               run: |
@@ -26,7 +26,7 @@ jobs:
                   PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
                   PR_REV=${PR_NUMBER:-$GITHUB_SHA}
                   SL_SDK_SNAPSHOT_VERSION="${SL_SDK_VERSION}.${PR_REV}-SNAPSHOT"
-                  ./mvnw versions:set -DnewVersion=${SL_SDK_SNAPSHOT_VERSION} # this should be done in memory
-                  ./mvnw -Pgithub -DskipTests deploy -s $GITHUB_WORKSPACE/settings.xml
+                  ./mvnw -B versions:set -DnewVersion=${SL_SDK_SNAPSHOT_VERSION} # this should be done in memory
+                  ./mvnw -B -Pgithub -DskipTests deploy -s $GITHUB_WORKSPACE/settings.xml
               env:
                   GITHUB_TOKEN: ${{ github.token }}
