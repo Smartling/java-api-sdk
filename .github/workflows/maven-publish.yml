@@ -15,7 +15,7 @@ jobs:
               with:
                   java-version: 11
                   server-id: github
-                  settings-path: ${{ github.workspace }} # location for the settings.xml file
+                  settings-path: ${{ github.workspace }}
 
             - name: Build with Maven
               run: ./mvnw clean test javadoc:javadoc
