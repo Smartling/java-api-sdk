@@ -65,7 +65,7 @@ public interface SmartlingApi
      * Returns an API for working with Smartling
      * <a href="https://api-reference.smartling.com/#tag/Attachments">attachments</a>.
      *
-     * @return {@link AttachmentApi}
+     * @return {@link AttachmentsApi}
      */
     AttachmentsApi attachmentsApi();
 }
