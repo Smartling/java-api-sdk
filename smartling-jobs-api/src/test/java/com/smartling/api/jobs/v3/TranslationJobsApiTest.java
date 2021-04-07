@@ -1,5 +1,6 @@
 package com.smartling.api.jobs.v3;
 
+import com.smartling.api.jobs.v3.pto.AccountTranslationJobListItemPTO;
 import com.smartling.api.jobs.v3.pto.AddLocaleCommandPTO;
 import com.smartling.api.jobs.v3.pto.AsyncResponsePTO;
 import com.smartling.api.jobs.v3.pto.ContentProgressReportPTO;
@@ -29,6 +30,7 @@ import com.smartling.api.jobs.v3.pto.TranslationJobSearchCommandPTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobUpdateCommandPTO;
 import com.smartling.api.jobs.v3.pto.WorkflowProgressReportPTO;
 import com.smartling.api.jobs.v3.pto.WorkflowStepSummaryReportItemPTO;
+import com.smartling.api.jobs.v3.pto.account.AccountTranslationJobListCommandPTO;
 import com.smartling.api.v2.client.ClientConfiguration;
 import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
@@ -63,6 +65,7 @@ public class TranslationJobsApiTest
 {
 
     private static final String PROJECT_ID = "4bca2a7b8";
+    private static final String ACCOUNT_UID = "a11223344";
     private static final String TRANSLATION_JOB_UID = "0123456789ab";
     private static final String HASHCODE = "hash1";
     private static final String TRANSLATION_JOB_UID1 = "jnw83gm9we9r";
@@ -230,6 +233,54 @@ public class TranslationJobsApiTest
         assertTrue(request.getPath().contains("jobName=job2"));
         assertTrue(request.getPath().contains("jobNumber=TT-123"));
         assertTrue(request.getPath().contains("translationJobUids=jobUid"));
+        assertTrue(request.getPath().contains("limit=100"));
+        assertTrue(request.getPath().contains("offset=10"));
+        assertTrue(request.getPath().contains("sortBy=jobName"));
+        assertTrue(request.getPath().contains("sortDirection=asc"));
+    }
+
+    @Test
+    public void testListAccountTranslationJobs() throws InterruptedException
+    {
+        assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, SampleApiResponses.GET_ACCOUNT_TRANSLATION_JOBS_LIST_RESPONSE_BODY));
+
+        AccountTranslationJobListCommandPTO filterBody = new AccountTranslationJobListCommandPTO("job2", true, asList("project1", "project2"), asList("DRAFT", "IN_PROGRESS"));
+        PagingCommandPTO pagingBody = new PagingCommandPTO(10, 100);
+        SortCommandPTO sortBody = new SortCommandPTO("jobName", "asc");
+
+        ListResponse<AccountTranslationJobListItemPTO> listResponse = translationJobsApi.listAccountTranslationJobs(ACCOUNT_UID, filterBody, pagingBody, sortBody);
+
+        assertEquals(listResponse.getTotalCount(), 2);
+
+        assertEquals("translationJobUid1", listResponse.getItems().get(0).getTranslationJobUid());
+        assertEquals("jobName1", listResponse.getItems().get(0).getJobName());
+        assertEquals("PP-11111", listResponse.getItems().get(0).getJobNumber());
+        assertEquals(asList("fr-FR"), listResponse.getItems().get(0).getTargetLocaleIds());
+        assertEquals("IN_PROGRESS", listResponse.getItems().get(0).getJobStatus());
+        assertEquals("2015-11-22T11:51:17Z", listResponse.getItems().get(0).getCreatedDate());
+        assertEquals("2015-11-21T11:51:17Z", listResponse.getItems().get(0).getDueDate());
+        assertEquals("project1", listResponse.getItems().get(0).getProjectId());
+        assertEquals(1L, (long)listResponse.getItems().get(0).getPriority());
+
+        assertEquals("translationJobUid2", listResponse.getItems().get(1).getTranslationJobUid());
+        assertEquals("jobName2", listResponse.getItems().get(1).getJobName());
+        assertEquals("PP-11111", listResponse.getItems().get(0).getJobNumber());
+        assertEquals(asList("de-DE"), listResponse.getItems().get(1).getTargetLocaleIds());
+        assertEquals("AWAITING_AUTHORIZATION", listResponse.getItems().get(1).getJobStatus());
+        assertEquals("2015-11-24T11:51:17Z", listResponse.getItems().get(1).getCreatedDate());
+        assertEquals("2015-11-23T11:51:17Z", listResponse.getItems().get(1).getDueDate());
+        assertEquals("project2", listResponse.getItems().get(1).getProjectId());
+        assertEquals(2L, (long)listResponse.getItems().get(1).getPriority());
+
+        RecordedRequest request = mockWebServer.takeRequest();
+        assertEquals(GET, request.getMethod());
+        assertTrue(request.getPath().startsWith(("/jobs-api/v3" + TranslationJobsApi.API_AL_JOBS_ENDPOINT).replace("{accountUid}", ACCOUNT_UID)));
+        assertTrue(request.getPath().contains("jobName=job2"));
+        assertTrue(request.getPath().contains("withPriority=true"));
+        assertTrue(request.getPath().contains("projectIds=project1"));
+        assertTrue(request.getPath().contains("&projectIds=project2"));
+        assertTrue(request.getPath().contains("translationJobStatus=DRAFT"));
+        assertTrue(request.getPath().contains("&translationJobStatus=IN_PROGRESS"));
         assertTrue(request.getPath().contains("limit=100"));
         assertTrue(request.getPath().contains("offset=10"));
         assertTrue(request.getPath().contains("sortBy=jobName"));
