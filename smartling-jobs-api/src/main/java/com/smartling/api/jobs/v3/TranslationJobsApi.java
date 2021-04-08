@@ -1,5 +1,6 @@
 package com.smartling.api.jobs.v3;
 
+import com.smartling.api.jobs.v3.pto.AccountTranslationJobListItemPTO;
 import com.smartling.api.jobs.v3.pto.ContentProgressReportPTO;
 import com.smartling.api.jobs.v3.pto.CustomFieldAssignmentPTO;
 import com.smartling.api.jobs.v3.pto.CustomFieldCreatePTO;
@@ -14,6 +15,7 @@ import com.smartling.api.jobs.v3.pto.AsyncResponsePTO;
 import com.smartling.api.jobs.v3.pto.SortCommandPTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobFindByLocalesAndHashcodesCommandPTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobFoundByStringsAndLocalesResponsePTO;
+import com.smartling.api.jobs.v3.pto.account.AccountTranslationJobListCommandPTO;
 import com.smartling.api.v2.response.EmptyData;
 import com.smartling.api.v2.response.ListResponse;
 import com.smartling.api.jobs.v3.pto.FileUriPTO;
@@ -74,6 +76,8 @@ public interface TranslationJobsApi
     String API_JOB_AUTHORIZE_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/authorize";
     String API_JOB_LOCALES_COMPLETION_DATES_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/locales-completion-dates";
 
+    String API_AL_JOBS_ENDPOINT = "/accounts/{accountUid}/jobs";
+
     /* workflow step due date endpoints */
     String API_JOB_SCHEDULE_ENDPOINT = API_SINGLE_JOB_ENDPOINT + "/schedule";
 
@@ -98,6 +102,13 @@ public interface TranslationJobsApi
                                                                 @BeanParam TranslationJobListCommandPTO translationJobListCommand,
                                                                 @BeanParam PagingCommandPTO pagingCommand,
                                                                 @BeanParam SortCommandPTO sortCommand);
+
+    @GET
+    @Path(API_AL_JOBS_ENDPOINT)
+    ListResponse<AccountTranslationJobListItemPTO> listAccountTranslationJobs(@PathParam(ACCOUNT_UID) String accountUid,
+                                                                              @BeanParam AccountTranslationJobListCommandPTO accountTranslationJobListCommand,
+                                                                              @BeanParam PagingCommandPTO pagingCommand,
+                                                                              @BeanParam SortCommandPTO sortCommand);
 
     @GET
     @Path(API_SINGLE_JOB_ENDPOINT)
