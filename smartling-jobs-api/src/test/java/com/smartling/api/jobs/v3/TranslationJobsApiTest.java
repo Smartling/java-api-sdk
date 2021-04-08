@@ -244,11 +244,22 @@ public class TranslationJobsApiTest
     {
         assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, SampleApiResponses.GET_ACCOUNT_TRANSLATION_JOBS_LIST_RESPONSE_BODY));
 
-        AccountTranslationJobListCommandPTO filterBody = new AccountTranslationJobListCommandPTO("job2", true, asList("project1", "project2"), asList("DRAFT", "IN_PROGRESS"));
+        AccountTranslationJobListCommandPTO filterBody = new AccountTranslationJobListCommandPTO(
+            "job2",
+            true,
+            asList("project1", "project2"),
+            asList("DRAFT", "IN_PROGRESS")
+        );
+
         PagingCommandPTO pagingBody = new PagingCommandPTO(10, 100);
         SortCommandPTO sortBody = new SortCommandPTO("jobName", "asc");
 
-        ListResponse<AccountTranslationJobListItemPTO> listResponse = translationJobsApi.listAccountTranslationJobs(ACCOUNT_UID, filterBody, pagingBody, sortBody);
+        ListResponse<AccountTranslationJobListItemPTO> listResponse = translationJobsApi.listAccountTranslationJobs(
+            ACCOUNT_UID,
+            filterBody,
+            pagingBody,
+            sortBody
+        );
 
         assertEquals(listResponse.getTotalCount(), 2);
 
