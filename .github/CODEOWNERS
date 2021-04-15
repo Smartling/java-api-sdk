@@ -9,4 +9,5 @@ smartling-projects-api/         @dimitrystd @dkBrazz @sl-mmuradov @rmalyona @isk
 smartling-locales-api/
 smartling-issues-api/           @pshander
 smartling-api-test-utils/       @dkBrazz
-smartling-strigns-api/          @klegins-smartling @AlexanderNovak
+smartling-strings-api/          @klegins-smartling @AlexanderNovak
+smartling-attachments-api/      @klegins-smartling @AlexanderNovak

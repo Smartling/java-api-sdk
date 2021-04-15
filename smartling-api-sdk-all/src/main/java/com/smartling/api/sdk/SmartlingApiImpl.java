@@ -1,5 +1,7 @@
 package com.smartling.api.sdk;
 
+import com.smartling.api.attachments.v2.AttachmentsApi;
+import com.smartling.api.attachments.v2.AttachmentsApiFactory;
 import com.smartling.api.files.v2.FilesApi;
 import com.smartling.api.files.v2.FilesApiFactory;
 import com.smartling.api.jobbatches.v2.JobBatchesApi;
@@ -22,6 +24,7 @@ final class SmartlingApiImpl implements SmartlingApi
     private final JobBatchesApi jobBatchesApi;
     private final FilesApi filesApi;
     private final ProjectsApi projectsApi;
+    private final AttachmentsApi attachmentsApi;
 
     SmartlingApiImpl(String userIdentifier, String userSecret)
     {
@@ -37,6 +40,7 @@ final class SmartlingApiImpl implements SmartlingApi
         jobBatchesApi = new JobBatchesApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
         filesApi = new FilesApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
         projectsApi = new ProjectsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
+        attachmentsApi = new AttachmentsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
     }
 
     @Override
@@ -73,5 +77,11 @@ final class SmartlingApiImpl implements SmartlingApi
     public ProjectsApi projectsApi()
     {
         return projectsApi;
+    }
+
+    @Override
+    public AttachmentsApi attachmentsApi()
+    {
+        return attachmentsApi;
     }
 }
