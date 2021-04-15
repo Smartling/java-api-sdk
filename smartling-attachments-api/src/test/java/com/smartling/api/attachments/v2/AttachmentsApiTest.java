@@ -4,9 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartling.api.attachments.v2.pto.AttachmentPTO;
 import com.smartling.api.attachments.v2.pto.AttachmentType;
-import com.smartling.api.attachments.v2.pto.EntityAttachmentsPTO;
-import com.smartling.api.attachments.v2.pto.EntityLinkCommand;
-import com.smartling.api.attachments.v2.pto.LinkedAttachmentPTO;
 import com.smartling.api.v2.client.ClientConfiguration;
 import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
@@ -30,7 +27,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AttachmentsApiTest
 {
@@ -108,21 +106,6 @@ public class AttachmentsApiTest
         return attachmentPTO;
     }
 
-    private LinkedAttachmentPTO createLinkedAttachmentPTO()
-    {
-        LinkedAttachmentPTO linkedAttachmentPTO = new LinkedAttachmentPTO();
-        randomAttachmentPTO(linkedAttachmentPTO);
-        return linkedAttachmentPTO;
-    }
-
-    private EntityAttachmentsPTO createEntityAttachmentsPTO()
-    {
-        EntityAttachmentsPTO entityAttachmentsPTO = new EntityAttachmentsPTO();
-        entityAttachmentsPTO.setEntityUid(UUID.randomUUID().toString());
-        entityAttachmentsPTO.setAttachments(Arrays.asList(createLinkedAttachmentPTO(), createLinkedAttachmentPTO()));
-        return entityAttachmentsPTO;
-    }
-
     @Before
     public void setUp() throws Exception
     {
@@ -139,44 +122,10 @@ public class AttachmentsApiTest
         mockWebServer.shutdown();
     }
 
-    private void assignResponse(int httpStatusCode, String body)
-    {
-        MockResponse response = new MockResponse()
-                .setResponseCode(httpStatusCode)
-                .setHeader(HttpHeaders.CONTENT_LENGTH, body.length())
-                .setHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8")
-                .setBody(body);
-
-        mockWebServer.enqueue(response);
-    }
-
     @Test
     public void testGetApiClass() throws Exception
     {
         assertEquals(AttachmentsApi.class, new AttachmentsApiFactory().getApiClass());
-    }
-
-    @Test
-    public void testLinkAttachments() throws Exception
-    {
-        EntityAttachmentsPTO expectedPTO1 = createEntityAttachmentsPTO();
-        EntityAttachmentsPTO expectedPTO2 = createEntityAttachmentsPTO();
-
-        assignResponse(HttpStatus.SC_OK, MediaType.APPLICATION_JSON, jsonResponse(new ListResponse<>(Arrays.asList(expectedPTO1, expectedPTO2))));
-
-        EntityLinkCommand command = new EntityLinkCommand();
-        command.setEntityUids(Arrays.asList("e1", "e2"));
-        command.setAttachmentUids(Arrays.asList("a1", "a2"));
-
-        ListResponse<EntityAttachmentsPTO> response = attachmentsApi.linkAttachments(ACCOUNT_UID, ATTACHMENT_TYPE, command);
-        RecordedRequest request = getRequestWithValidation(HttpMethod.PUT, LINKS, ACCOUNT_UID, ATTACHMENT_TYPE);
-        assertEquals(2, response.getItems().size());
-        assertEquals(json(command), request.getBody().readUtf8());
-
-        EntityAttachmentsPTO actualPTO1 = response.getItems().get(0);
-        EntityAttachmentsPTO actualPTO2 = response.getItems().get(1);
-        assertEquals(expectedPTO1.getEntityUid(), actualPTO1.getEntityUid());
-        assertEquals(expectedPTO2.getEntityUid(), actualPTO2.getEntityUid());
     }
 
     @Test
@@ -195,14 +144,5 @@ public class AttachmentsApiTest
         AttachmentPTO actualPTO2 = response.getItems().get(1);
         assertEquals(expectedPTO1.getAttachmentUid(), actualPTO1.getAttachmentUid());
         assertEquals(expectedPTO2.getAttachmentUid(), actualPTO2.getAttachmentUid());
-    }
-
-    @Test
-    public void testDeleteAttachments() throws Exception
-    {
-        assignResponse(HttpStatus.SC_OK, MediaType.APPLICATION_JSON, jsonResponse(null));
-
-        assertNotNull(attachmentsApi.deleteAttachments(ACCOUNT_UID, ATTACHMENT_TYPE, ENTITY_UID));
-        getRequestWithValidation(HttpMethod.DELETE, ENTITY_LINKS, ACCOUNT_UID, ATTACHMENT_TYPE, ENTITY_UID);
     }
 }
