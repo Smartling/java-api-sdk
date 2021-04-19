@@ -1,5 +1,6 @@
 package com.smartling.api.sdk;
 
+import com.smartling.api.attachments.v2.AttachmentsApi;
 import com.smartling.api.files.v2.FilesApi;
 import com.smartling.api.issues.v2.IssuesApi;
 import com.smartling.api.jobbatches.v2.JobBatchesApi;
@@ -59,4 +60,12 @@ public interface SmartlingApi
      * @return {@link ProjectsApi}
      */
     ProjectsApi projectsApi();
+
+    /**
+     * Returns an API for working with Smartling
+     * <a href="https://api-reference.smartling.com/#tag/Attachments">attachments</a>.
+     *
+     * @return {@link AttachmentsApi}
+     */
+    AttachmentsApi attachmentsApi();
 }
