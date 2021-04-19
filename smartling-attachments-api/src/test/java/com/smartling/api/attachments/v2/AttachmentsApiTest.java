@@ -64,7 +64,6 @@ public class AttachmentsApiTest
     private String requestPath(String path, String... pathParameters)
     {
         assertTrue(pathParameters.length <= PATH_PLACEHOLDERS.size());
-
         for (int i = 0; i < pathParameters.length; i++)
             path = path.replace("{" + PATH_PLACEHOLDERS.get(i) + "}", pathParameters[i]);
 
