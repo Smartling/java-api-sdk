@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>smartling-sdk-parent</artifactId>
+        <groupId>com.smartling.api</groupId>
+        <version>0.20.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>smartling-api-sdk-bom</artifactId>
+    <name>Smartling API BOM</name>
+    <description>
+        The Smartling API BOM helps set a compatible set of common dependency versions.
+    </description>
+    <dependencyManagement>
+        <dependencies>
+            <!-- list in alphabetical order, except api-sdk-all -->
+            <dependency>
+                <groupId>com.smartling.api</groupId>
+                <artifactId>smartling-api-test-utils</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smartling.api</groupId>
+                <artifactId>smartling-api-commons</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smartling.api</groupId>
+                <artifactId>smartling-attachments-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smartling.api</groupId>
+                <artifactId>smartling-issues-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smartling.api</groupId>
+                <artifactId>smartling-jobs-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smartling.api</groupId>
+                <artifactId>smartling-locales-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smartling.api</groupId>
+                <artifactId>smartling-job-batches-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smartling.api</groupId>
+                <artifactId>smartling-files-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smartling.api</groupId>
+                <artifactId>smartling-projects-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smartling.api</groupId>
+                <artifactId>smartling-strings-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.smartling.api</groupId>
+                <artifactId>smartling-api-sdk-all</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

@@ -147,9 +147,9 @@
         </plugins>
     </build>
 
-    <!-- list in alphabetical order, except api-sdk-all -->
+    <!-- list in alphabetical order, except api-sdk-all and api-sdk-bom -->
     <modules>
-        <module>samrtling-api-test-utils</module>
+        <module>smartling-api-test-utils</module>
         <module>smartling-api-commons</module>
         <module>smartling-attachments-api</module>
         <module>smartling-issues-api</module>
@@ -159,7 +159,8 @@
         <module>smartling-files-api</module>
         <module>smartling-projects-api</module>
         <module>smartling-strings-api</module>
-        <module>smartling-api-sdk-all</module> <!-- keep last -->
+        <module>smartling-api-sdk-all</module> <!-- keep last but one -->
+        <module>smartling-api-sdk-bom</module> <!-- keep last -->
     </modules>
 
     <developers>
