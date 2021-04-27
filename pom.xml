@@ -149,7 +149,7 @@
 
     <!-- list in alphabetical order, except api-sdk-all -->
     <modules>
-        <module>samrtling-api-test-utils</module>
+        <module>smartling-api-test-utils</module>
         <module>smartling-api-commons</module>
         <module>smartling-attachments-api</module>
         <module>smartling-issues-api</module>
