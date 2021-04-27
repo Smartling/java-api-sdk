@@ -17,7 +17,7 @@ Add the SDK to your dependencies:
             <artifactId>smartling-api-sdk</artifactId>
             <version>${version}</version>
         </dependency>
-    </dependency>
+    </dependencies>
 
 ### Gradle
 
