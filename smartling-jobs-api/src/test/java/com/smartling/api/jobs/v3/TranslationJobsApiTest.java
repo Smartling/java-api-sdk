@@ -5,6 +5,7 @@ import com.smartling.api.jobs.v3.pto.AddLocaleCommandPTO;
 import com.smartling.api.jobs.v3.pto.AsyncResponsePTO;
 import com.smartling.api.jobs.v3.pto.ContentProgressReportPTO;
 import com.smartling.api.jobs.v3.pto.CustomFieldAssignmentPTO;
+import com.smartling.api.jobs.v3.pto.CustomFieldPTO;
 import com.smartling.api.jobs.v3.pto.FileUriPTO;
 import com.smartling.api.jobs.v3.pto.HashcodesAndLocalesPTO;
 import com.smartling.api.jobs.v3.pto.LocaleAndHashcodeListCommandPTO;
@@ -12,6 +13,7 @@ import com.smartling.api.jobs.v3.pto.LocaleContentProgressReportPTO;
 import com.smartling.api.jobs.v3.pto.LocaleHashcodePairPTO;
 import com.smartling.api.jobs.v3.pto.LocaleWorkflowCommandPTO;
 import com.smartling.api.jobs.v3.pto.PagingCommandPTO;
+import com.smartling.api.jobs.v3.pto.ProjectCustomFieldFilterPTO;
 import com.smartling.api.jobs.v3.pto.SortCommandPTO;
 import com.smartling.api.jobs.v3.pto.StringModifiedCountResponsePTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobAddFileCommandPTO;
@@ -821,5 +823,48 @@ public class TranslationJobsApiTest
             .contains(TranslationJobsApi.API_JOB_CONTENTS_ENDPOINT.replace("{projectId}", PROJECT_ID).replace("{translationJobUid}", TRANSLATION_JOB_UID)));
         assertTrue(request.getPath().contains("limit=100"));
         assertTrue(request.getPath().contains("offset=0"));
+    }
+
+    @Test
+    public void testGetProjectCustomFields() throws Exception
+    {
+        assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, SampleApiResponses.GET_PROJECT_CUSTOM_FIELDS_RESPONSE_BODY));
+
+        ListResponse<CustomFieldPTO> response = translationJobsApi.getProjectCustomFields(PROJECT_ID, new ProjectCustomFieldFilterPTO());
+
+        assertEquals(2, response.getTotalCount());
+        assertEquals(2, response.getItems().size());
+
+        assertEquals("test_field_name", response.getItems().get(0).getFieldName());
+        assertEquals("d9bony5xnqrb", response.getItems().get(0).getFieldUid());
+
+        assertEquals("test_field_name2", response.getItems().get(1).getFieldName());
+        assertEquals("d9bony6xnqrb", response.getItems().get(1).getFieldUid());
+
+        final RecordedRequest request = mockWebServer.takeRequest();
+        assertEquals("GET", request.getMethod());
+        assertTrue(request.getPath()
+            .contains(TranslationJobsApi.API_PROJECT_CUSTOM_FIELDS_ENDPOINT.replace("{projectId}", PROJECT_ID)));
+        assertTrue(request.getPath().contains("includeDisabled=false"));
+    }
+
+    @Test
+    public void testGetAllProjectCustomFields() throws Exception
+    {
+        assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, SampleApiResponses.GET_PROJECT_CUSTOM_FIELDS_RESPONSE_BODY));
+
+        ListResponse<CustomFieldPTO> response = translationJobsApi.getProjectCustomFields(PROJECT_ID, new ProjectCustomFieldFilterPTO(true));
+
+        assertEquals(2, response.getTotalCount());
+        assertEquals(2, response.getItems().size());
+
+        assertEquals("test_field_name", response.getItems().get(0).getFieldName());
+        assertEquals("test_field_name2", response.getItems().get(1).getFieldName());
+
+        final RecordedRequest request = mockWebServer.takeRequest();
+        assertEquals("GET", request.getMethod());
+        assertTrue(request.getPath()
+            .contains(TranslationJobsApi.API_PROJECT_CUSTOM_FIELDS_ENDPOINT.replace("{projectId}", PROJECT_ID)));
+        assertTrue(request.getPath().contains("includeDisabled=true"));
     }
 }
