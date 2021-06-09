@@ -6,6 +6,10 @@ public class RestApiResponse<T extends ResponseData> implements Serializable
 {
     private Response<T> response;
 
+    public RestApiResponse()
+    {
+    }
+
     public RestApiResponse(Response<T> response)
     {
         this.response = response;
@@ -14,5 +18,10 @@ public class RestApiResponse<T extends ResponseData> implements Serializable
     public Response<T> getResponse()
     {
         return response;
+    }
+
+    public void setResponse(Response<T> response)
+    {
+        this.response = response;
     }
 }
