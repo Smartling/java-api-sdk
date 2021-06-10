@@ -4,13 +4,13 @@
 
     <artifactId>smartling-api-test-utils</artifactId>
     <packaging>jar</packaging>
-    <version>0.20.2</version>
+    <version>0.20.3-SNAPSHOT</version>
     <name>Smartling API Test Utils</name>
 
     <parent>
         <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
-        <version>0.20.2</version>
+        <version>0.20.3-SNAPSHOT</version>
     </parent>
 
     <dependencies>
