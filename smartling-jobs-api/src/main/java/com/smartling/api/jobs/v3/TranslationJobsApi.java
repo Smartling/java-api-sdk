@@ -231,7 +231,7 @@ public interface TranslationJobsApi
 
     @GET
     @Path(API_PROJECT_CUSTOM_FIELDS_ENDPOINT)
-    ListResponse<CustomFieldPTO> getProjectCustomFields(@PathParam(PROJECT_ID) String projectId, @BeanParam ProjectCustomFieldFilterPTO filterPTO);
+    ListResponse<CustomFieldPTO> getAssignedCustomFieldsToProject(@PathParam(PROJECT_ID) String projectId, @BeanParam ProjectCustomFieldFilterPTO filterPTO);
 
     @GET
     @Path(API_ACCOUNT_CUSTOM_FIELDS_ENDPOINT)

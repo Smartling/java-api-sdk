@@ -830,7 +830,7 @@ public class TranslationJobsApiTest
     {
         assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, SampleApiResponses.GET_PROJECT_CUSTOM_FIELDS_RESPONSE_BODY));
 
-        ListResponse<CustomFieldPTO> response = translationJobsApi.getProjectCustomFields(PROJECT_ID, new ProjectCustomFieldFilterPTO());
+        ListResponse<CustomFieldPTO> response = translationJobsApi.getAssignedCustomFieldsToProject(PROJECT_ID, new ProjectCustomFieldFilterPTO());
 
         assertEquals(2, response.getTotalCount());
         assertEquals(2, response.getItems().size());
@@ -853,7 +853,7 @@ public class TranslationJobsApiTest
     {
         assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, SampleApiResponses.GET_PROJECT_CUSTOM_FIELDS_RESPONSE_BODY));
 
-        ListResponse<CustomFieldPTO> response = translationJobsApi.getProjectCustomFields(PROJECT_ID, new ProjectCustomFieldFilterPTO(true));
+        ListResponse<CustomFieldPTO> response = translationJobsApi.getAssignedCustomFieldsToProject(PROJECT_ID, new ProjectCustomFieldFilterPTO(true));
 
         assertEquals(2, response.getTotalCount());
         assertEquals(2, response.getItems().size());
