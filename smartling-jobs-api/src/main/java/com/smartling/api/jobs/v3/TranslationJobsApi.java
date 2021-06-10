@@ -12,6 +12,7 @@ import com.smartling.api.jobs.v3.pto.PagingCommandPTO;
 import com.smartling.api.jobs.v3.pto.AddLocaleCommandPTO;
 import com.smartling.api.jobs.v3.pto.AsyncProcessDTO;
 import com.smartling.api.jobs.v3.pto.AsyncResponsePTO;
+import com.smartling.api.jobs.v3.pto.ProjectCustomFieldFilterPTO;
 import com.smartling.api.jobs.v3.pto.SortCommandPTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobFindByLocalesAndHashcodesCommandPTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobFoundByStringsAndLocalesResponsePTO;
@@ -227,6 +228,10 @@ public interface TranslationJobsApi
     @POST
     @Path(API_PROJECT_CUSTOM_FIELDS_ENDPOINT)
     EmptyData assignCustomFieldsToProject(@PathParam(PROJECT_ID) String projectId, List<CustomFieldAssignmentPTO> customFieldAssignments);
+
+    @GET
+    @Path(API_PROJECT_CUSTOM_FIELDS_ENDPOINT)
+    ListResponse<CustomFieldPTO> getAssignedCustomFieldsToProject(@PathParam(PROJECT_ID) String projectId, @BeanParam ProjectCustomFieldFilterPTO filterPTO);
 
     @GET
     @Path(API_ACCOUNT_CUSTOM_FIELDS_ENDPOINT)

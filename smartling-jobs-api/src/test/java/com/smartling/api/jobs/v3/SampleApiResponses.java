@@ -315,6 +315,37 @@ interface SampleApiResponses
             "        }" +
             "    ]" +
             "}";
+
+    String GET_PROJECT_CUSTOM_FIELDS_RESPONSE_BODY =
+        "{\n" +
+            "    \"totalCount\": 2,\n" +
+            "    \"items\": [\n" +
+            "        {\n" +
+            "            \"fieldUid\": \"d9bony5xnqrb\",\n" +
+            "            \"type\": \"SHORT_TEXT\",\n" +
+            "            \"fieldName\": \"test_field_name\",\n" +
+            "            \"enabled\": true,\n" +
+            "            \"required\": false,\n" +
+            "            \"searchable\": true,\n" +
+            "            \"displayToTranslators\": true,\n" +
+            "            \"options\": [],\n" +
+            "            \"defaultValue\": \"\",\n" +
+            "            \"description\": \"\"\n" +
+            "        },\n" +
+            "        {\n" +
+            "            \"fieldUid\": \"d9bony6xnqrb\",\n" +
+            "            \"type\": \"SHORT_TEXT\",\n" +
+            "            \"fieldName\": \"test_field_name2\",\n" +
+            "            \"enabled\": true,\n" +
+            "            \"required\": false,\n" +
+            "            \"searchable\": true,\n" +
+            "            \"displayToTranslators\": true,\n" +
+            "            \"options\": [],\n" +
+            "            \"defaultValue\": \"default_value\",\n" +
+            "            \"description\": \"Test custom field description\"\n" +
+            "        }\n" +
+            "    ]\n" +
+            "}";
 }
 
 
