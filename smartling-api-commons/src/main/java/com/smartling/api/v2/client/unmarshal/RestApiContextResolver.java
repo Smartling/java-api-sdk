@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.module.kotlin.KotlinModule;
+
 import java.util.Map;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -36,6 +38,7 @@ public class RestApiContextResolver implements ContextResolver<ObjectMapper>
             deserializerModule.addDeserializer(klass, (JsonDeserializer)classJsonDeserializerMap.get(klass));
 
         objectMapper.registerModule(deserializerModule);
+        objectMapper.registerModule(new KotlinModule());
 
         this.objectMapper = objectMapper;
     }
