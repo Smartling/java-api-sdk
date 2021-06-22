@@ -49,7 +49,7 @@ public class RestApiResponseReaderInterceptor implements ReaderInterceptor
 
         JsonNode node = requestNode.get("response");
 
-        if (!Response.class.isAssignableFrom(context.getType()))
+        if (!Response.class.isAssignableFrom(context.getType()) && node.has("data"))
             node = node.get("data");
 
         if (node.isNull() && EmptyData.class.isAssignableFrom(context.getType()))
