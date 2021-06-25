@@ -39,9 +39,25 @@ public class RestApiResponseReaderInterceptorTest
             + "   } "
             + "}";
 
+    private static final String RESPONSE_ERROR_JSON = "{\n" +
+        "    \"response\": {\n" +
+        "        \"code\":\"VALIDATION_ERROR\",\n" +
+        "        \"errors\": [\n" +
+        "            {\n" +
+        "                \"key\":\"file.not.found\",\n" +
+        "                \"message\":\"The file \\\"e5988be8-117d-4755-aa7c-f0959f25d5f1:/content/launches/2021/06/21/test0/content/we-retail/language-masters/fr/test\\\" could not be found\",\n" +
+        "                \"details\": {\n" +
+        "                    \"field\":\"fileUri\"\n" +
+        "                }\n" +
+        "            }\n" +
+        "        ]\n" +
+        "    }\n" +
+        "}";
+
     private static final String STRIPPED_RESPONSE_JSON = "{\"code\":\"SUCCESS\",\"data\":{\"packageUid\":\"2383bcd09\"}}";
     private static final String STRIPPED_DATA_JSON = "{\"packageUid\":\"2383bcd09\"}";
     private static final String STRIPPED_NULL_JSON = "null";
+    private static final String STRIPPED_ERROR_JSON = "{\"code\":\"VALIDATION_ERROR\",\"errors\":[{\"key\":\"file.not.found\",\"message\":\"The file \\\"e5988be8-117d-4755-aa7c-f0959f25d5f1:/content/launches/2021/06/21/test0/content/we-retail/language-masters/fr/test\\\" could not be found\",\"details\":{\"field\":\"fileUri\"}}]}";
 
     private static final String RESPONSE_TEXT_PLAIN = "some text";
 
@@ -141,6 +157,17 @@ public class RestApiResponseReaderInterceptorTest
     {
         doReturn(Object.class).when(context).getType();
         setContextJsonInputStream(RESPONSE_NULL_JSON, STRIPPED_NULL_JSON);
+        interceptor.aroundReadFrom(context);
+
+        verify(context, times(1)).proceed();
+        verify(context, times(1)).setInputStream(any(InputStream.class));
+    }
+
+    @Test
+    public void testAroundReadErrorData() throws Exception
+    {
+        doReturn(String.class).when(context).getType();
+        setContextJsonInputStream(RESPONSE_ERROR_JSON, STRIPPED_ERROR_JSON);
         interceptor.aroundReadFrom(context);
 
         verify(context, times(1)).proceed();
