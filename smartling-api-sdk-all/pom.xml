@@ -48,6 +48,11 @@
         </dependency>
         <dependency>
             <groupId>com.smartling.api</groupId>
+            <artifactId>smartling-contexts-api</artifactId>
+            <version>0.22.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smartling.api</groupId>
             <artifactId>smartling-attachments-api</artifactId>
             <version>0.22.3-SNAPSHOT</version>
         </dependency>
