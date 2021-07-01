@@ -12,6 +12,7 @@ import com.smartling.api.contexts.v2.pto.MatchIdPTO;
 import com.smartling.api.contexts.v2.pto.MatchRequestPTO;
 import com.smartling.api.contexts.v2.pto.MatchStatusPTO;
 import com.smartling.api.contexts.v2.pto.PaginatedListResponse;
+import com.smartling.api.v2.response.ListResponse;
 import java.io.InputStream;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -79,5 +80,5 @@ public interface ContextsApi
     @POST
     @Path("/projects/{projectId}/bindings/remove")
     @Produces
-    void deleteBindings(@PathParam("projectId") String projectId, BatchDeleteBindingsRequestPTO bindingsRequest);
+    ListResponse<BindingPTO> deleteBindings(@PathParam("projectId") String projectId, BatchDeleteBindingsRequestPTO bindingsRequest);
 }

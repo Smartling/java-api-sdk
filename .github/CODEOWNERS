@@ -11,3 +11,5 @@ smartling-issues-api/           @pshander
 smartling-api-test-utils/       @dkBrazz
 smartling-strings-api/          @klegins-smartling @AlexanderNovak
 smartling-attachments-api/      @klegins-smartling @AlexanderNovak
+smartling-contexts-api/         @vbarhatov @MihailTymoshenko @dsavchenko-sm
+

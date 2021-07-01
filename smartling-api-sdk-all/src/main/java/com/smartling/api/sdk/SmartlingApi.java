@@ -1,6 +1,7 @@
 package com.smartling.api.sdk;
 
 import com.smartling.api.attachments.v2.AttachmentsApi;
+import com.smartling.api.contexts.v2.ContextsApi;
 import com.smartling.api.files.v2.FilesApi;
 import com.smartling.api.issues.v2.IssuesApi;
 import com.smartling.api.jobbatches.v2.JobBatchesApi;
@@ -68,4 +69,12 @@ public interface SmartlingApi
      * @return {@link AttachmentsApi}
      */
     AttachmentsApi attachmentsApi();
+
+    /**
+     * Returns an API for working with Smartling
+     * <a href="https://api-reference.smartling.com/#tag/Context">contexts</a>.
+     *
+     * @return {@link ContextsApi}
+     */
+    ContextsApi contextsApi();
 }
