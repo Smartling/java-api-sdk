@@ -5,11 +5,11 @@
     <parent>
         <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
-        <version>0.22.5-SNAPSHOT</version>
+        <version>0.23.0</version>
     </parent>
 
     <artifactId>smartling-files-api</artifactId>
-    <version>0.22.5-SNAPSHOT</version>
+    <version>0.23.0</version>
     <name>Smartling Content Files API</name>
 
     <build>
@@ -25,7 +25,7 @@
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-api-commons</artifactId>
-            <version>0.22.5-SNAPSHOT</version>
+            <version>0.23.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -35,7 +35,7 @@
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-api-test-utils</artifactId>
-            <version>0.22.5-SNAPSHOT</version>
+            <version>0.23.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
