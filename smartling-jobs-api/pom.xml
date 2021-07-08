@@ -5,18 +5,18 @@
     <parent>
         <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
-        <version>0.23.0</version>
+        <version>0.23.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>smartling-jobs-api</artifactId>
-    <version>0.23.0</version>
+    <version>0.23.1-SNAPSHOT</version>
     <name>Smartling Jobs API</name>
 
     <dependencies>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-api-commons</artifactId>
-            <version>0.23.0</version>
+            <version>0.23.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
