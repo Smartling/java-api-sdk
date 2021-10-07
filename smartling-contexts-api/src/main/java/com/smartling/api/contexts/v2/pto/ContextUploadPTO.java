@@ -22,6 +22,6 @@ public class ContextUploadPTO
 
     @FormParam("content")
     @PartFilename("content")
-    @PartType("text/html")
+    @PartType("application/octet-stream")
     private byte[] content;
 }
