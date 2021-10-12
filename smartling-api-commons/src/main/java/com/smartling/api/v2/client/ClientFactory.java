@@ -3,6 +3,7 @@ package com.smartling.api.v2.client;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartling.api.v2.client.auth.AuthorizationRequestFilter;
+import com.smartling.api.v2.response.WildcardBodyReader;
 import com.smartling.resteasy.ext.ExtendedMultipartFormWriter;
 import com.smartling.api.v2.client.exception.DefaultRestApiExceptionMapper;
 import com.smartling.api.v2.client.exception.RestApiExceptionHandler;
@@ -214,6 +215,7 @@ public class ClientFactory
                 .target(domain)
                 .register(new RestApiResponseReaderInterceptor())
                 .register(new ExtendedMultipartFormWriter())
+                .register(new WildcardBodyReader())
                 .register(contextResolver);
 
         for (final ClientRequestFilter filter : clientRequestFilters)

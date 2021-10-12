@@ -46,7 +46,8 @@ public class SmartlingWireMock extends WireMock
             .withHeader("Content-Type", equalTo("application/json"));
     }
 
-    public static <T extends Enum<T>> ResponseDefinitionBuilder smartlingResponse(Enum<T> responseCode, String data, String errors)
+    public static <T extends Enum<T>> ResponseDefinitionBuilder smartlingResponse(
+        Enum<T> responseCode, String contentType, String data, String errors)
     {
         ObjectNode response = responseTemplate();
         ((ObjectNode) response.get("response"))
@@ -65,8 +66,13 @@ public class SmartlingWireMock extends WireMock
         }
 
         return aResponse()
-            .withHeader("Content-Type", "application/json")
+            .withHeader("Content-Type", contentType)
             .withJsonBody(response);
+    }
+
+    public static <T extends Enum<T>> ResponseDefinitionBuilder smartlingResponse(Enum<T> responseCode, String data, String errors)
+    {
+        return smartlingResponse(responseCode, "application/json", data, errors);
     }
 
     public static ResponseDefinitionBuilder success(String data)
@@ -79,7 +85,7 @@ public class SmartlingWireMock extends WireMock
         return smartlingResponse(responseCode,null, errors);
     }
 
-    private enum ResponseCode
+    public enum ResponseCode
     {
         SUCCESS
     }
