@@ -125,7 +125,7 @@ public class AuthenticationIntegrationTest
             .willReturn(smartlingResponse(SmartlingWireMock.ResponseCode.SUCCESS, "*/*", data, null)
             )
         );
-        String expectedMessage = "Unexpected media type */* for response:\n" +
+        String expectedMessage = "Error during response processing:\n" +
             "\ttype: com.smartling.api.v2.authentication.pto.Authentication\n" +
             "\tgenericType: class com.smartling.api.v2.authentication.pto.Authentication\n" +
             "\tannotations: [\n" +
@@ -133,6 +133,7 @@ public class AuthenticationIntegrationTest
             "\t\t@javax.ws.rs.Path(value=\"/authenticate\")\n" +
             "\t]\n" +
             "\theaders: [Content-Type=*/*,Matched-Stub-Id=" + stubMapping.getId() + ",Server=Jetty(9.2.28.v20190418),Transfer-Encoding=chunked,Vary=Accept-Encoding, User-Agent]\n" +
+            "\tmedia type: */*\n" +
             "\tbody: {\"response\":{\"code\":\"SUCCESS\",\"data\":{\"accessToken\":\"accessTokenValue\",\"refreshToken\":\"refreshTokenValue\",\"expiresIn\":480,\"refreshExpiresIn\":21600,\"tokenType\":\"Bearer\"}}}";
         String actualMessage = null;
         try
@@ -140,7 +141,7 @@ public class AuthenticationIntegrationTest
             dummyApi().dummy();
         }
         catch (Exception ex) {
-            actualMessage = ex.getCause().getCause().getCause().getMessage();
+            actualMessage = ex.getCause().getCause().getMessage();
         }
         assertEquals(expectedMessage, actualMessage);
     }
