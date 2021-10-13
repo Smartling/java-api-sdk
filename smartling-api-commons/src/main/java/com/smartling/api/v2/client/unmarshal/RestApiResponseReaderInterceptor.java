@@ -75,6 +75,7 @@ public class RestApiResponseReaderInterceptor implements ReaderInterceptor
                 + "\n\tgenericType: " + context.getGenericType() + "\n\tannotations: [" + annotationsView
                 + "\n\t]\n\theaders: " + context.getHeaders() + "\n\tmedia type: " + context.getMediaType()
                 + "\n\tbody: " + body;
+            log.error(message);
             throw new ProcessingException(message, ex);
         }
     }
