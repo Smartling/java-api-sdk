@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartling.api.v2.response.EmptyData;
 import com.smartling.api.v2.response.Response;
 import com.smartling.api.v2.response.RestApiResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpHeaders;
 import org.apache.http.message.BasicHeader;
@@ -12,10 +14,12 @@ import org.apache.http.message.BasicHeader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.Annotation;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
@@ -28,6 +32,7 @@ import javax.ws.rs.ext.ReaderInterceptorContext;
  */
 @Provider
 @Priority(Priorities.USER)
+@Slf4j
 public class RestApiResponseReaderInterceptor implements ReaderInterceptor
 {
     protected static final EmptyData EMPTY_DATA = new EmptyData();
@@ -35,28 +40,44 @@ public class RestApiResponseReaderInterceptor implements ReaderInterceptor
     @Override
     public Object aroundReadFrom(final ReaderInterceptorContext context) throws IOException, WebApplicationException
     {
-        if (!MediaType.APPLICATION_JSON.equalsIgnoreCase(getResponseContentType(context)))
+        try
+        {
+            if (!MediaType.APPLICATION_JSON.equalsIgnoreCase(getResponseContentType(context)))
+                return context.proceed();
+
+            if (RestApiResponse.class.isAssignableFrom(context.getType()))
+                return context.proceed();
+
+            if (InputStream.class.isAssignableFrom(context.getType()))
+                return context.proceed();
+
+            final ObjectMapper mapper = new ObjectMapper();
+            final JsonNode requestNode = mapper.readTree(context.getInputStream());
+
+            JsonNode node = requestNode.get("response");
+
+            if (!Response.class.isAssignableFrom(context.getType()) && node.has("data"))
+                node = node.get("data");
+
+            if (node.isNull() && EmptyData.class.isAssignableFrom(context.getType()))
+                return EMPTY_DATA;
+
+            context.setInputStream(new ByteArrayInputStream(node.toString().getBytes(StandardCharsets.UTF_8)));
             return context.proceed();
-
-        if (RestApiResponse.class.isAssignableFrom(context.getType()))
-            return context.proceed();
-
-        if (InputStream.class.isAssignableFrom(context.getType()))
-            return context.proceed();
-
-        final ObjectMapper mapper = new ObjectMapper();
-        final JsonNode requestNode = mapper.readTree(context.getInputStream());
-
-        JsonNode node = requestNode.get("response");
-
-        if (!Response.class.isAssignableFrom(context.getType()) && node.has("data"))
-            node = node.get("data");
-
-        if (node.isNull() && EmptyData.class.isAssignableFrom(context.getType()))
-            return EMPTY_DATA;
-
-        context.setInputStream(new ByteArrayInputStream(node.toString().getBytes(StandardCharsets.UTF_8)));
-        return context.proceed();
+        }
+        catch (ProcessingException ex) {
+            String body = IOUtils.toString(context.getInputStream(), StandardCharsets.UTF_8.name());
+            String annotationsView = "";
+            for (Annotation annotation : context.getAnnotations()) {
+                annotationsView += "\n\t\t" + annotation;
+            }
+            String message = "Error during response processing:\n\ttype: " + context.getType().getName()
+                + "\n\tgenericType: " + context.getGenericType() + "\n\tannotations: [" + annotationsView
+                + "\n\t]\n\theaders: " + context.getHeaders() + "\n\tmedia type: " + context.getMediaType()
+                + "\n\tbody: " + body;
+            log.error(message);
+            throw new ProcessingException(message, ex);
+        }
     }
 
     private String getResponseContentType(final ReaderInterceptorContext context)

@@ -1,6 +1,7 @@
 package com.smartling.api.v2.auth;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import com.smartling.api.v2.authentication.AuthenticationApi;
 import com.smartling.api.v2.authentication.AuthenticationApiFactory;
 import com.smartling.api.v2.client.AbstractApiFactory;
@@ -14,6 +15,7 @@ import com.smartling.api.v2.client.exception.RestApiRuntimeException;
 import com.smartling.api.v2.client.exception.server.MaintanenceModeErrorException;
 import com.smartling.api.v2.client.exception.server.ServerApiException;
 import com.smartling.api.v2.response.ResponseCode;
+import com.smartling.api.v2.tests.wiremock.SmartlingWireMock;
 import org.apache.http.HttpStatus;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -32,10 +34,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.smartling.api.v2.auth.DummyApi.DUMMY_API;
-import static com.smartling.api.v2.tests.wiremock.SmartlingWireMock.error;
-import static com.smartling.api.v2.tests.wiremock.SmartlingWireMock.postJson;
-import static com.smartling.api.v2.tests.wiremock.SmartlingWireMock.success;
+import static com.smartling.api.v2.tests.wiremock.SmartlingWireMock.*;
 import static java.lang.Thread.sleep;
+import static org.junit.Assert.assertEquals;
 
 public class AuthenticationIntegrationTest
 {
@@ -45,7 +46,7 @@ public class AuthenticationIntegrationTest
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private ApiFactory<DummyApi> dummyFactory = new AbstractApiFactory<DummyApi>()
+    private final ApiFactory<DummyApi> dummyFactory = new AbstractApiFactory<DummyApi>()
     {
         @Override
         protected Class<DummyApi> getApiClass()
@@ -102,6 +103,47 @@ public class AuthenticationIntegrationTest
 
         smartlingApi.verify(getRequestedFor(urlEqualTo(DUMMY_API))
             .withHeader("Authorization", equalTo("Bearer accessTokenValue")));
+    }
+
+    @Test
+    public void shouldLogWeirdContentType()
+    {
+        // language=JSON
+        String data = "{\n" +
+            "  \"accessToken\": \"accessTokenValue\",\n" +
+            "  \"refreshToken\": \"refreshTokenValue\",\n" +
+            "  \"expiresIn\": 480,\n" +
+            "  \"refreshExpiresIn\": 21600,\n" +
+            "  \"tokenType\": \"Bearer\"\n" +
+            "}";
+        StubMapping stubMapping = smartlingApi.stubFor(postJson(urlEqualTo("/auth-api/v2/authenticate"))
+            .withRequestBody(equalToJson("{\n" +
+                "  \"userIdentifier\": \"user\",\n" +
+                "  \"userSecret\": \"secret\"\n" +
+                "}")
+            )
+            .willReturn(smartlingResponse(SmartlingWireMock.ResponseCode.SUCCESS, "*/*", data, null)
+            )
+        );
+        String expectedMessage = "Error during response processing:\n" +
+            "\ttype: com.smartling.api.v2.authentication.pto.Authentication\n" +
+            "\tgenericType: class com.smartling.api.v2.authentication.pto.Authentication\n" +
+            "\tannotations: [\n" +
+            "\t\t@javax.ws.rs.POST()\n" +
+            "\t\t@javax.ws.rs.Path(value=\"/authenticate\")\n" +
+            "\t]\n" +
+            "\theaders: [Content-Type=*/*,Matched-Stub-Id=" + stubMapping.getId() + ",Server=Jetty(9.2.28.v20190418),Transfer-Encoding=chunked,Vary=Accept-Encoding, User-Agent]\n" +
+            "\tmedia type: */*\n" +
+            "\tbody: {\"response\":{\"code\":\"SUCCESS\",\"data\":{\"accessToken\":\"accessTokenValue\",\"refreshToken\":\"refreshTokenValue\",\"expiresIn\":480,\"refreshExpiresIn\":21600,\"tokenType\":\"Bearer\"}}}";
+        String actualMessage = null;
+        try
+        {
+            dummyApi().dummy();
+        }
+        catch (Exception ex) {
+            actualMessage = ex.getCause().getCause().getMessage();
+        }
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
