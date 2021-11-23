@@ -3,6 +3,10 @@ package com.smartling.api.contexts.v2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.Lists;
+import com.smartling.api.contexts.v2.pto.AsyncProcessPTO;
+import com.smartling.api.contexts.v2.pto.AsyncProcessStartedPTO;
+import com.smartling.api.contexts.v2.pto.AsyncProcessState;
+import com.smartling.api.contexts.v2.pto.AsyncProcessType;
 import com.smartling.api.contexts.v2.pto.BatchBindingPTO;
 import com.smartling.api.contexts.v2.pto.BatchBindingRequestPTO;
 import com.smartling.api.contexts.v2.pto.BatchDeleteBindingsRequestPTO;
@@ -10,12 +14,11 @@ import com.smartling.api.contexts.v2.pto.BindingPTO;
 import com.smartling.api.contexts.v2.pto.BindingRequestPTO;
 import com.smartling.api.contexts.v2.pto.BindingsRequestPTO;
 import com.smartling.api.contexts.v2.pto.ContextPTO;
+import com.smartling.api.contexts.v2.pto.ContextUploadAndMatchPTO;
 import com.smartling.api.contexts.v2.pto.ContextUploadPTO;
 import com.smartling.api.contexts.v2.pto.CoordinatesPTO;
-import com.smartling.api.contexts.v2.pto.ContextUploadAndMatchPTO;
-import com.smartling.api.contexts.v2.pto.MatchIdPTO;
+import com.smartling.api.contexts.v2.pto.DeleteContextsAsyncRequestPTO;
 import com.smartling.api.contexts.v2.pto.MatchRequestPTO;
-import com.smartling.api.contexts.v2.pto.MatchStatusPTO;
 import com.smartling.api.contexts.v2.pto.PaginatedListResponse;
 import com.smartling.api.v2.client.ClientConfiguration;
 import com.smartling.api.v2.client.DefaultClientConfiguration;
@@ -46,7 +49,8 @@ public class ContextsApiTest
 {
     private static final String PROJECT_UID = "project_uid";
     private static final String CONTEXT_UID = "context_uid";
-    private static final String MATCH_ID = "match_id";
+    private static final String PROCESS_UID = "process_uid";
+
 
     private final static String UPLOAD_CONTEXT_RESPONSE = "{\n" +
         "  \"response\": {\n" +
@@ -230,6 +234,20 @@ public class ContextsApiTest
     }
 
     @Test
+    public void testDeleteContextsAsync() throws Exception
+    {
+        String body = objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
+            .writeValueAsString(ResponseBuilders.respondWith(new AsyncProcessStartedPTO(PROCESS_UID)));
+        assignResponse(body);
+
+        AsyncProcessStartedPTO asyncProcessStartedPTO = contextApi.deleteContextsAsync(PROJECT_UID, new DeleteContextsAsyncRequestPTO(Collections.singletonList(CONTEXT_UID)));
+        assertThat(asyncProcessStartedPTO.getProcessUid(), is(PROCESS_UID));
+        RecordedRequest request = mockWebServer.takeRequest();
+        assertEquals("POST", request.getMethod());
+        assertTrue(request.getPath().contains("/projects/" + PROJECT_UID + "/contexts/remove/async"));
+    }
+
+    @Test
     public void testStreamResponse() throws Exception
     {
         assignResponse("test");
@@ -249,12 +267,12 @@ public class ContextsApiTest
     public void testMatchAsync() throws Exception
     {
         String body = objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-            .writeValueAsString(ResponseBuilders.respondWith(new MatchIdPTO(MATCH_ID)));
+            .writeValueAsString(ResponseBuilders.respondWith(new AsyncProcessStartedPTO(PROCESS_UID)));
         assignResponse(body);
 
-        MatchIdPTO matchIdPTO = contextApi.matchAsync(PROJECT_UID, CONTEXT_UID, new MatchRequestPTO());
+        AsyncProcessStartedPTO asyncProcessStartedPTO = contextApi.matchAsync(PROJECT_UID, CONTEXT_UID, new MatchRequestPTO());
 
-        assertThat(matchIdPTO.getMatchId(), is(MATCH_ID));
+        assertThat(asyncProcessStartedPTO.getProcessUid(), is(PROCESS_UID));
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals("POST", request.getMethod());
         assertTrue(request.getPath().contains("/projects/" + PROJECT_UID + "/contexts/" + CONTEXT_UID + "/match/async"));
@@ -264,34 +282,41 @@ public class ContextsApiTest
     public void testUploadAndMatchAsync() throws Exception
     {
         String body = objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-            .writeValueAsString(ResponseBuilders.respondWith(new MatchIdPTO(MATCH_ID)));
+            .writeValueAsString(ResponseBuilders.respondWith(new AsyncProcessStartedPTO(PROCESS_UID)));
         assignResponse(body);
         byte[] content = "<div>context content</div>".getBytes();
         ContextUploadAndMatchPTO contextUploadPTO = new ContextUploadAndMatchPTO("context.html", content,
             Collections.<String>emptyList()
         );
 
-        MatchIdPTO matchIdPTO = contextApi.uploadContextAndMatchAsync(PROJECT_UID, contextUploadPTO);
+        AsyncProcessStartedPTO asyncProcessStartedPTO = contextApi.uploadContextAndMatchAsync(PROJECT_UID, contextUploadPTO);
 
-        assertThat(matchIdPTO.getMatchId(), is(MATCH_ID));
+        assertThat(asyncProcessStartedPTO.getProcessUid(), is(PROCESS_UID));
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals("POST", request.getMethod());
         assertTrue(request.getPath().contains("/projects/" + PROJECT_UID + "/contexts/upload-and-match-async"));
     }
 
     @Test
-    public void testMatchAsyncStatus() throws Exception
+    public void testGetAsyncProcess() throws Exception
     {
-        String body = objectMapper.writeValueAsString(ResponseBuilders.respondWith(new MatchStatusPTO(MATCH_ID, "2017-04-19T14:21:11Z", "2017-04-19T14:21:11Z", "COMPLETED", "contextId", 99L, null)));
+        String body = objectMapper.writeValueAsString(ResponseBuilders.respondWith(new AsyncProcessPTO(PROCESS_UID, AsyncProcessState.IN_PROGRESS, AsyncProcessType.DELETE_CONTEXTS,
+            "2017-04-19T14:21:11Z", "2017-04-19T14:21:11Z", null, null
+        )));
         assignResponse(body);
 
-        MatchStatusPTO matchStatusPTO = contextApi.matchAsyncStatus(PROJECT_UID, MATCH_ID);
+        AsyncProcessPTO asyncProcessPTO = contextApi.getAsyncProcess(PROJECT_UID, PROCESS_UID);
 
-        assertThat(matchStatusPTO.getMatchId(), is(MATCH_ID));
+        assertThat(asyncProcessPTO.getProcessUid(), is(PROCESS_UID));
+        assertThat(asyncProcessPTO.getProcessState(), is(AsyncProcessState.IN_PROGRESS));
+        assertThat(asyncProcessPTO.getProcessType(), is(AsyncProcessType.DELETE_CONTEXTS));
+        assertThat(asyncProcessPTO.getCreatedDate(), is("2017-04-19T14:21:11Z"));
+        assertThat(asyncProcessPTO.getModifiedDate(), is("2017-04-19T14:21:11Z"));
+
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals("GET", request.getMethod());
-        assertTrue(request.getPath().contains("/projects/" + PROJECT_UID + "/match/" + MATCH_ID));
-   }
+        assertTrue(request.getPath().contains("/projects/" + PROJECT_UID + "/processes/" + PROCESS_UID));
+    }
 
     @Test
     public void testCreateBinding() throws Exception
