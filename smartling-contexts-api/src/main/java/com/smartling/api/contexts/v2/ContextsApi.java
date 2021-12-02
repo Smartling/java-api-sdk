@@ -1,5 +1,7 @@
 package com.smartling.api.contexts.v2;
 
+import com.smartling.api.contexts.v2.pto.AsyncProcessPTO;
+import com.smartling.api.contexts.v2.pto.AsyncProcessStartedPTO;
 import com.smartling.api.contexts.v2.pto.BatchBindingPTO;
 import com.smartling.api.contexts.v2.pto.BatchBindingRequestPTO;
 import com.smartling.api.contexts.v2.pto.BatchDeleteBindingsRequestPTO;
@@ -8,9 +10,8 @@ import com.smartling.api.contexts.v2.pto.BindingsRequestPTO;
 import com.smartling.api.contexts.v2.pto.ContextPTO;
 import com.smartling.api.contexts.v2.pto.ContextUploadPTO;
 import com.smartling.api.contexts.v2.pto.ContextUploadAndMatchPTO;
-import com.smartling.api.contexts.v2.pto.MatchIdPTO;
+import com.smartling.api.contexts.v2.pto.DeleteContextsAsyncRequestPTO;
 import com.smartling.api.contexts.v2.pto.MatchRequestPTO;
-import com.smartling.api.contexts.v2.pto.MatchStatusPTO;
 import com.smartling.api.contexts.v2.pto.PaginatedListResponse;
 import com.smartling.api.v2.response.ListResponse;
 import java.io.InputStream;
@@ -48,24 +49,28 @@ public interface ContextsApi
     @Path("/projects/{projectId}/contexts/{contextUid}")
     void deleteContext(@PathParam("projectId") String projectId, @PathParam("contextUid") String contextUid);
 
+    @POST
+    @Path("/projects/{projectId}/contexts/remove/async")
+    AsyncProcessStartedPTO deleteContextsAsync(@PathParam("projectId") String projectId, DeleteContextsAsyncRequestPTO request);
+
     @GET
     @Path("/projects/{projectId}/contexts/{contextUid}/content")
     InputStream downloadContextFileContent(@PathParam("projectId") String projectId, @PathParam("contextUid") String contextUid);
 
     @POST
     @Path("/projects/{projectId}/contexts/{contextUid}/match/async")
-    MatchIdPTO matchAsync(@PathParam("projectId") String projectId, @PathParam("contextUid") String contextUid,
+    AsyncProcessStartedPTO matchAsync(@PathParam("projectId") String projectId, @PathParam("contextUid") String contextUid,
         MatchRequestPTO matchRequestPTO);
 
     @POST
     @Path("/projects/{projectId}/contexts/upload-and-match-async")
     @Consumes (MediaType.MULTIPART_FORM_DATA)
-    MatchIdPTO uploadContextAndMatchAsync(@PathParam("projectId") String projectId,
+    AsyncProcessStartedPTO uploadContextAndMatchAsync(@PathParam("projectId") String projectId,
         @MultipartForm ContextUploadAndMatchPTO contextUploadPTO);
 
     @GET
-    @Path("/projects/{projectId}/match/{matchId}")
-    MatchStatusPTO matchAsyncStatus(@PathParam("projectId") String projectId, @PathParam("matchId") String matchId);
+    @Path("/projects/{projectId}/processes/{processUid}")
+    AsyncProcessPTO getAsyncProcess(@PathParam("projectId") String projectId, @PathParam("processUid") String processUid);
 
     @POST
     @Path("/projects/{projectId}/bindings")
