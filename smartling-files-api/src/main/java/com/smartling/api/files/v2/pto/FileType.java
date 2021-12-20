@@ -38,7 +38,8 @@ public enum FileType
     XLIFF_CAT("application/xml", false),            // XLIFF for offline CAT integration
     DITA("application/xml", false),                 // DITA file format
     PDF("application/octet-stream", false),         // PDF file format
-    FLUENT("text/plain", true);                     // Mozilla Fluent parser
+    FLUENT("text/plain", true),                     // Mozilla Fluent parser
+    DOCM("application/octet-stream", false);        // Microsoft Word with macros
 
     private final String identifier;
     private final String mimeType;
