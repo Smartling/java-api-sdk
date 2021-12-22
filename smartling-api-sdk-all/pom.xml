@@ -56,5 +56,11 @@
             <artifactId>smartling-attachments-api</artifactId>
             <version>0.24.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.smartling.api</groupId>
+            <artifactId>smartling-reports-api</artifactId>
+            <version>0.24.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>

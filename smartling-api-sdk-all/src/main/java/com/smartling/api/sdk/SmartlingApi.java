@@ -8,6 +8,7 @@ import com.smartling.api.jobbatches.v2.JobBatchesApi;
 import com.smartling.api.locales.v2.LocalesApi;
 import com.smartling.api.jobs.v3.TranslationJobsApi;
 import com.smartling.api.projects.v2.ProjectsApi;
+import com.smartling.api.reports.v3.ReportsApi;
 
 /**
  * Provides APIs for working with the Smartling Platform.
@@ -77,4 +78,13 @@ public interface SmartlingApi
      * @return {@link ContextsApi}
      */
     ContextsApi contextsApi();
+
+
+    /**
+     * Returns an API for working with Smartling
+     * <a href="https://api-reference.smartling.com/#tag/Reports">reports</a>.
+     *
+     * @return {@link ReportsApi}
+     */
+    ReportsApi reportsApi();
 }
