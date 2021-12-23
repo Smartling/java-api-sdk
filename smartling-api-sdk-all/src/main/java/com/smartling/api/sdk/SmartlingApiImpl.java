@@ -16,6 +16,8 @@ import com.smartling.api.locales.v2.LocalesApi;
 import com.smartling.api.locales.v2.LocalesApiFactory;
 import com.smartling.api.projects.v2.ProjectsApi;
 import com.smartling.api.projects.v2.ProjectsApiFactory;
+import com.smartling.api.reports.v3.ReportsApi;
+import com.smartling.api.reports.v3.ReportsApiFactory;
 import com.smartling.api.v2.client.ClientFactory;
 
 final class SmartlingApiImpl implements SmartlingApi
@@ -28,6 +30,7 @@ final class SmartlingApiImpl implements SmartlingApi
     private final ProjectsApi projectsApi;
     private final AttachmentsApi attachmentsApi;
     private final ContextsApi contextsApi;
+    private final ReportsApi reportsApi;
 
     SmartlingApiImpl(String userIdentifier, String userSecret)
     {
@@ -45,6 +48,7 @@ final class SmartlingApiImpl implements SmartlingApi
         projectsApi = new ProjectsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
         attachmentsApi = new AttachmentsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
         contextsApi = new ContextsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
+        reportsApi = new ReportsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
     }
 
     @Override
@@ -93,5 +97,11 @@ final class SmartlingApiImpl implements SmartlingApi
     public ContextsApi contextsApi()
     {
         return contextsApi;
+    }
+
+    @Override
+    public ReportsApi reportsApi()
+    {
+        return reportsApi;
     }
 }

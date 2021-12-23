@@ -166,6 +166,7 @@
         <module>smartling-projects-api</module>
         <module>smartling-strings-api</module>
         <module>smartling-contexts-api</module>
+        <module>smartling-reports-api</module>
         <module>smartling-api-sdk-all</module> <!-- keep last -->
     </modules>
 
