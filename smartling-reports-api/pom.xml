@@ -5,6 +5,7 @@
         <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
         <version>0.24.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>smartling-reports-api</artifactId>
     <version>0.24.1-SNAPSHOT</version>
