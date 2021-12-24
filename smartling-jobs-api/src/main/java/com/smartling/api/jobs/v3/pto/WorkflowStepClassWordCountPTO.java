@@ -13,10 +13,12 @@ import lombok.NoArgsConstructor;
 public class WorkflowStepClassWordCountPTO extends WordCountPTO implements ResponseData
 {
     private String workflowStepType;
+    private String workflowStepName;
 
-    public WorkflowStepClassWordCountPTO(long stringCount, long wordCount, String workflowStepType)
+    public WorkflowStepClassWordCountPTO(long stringCount, long wordCount, String workflowStepType, String workflowStepName)
     {
         super(stringCount, wordCount);
         this.workflowStepType = workflowStepType;
+        this.workflowStepName = workflowStepName;
     }
 }
