@@ -18,7 +18,7 @@ public class ContentProgressReportPTO implements ResponseData
     @Singular("add")
     private List<LocaleContentProgressReportPTO> contentProgressReport;
     private JobProgressCompletedPTO progress;
-    private List<WorkflowStepClassWordCountPTO> summaryReport;
+    private List<WorkflowStepClassNameWordCountPTO> summaryReport;
 
     public ContentProgressReportPTO(List<LocaleContentProgressReportPTO> contentProgressReport)
     {
