@@ -1,18 +1,16 @@
 package com.smartling.api.reports.v3;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.smartling.api.reports.v3.pto.WordCountReportCommandPTO;
 import com.smartling.api.reports.v3.pto.WordCountResponsePTO;
 import com.smartling.api.v2.client.ClientConfiguration;
 import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
-import com.smartling.api.v2.response.EmptyData;
 import com.smartling.api.v2.response.ListResponse;
-import com.smartling.api.v2.response.ResponseBuilders;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
@@ -21,7 +19,10 @@ import org.junit.Test;
 import javax.ws.rs.core.HttpHeaders;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -163,11 +164,13 @@ public class ReportsApiTest
     @Test
     public void testDownloadWordCountReport() throws Exception
     {
-        String body = objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-            .writeValueAsString(ResponseBuilders.respondWith(new EmptyData()));
-        assignResponse(HttpStatus.SC_OK, body);
+        assignResponse(HttpStatus.SC_OK,"test");
 
-        InputStream inputStream = reportsApi.downloadWordCountReport(createCommand());
+        try(InputStream stream = reportsApi.downloadWordCountReport(createCommand()))
+        {
+            String content = IOUtils.toString(stream, StandardCharsets.UTF_8);
+            assertThat(content, is("test"));
+        }
 
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals("POST", request.getMethod());

@@ -40,7 +40,7 @@ public class ReportsApiIntTest
     }
 
     @Test
-    public void name() throws Exception
+    public void testDownloadWordCountReportInCsv() throws Exception
     {
         String rawBody = UUID.randomUUID().toString();
 
