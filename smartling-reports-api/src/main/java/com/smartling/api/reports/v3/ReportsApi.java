@@ -43,6 +43,8 @@ public interface ReportsApi
      *    includeJobReferenceNumber: deprecated. Use fields instead.
      *    includeFuzzyMatchProfile: deprecated. Use fields instead.
      *    includeWorkflowStep: deprecated. Use fields instead.
+     *
+     * @return csv file
      */
     @POST
     @Path("word-count/csv")
