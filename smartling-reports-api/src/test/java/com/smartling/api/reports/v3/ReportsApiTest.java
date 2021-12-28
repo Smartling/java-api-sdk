@@ -1,6 +1,7 @@
 package com.smartling.api.reports.v3;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import com.smartling.api.reports.v3.pto.WordCountReportCommandPTO;
 import com.smartling.api.reports.v3.pto.WordCountResponsePTO;
 import com.smartling.api.v2.client.ClientConfiguration;
@@ -157,8 +158,34 @@ public class ReportsApiTest
         assertEquals(3, results.getItems().size());
 
         RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals("POST", request.getMethod());
+        assertEquals("GET", request.getMethod());
         assertTrue(request.getPath().contains("/reports-api/v3/word-count"));
+
+        assertTrue(request.getPath().contains("accountUid=a71308ec"));
+        assertTrue(request.getPath().contains("startDate=2021-12-01"));
+        assertTrue(request.getPath().contains("endDate=2021-12-02"));
+
+        assertTrue(request.getPath().contains("projectIds=e240a7892"));
+        assertTrue(request.getPath().contains("projectIds=0d96d0fcf"));
+
+        assertTrue(request.getPath().contains("targetLocaleIds=ru-RU"));
+        assertTrue(request.getPath().contains("targetLocaleIds=fr-FR"));
+
+        assertTrue(request.getPath().contains("jobUids=jobUid1"));
+        assertTrue(request.getPath().contains("userUids=userUid1"));
+        assertTrue(request.getPath().contains("agencyUid=agencyUid1"));
+
+        assertTrue(request.getPath().contains("includeJob=false"));
+        assertTrue(request.getPath().contains("includeJobReferenceNumber=false"));
+        assertTrue(request.getPath().contains("includeFuzzyMatchProfile=false"));
+        assertTrue(request.getPath().contains("includeWorkflowStep=false"));
+        assertTrue(request.getPath().contains("includeTranslationResource=false"));
+
+        assertTrue(request.getPath().contains("fields=field1"));
+        assertTrue(request.getPath().contains("fields=field2"));
+
+        assertTrue(request.getPath().contains("limit=500"));
+        assertTrue(request.getPath().contains("offset=0"));
     }
 
     @Test
@@ -173,18 +200,31 @@ public class ReportsApiTest
         }
 
         RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals("POST", request.getMethod());
+        assertEquals("GET", request.getMethod());
         assertTrue(request.getPath().contains("/reports-api/v3/word-count/csv"));
     }
 
     private WordCountReportCommandPTO createCommand()
     {
         return WordCountReportCommandPTO.builder()
+            .startDate("2021-12-01")
+            .endDate("2021-12-02")
             .accountUid("a71308ec")
             .projectId("e240a7892")
-            .startDate("20121-12-01")
-            .endDate("20121-12-02")
+            .projectId("0d96d0fcf")
+            .targetLocaleId("ru-RU")
+            .targetLocaleId("fr-FR")
+            .jobUid("jobUid1")
+            .userUid("userUid1")
+            .agencyUid("agencyUid1")
+            .includeJob(false)
+            .includeJobReferenceNumber(false)
+            .includeFuzzyMatchProfile(false)
+            .includeWorkflowStep(false)
+            .includeTranslationResource(false)
+            .fields(Lists.newArrayList("field1", "field2"))
             .limit(500)
             .build();
     }
 }
+

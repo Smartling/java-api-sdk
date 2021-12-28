@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
@@ -44,7 +44,7 @@ public class ReportsApiIntTest
     {
         String rawBody = UUID.randomUUID().toString();
 
-        smartlingApi.stubFor(post(urlPathMatching("/reports-api/v3/word-count/csv"))
+        smartlingApi.stubFor(get(urlPathMatching("/reports-api/v3/word-count/csv"))
             .willReturn(aResponse()
                 .withHeader("Content-Type", "text/csv")
                 .withBody(rawBody)));

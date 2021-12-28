@@ -4,8 +4,9 @@ import com.smartling.api.reports.v3.pto.WordCountReportCommandPTO;
 import com.smartling.api.reports.v3.pto.WordCountResponsePTO;
 import com.smartling.api.v2.response.ListResponse;
 
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -29,9 +30,9 @@ public interface ReportsApi
      *
      * @return word count report data in {@link WordCountResponsePTO} object
      */
-    @POST
+    @GET
     @Path("word-count")
-    ListResponse<WordCountResponsePTO> wordCountReport(WordCountReportCommandPTO wordCountReportCommandPTO);
+    ListResponse<WordCountResponsePTO> wordCountReport(@BeanParam WordCountReportCommandPTO wordCountReportCommandPTO);
 
     /**
      * Obtains word count report in csv
@@ -46,7 +47,7 @@ public interface ReportsApi
      *
      * @return csv file
      */
-    @POST
+    @GET
     @Path("word-count/csv")
-    InputStream downloadWordCountReport(WordCountReportCommandPTO wordCountReportCommandPTO);
+    InputStream downloadWordCountReport(@BeanParam WordCountReportCommandPTO wordCountReportCommandPTO);
 }
