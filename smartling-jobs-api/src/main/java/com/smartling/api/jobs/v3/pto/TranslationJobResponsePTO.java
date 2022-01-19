@@ -30,6 +30,8 @@ public class TranslationJobResponsePTO implements ResponseData
     private String modifiedByUserUid;
     private String firstCompletedDate;
     private String lastCompletedDate;
+    private String firstAuthorizedDate;
+    private String lastAuthorizedDate;
     private String jobStatus;
     private IssuesCountsPTO issues;
     private List<TranslationJobCustomFieldPTO> customFields;
