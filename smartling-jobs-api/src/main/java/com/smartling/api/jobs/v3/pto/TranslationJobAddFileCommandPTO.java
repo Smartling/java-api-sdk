@@ -13,17 +13,6 @@ import java.util.List;
 @Builder
 public class TranslationJobAddFileCommandPTO
 {
-    /**
-     * Indicates, if strings should be moved from other jobs in that case.
-     */
-    private boolean moveEnabled = false;
     private String fileUri;
     private List<String> targetLocaleIds;
-
-    public TranslationJobAddFileCommandPTO(String fileUri, List<String> targetLocaleIds)
-    {
-        this.fileUri = fileUri;
-        this.targetLocaleIds = targetLocaleIds;
-    }
-
 }
