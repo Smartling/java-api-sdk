@@ -425,10 +425,9 @@ public class TranslationJobsApiTest
     public void testAddFileToTranslationJobSync() throws InterruptedException
     {
         assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, SampleApiResponses.COUNT_MODIFIED_STRINGS));
-        String requestString = "{\"moveEnabled\":true,\"fileUri\":\"/file/app.properties\",\"targetLocaleIds\":[\"fr-FR\"]}";
+        String requestString = "{\"fileUri\":\"/file/app.properties\",\"targetLocaleIds\":[\"fr-FR\"]}";
 
         TranslationJobAddFileCommandPTO command = new TranslationJobAddFileCommandPTO("/file/app.properties", asList("fr-FR"));
-        command.setMoveEnabled(true);
 
         StringModifiedCountResponsePTO responsePTO = translationJobsApi.addFileToTranslationJob(PROJECT_ID, TRANSLATION_JOB_UID, command);
 
@@ -449,10 +448,9 @@ public class TranslationJobsApiTest
     {
         assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, SampleApiResponses.ASYNC_RESPONSE));
 
-        String requestString = "{\"moveEnabled\":true,\"fileUri\":\"/file/app.properties\",\"targetLocaleIds\":[\"fr-FR\"]}";
+        String requestString = "{\"fileUri\":\"/file/app.properties\",\"targetLocaleIds\":[\"fr-FR\"]}";
 
         TranslationJobAddFileCommandPTO command = new TranslationJobAddFileCommandPTO("/file/app.properties", asList("fr-FR"));
-        command.setMoveEnabled(true);
 
         StringModifiedCountResponsePTO responsePTO = translationJobsApi.addFileToTranslationJob(PROJECT_ID, TRANSLATION_JOB_UID, command);
 
@@ -513,7 +511,7 @@ public class TranslationJobsApiTest
     {
         assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, SampleApiResponses.COUNT_MODIFIED_STRINGS));
 
-        String requestString = "{\"moveEnabled\":true,\"hashcodes\":[\"hashcode1\",\"hashcode2\"],\"targetLocaleIds\":[\"fr-FR\"]}";
+        String requestString = "{\"hashcodes\":[\"hashcode1\",\"hashcode2\"],\"targetLocaleIds\":[\"fr-FR\"]}";
 
         LocaleAndHashcodeListCommandPTO command = new LocaleAndHashcodeListCommandPTO(true, asList("hashcode1", "hashcode2"), asList("fr-FR"));
 
