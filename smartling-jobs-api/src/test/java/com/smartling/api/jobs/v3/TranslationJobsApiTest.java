@@ -511,7 +511,7 @@ public class TranslationJobsApiTest
     {
         assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, SampleApiResponses.COUNT_MODIFIED_STRINGS));
 
-        String requestString = "{\"hashcodes\":[\"hashcode1\",\"hashcode2\"],\"targetLocaleIds\":[\"fr-FR\"]}";
+        String requestString = "{\"moveEnabled\":true,\"hashcodes\":[\"hashcode1\",\"hashcode2\"],\"targetLocaleIds\":[\"fr-FR\"]}";
 
         LocaleAndHashcodeListCommandPTO command = new LocaleAndHashcodeListCommandPTO(true, asList("hashcode1", "hashcode2"), asList("fr-FR"));
 
