@@ -352,7 +352,7 @@ public class TranslationJobsApiTest
         assertEquals("/app/file1.properties", response.getItems().get(0).getUri());
         assertEquals("uid1", response.getItems().get(0).getFileUid());
         assertEquals("/app/file2.properties", response.getItems().get(1).getUri());
-        assertEquals("uid2", response.getItems().get(0).getFileUid());
+        assertEquals("uid2", response.getItems().get(1).getFileUid());
 
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals(GET, request.getMethod());
