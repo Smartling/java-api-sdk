@@ -15,4 +15,5 @@ import lombok.experimental.Accessors;
 public class SourceFilePTO implements ResponseData {
     private String fileUid;
     private String uri;
+    private String name;
 }

@@ -133,6 +133,7 @@ public class TranslationJobsApiTest
         assertEquals("IN_PROGRESS", response.getJobStatus());
         assertEquals(1, response.getSourceFiles().size());
         assertEquals("/file/app.properties", response.getSourceFiles().get(0).getUri());
+        assertEquals("/file/app.properties", response.getSourceFiles().get(0).getName());
         assertEquals("uid1", response.getSourceFiles().get(0).getFileUid());
     }
 
@@ -350,8 +351,10 @@ public class TranslationJobsApiTest
         assertEquals(2, response.getTotalCount());
         assertEquals(2, response.getItems().size());
         assertEquals("/app/file1.properties", response.getItems().get(0).getUri());
+        assertEquals("/app/file1.properties", response.getItems().get(0).getName());
         assertEquals("uid1", response.getItems().get(0).getFileUid());
         assertEquals("/app/file2.properties", response.getItems().get(1).getUri());
+        assertEquals("/app/file2.properties", response.getItems().get(1).getName());
         assertEquals("uid2", response.getItems().get(1).getFileUid());
 
         RecordedRequest request = mockWebServer.takeRequest();
