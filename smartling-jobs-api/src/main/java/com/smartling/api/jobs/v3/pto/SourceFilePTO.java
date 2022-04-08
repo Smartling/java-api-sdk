@@ -7,14 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Accessors(chain = true)
-public class SourceFilePTO implements ResponseData
-{
+public class SourceFilePTO implements ResponseData {
+    private String fileUid;
     private String uri;
     private String name;
 }

@@ -14,12 +14,12 @@ import com.smartling.api.jobs.v3.pto.AsyncProcessDTO;
 import com.smartling.api.jobs.v3.pto.AsyncResponsePTO;
 import com.smartling.api.jobs.v3.pto.ProjectCustomFieldFilterPTO;
 import com.smartling.api.jobs.v3.pto.SortCommandPTO;
+import com.smartling.api.jobs.v3.pto.SourceFilePTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobFindByLocalesAndHashcodesCommandPTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobFoundByStringsAndLocalesResponsePTO;
 import com.smartling.api.jobs.v3.pto.account.AccountTranslationJobListCommandPTO;
 import com.smartling.api.v2.response.EmptyData;
 import com.smartling.api.v2.response.ListResponse;
-import com.smartling.api.jobs.v3.pto.FileUriPTO;
 import com.smartling.api.jobs.v3.pto.HashcodesAndLocalesPTO;
 import com.smartling.api.jobs.v3.pto.LocaleAndHashcodeListCommandPTO;
 import com.smartling.api.jobs.v3.pto.StringModifiedCountResponsePTO;
@@ -212,9 +212,9 @@ public interface TranslationJobsApi
 
     @GET
     @Path(API_JOB_FILES_LIST_ENDPOINT)
-    ListResponse<FileUriPTO> getTranslationJobFiles(@PathParam(PROJECT_ID) String projectId,
-                                                    @PathParam(TRANSLATION_JOB_UID) String translationJobUid,
-                                                    @BeanParam PagingCommandPTO pagingCommand);
+    ListResponse<SourceFilePTO> getTranslationJobFiles(@PathParam(PROJECT_ID) String projectId,
+                                                       @PathParam(TRANSLATION_JOB_UID) String translationJobUid,
+                                                       @BeanParam PagingCommandPTO pagingCommand);
 
     @POST
     @Path(API_JOB_CLOSE_ENDPOINT)

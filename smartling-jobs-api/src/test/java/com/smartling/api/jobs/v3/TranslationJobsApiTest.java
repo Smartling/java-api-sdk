@@ -6,7 +6,6 @@ import com.smartling.api.jobs.v3.pto.AsyncResponsePTO;
 import com.smartling.api.jobs.v3.pto.ContentProgressReportPTO;
 import com.smartling.api.jobs.v3.pto.CustomFieldAssignmentPTO;
 import com.smartling.api.jobs.v3.pto.CustomFieldPTO;
-import com.smartling.api.jobs.v3.pto.FileUriPTO;
 import com.smartling.api.jobs.v3.pto.HashcodesAndLocalesPTO;
 import com.smartling.api.jobs.v3.pto.LocaleAndHashcodeListCommandPTO;
 import com.smartling.api.jobs.v3.pto.LocaleContentProgressReportPTO;
@@ -15,6 +14,7 @@ import com.smartling.api.jobs.v3.pto.LocaleWorkflowCommandPTO;
 import com.smartling.api.jobs.v3.pto.PagingCommandPTO;
 import com.smartling.api.jobs.v3.pto.ProjectCustomFieldFilterPTO;
 import com.smartling.api.jobs.v3.pto.SortCommandPTO;
+import com.smartling.api.jobs.v3.pto.SourceFilePTO;
 import com.smartling.api.jobs.v3.pto.StringModifiedCountResponsePTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobAddFileCommandPTO;
 import com.smartling.api.jobs.v3.pto.TranslationJobAuthorizeCommandPTO;
@@ -134,6 +134,7 @@ public class TranslationJobsApiTest
         assertEquals(1, response.getSourceFiles().size());
         assertEquals("/file/app.properties", response.getSourceFiles().get(0).getUri());
         assertEquals("/file/app.properties", response.getSourceFiles().get(0).getName());
+        assertEquals("uid1", response.getSourceFiles().get(0).getFileUid());
     }
 
     @Test
@@ -345,12 +346,16 @@ public class TranslationJobsApiTest
     {
         assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, SampleApiResponses.GET_JOB_FILES_LIST));
         PagingCommandPTO pagingBody = new PagingCommandPTO(10, 100);
-        ListResponse<FileUriPTO> response = translationJobsApi.getTranslationJobFiles(PROJECT_ID, TRANSLATION_JOB_UID, pagingBody);
+        ListResponse<SourceFilePTO> response = translationJobsApi.getTranslationJobFiles(PROJECT_ID, TRANSLATION_JOB_UID, pagingBody);
 
         assertEquals(2, response.getTotalCount());
         assertEquals(2, response.getItems().size());
         assertEquals("/app/file1.properties", response.getItems().get(0).getUri());
+        assertEquals("/app/file1.properties", response.getItems().get(0).getName());
+        assertEquals("uid1", response.getItems().get(0).getFileUid());
         assertEquals("/app/file2.properties", response.getItems().get(1).getUri());
+        assertEquals("/app/file2.properties", response.getItems().get(1).getName());
+        assertEquals("uid2", response.getItems().get(1).getFileUid());
 
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals(GET, request.getMethod());
