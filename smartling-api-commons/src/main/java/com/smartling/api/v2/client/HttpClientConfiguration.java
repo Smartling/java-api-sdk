@@ -1,5 +1,6 @@
 package com.smartling.api.v2.client;
 
+import javax.net.ssl.SSLContext;
 import java.util.Objects;
 
 /**
@@ -42,6 +43,7 @@ public class HttpClientConfiguration
     private Integer proxyPort;
     private String  proxyUser;
     private String  proxyPassword;
+    private SSLContext sslContext;
 
     public int getConnectionRequestTimeout()
     {
@@ -150,6 +152,15 @@ public class HttpClientConfiguration
     public HttpClientConfiguration setProxyPassword(final String proxyPassword)
     {
         this.proxyPassword = Objects.requireNonNull(proxyPassword, "Proxy password must not be empty");
+        return this;
+    }
+
+    public SSLContext getSslContext() {
+        return sslContext;
+    }
+
+    public HttpClientConfiguration setSslContext(SSLContext sslContext) {
+        this.sslContext = sslContext;
         return this;
     }
 }
