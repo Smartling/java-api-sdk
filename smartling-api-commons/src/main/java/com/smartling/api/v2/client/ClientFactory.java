@@ -3,7 +3,6 @@ package com.smartling.api.v2.client;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartling.api.v2.client.auth.AuthorizationRequestFilter;
-import com.smartling.resteasy.ext.ExtendedMultipartFormWriter;
 import com.smartling.api.v2.client.exception.DefaultRestApiExceptionMapper;
 import com.smartling.api.v2.client.exception.RestApiExceptionHandler;
 import com.smartling.api.v2.client.exception.RestApiExceptionMapper;
@@ -11,23 +10,30 @@ import com.smartling.api.v2.client.unmarshal.DetailsDeserializer;
 import com.smartling.api.v2.client.unmarshal.RestApiContextResolver;
 import com.smartling.api.v2.client.unmarshal.RestApiResponseReaderInterceptor;
 import com.smartling.api.v2.response.Details;
+import com.smartling.resteasy.ext.ExtendedMultipartFormWriter;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.RegistryBuilder;
 import org.apache.http.config.SocketConfig;
 import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.ssl.SSLContexts;
 import org.jboss.resteasy.client.jaxrs.ClientHttpEngine;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.client.jaxrs.engines.factory.ApacheHttpClient4EngineFactory;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.ClientResponseFilter;
 import javax.ws.rs.ext.ContextResolver;
@@ -66,6 +72,12 @@ public class ClientFactory
         return false;
     }
 
+    private ConnectionSocketFactory getSslConnectionSocketFactory(final HttpClientConfiguration configuration)
+    {
+        SSLContext sslContext = configuration.getSslContext() != null ? configuration.getSslContext() : SSLContexts.createDefault();
+        return new SSLConnectionSocketFactory(sslContext, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+    }
+
     /**
      * Returns the HTTP client connection manager to use for API requests.
      *
@@ -75,14 +87,16 @@ public class ClientFactory
      */
     protected HttpClientConnectionManager getHttpClientConnectionManager(final HttpClientConfiguration configuration)
     {
-        final SocketConfig socketConfig = SocketConfig.custom()
-                .setTcpNoDelay(true)
-                .setSoKeepAlive(true)
-                .build();
-        final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(RegistryBuilder.<ConnectionSocketFactory>create()
+            .register("http", PlainConnectionSocketFactory.getSocketFactory())
+            .register("https", getSslConnectionSocketFactory(configuration))
+            .build());
 
         connectionManager.setDefaultMaxPerRoute(configuration.getMaxThreadPerRoute());
-        connectionManager.setDefaultSocketConfig(socketConfig);
+        connectionManager.setDefaultSocketConfig(SocketConfig.custom()
+            .setTcpNoDelay(true)
+            .setSoKeepAlive(true)
+            .build());
         connectionManager.setMaxTotal(configuration.getMaxThreadTotal());
 
         return connectionManager;
