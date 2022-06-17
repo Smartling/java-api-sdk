@@ -20,6 +20,11 @@ public class RestApiExceptionHandler
 
     public RestApiRuntimeException createRestApiException(final Exception exception)
     {
+        return createRestApiException(exception, null);
+    }
+
+    public RestApiRuntimeException createRestApiException(final Exception exception, String errorDetails)
+    {
         final Throwable throwable = (exception instanceof InvocationTargetException) ? exception.getCause() : exception;
 
         final RestApiRuntimeException restApiRuntimeException;
@@ -39,6 +44,7 @@ public class RestApiExceptionHandler
             restApiRuntimeException = new RestApiRuntimeException(throwable);
         }
 
+        restApiRuntimeException.setErrorDetails(errorDetails);
         return restApiRuntimeException;
     }
 
