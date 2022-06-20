@@ -6,6 +6,7 @@ import com.smartling.api.v2.client.exception.server.DetailedErrorMessage;
 import lombok.AllArgsConstructor;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -73,6 +74,14 @@ public class ExceptionDecoratorInvocationHandlerTest
         verify(exceptionHandler).createRestApiException(any(InvocationTargetException.class), eq(", id=100500"));
     }
 
+    @Test(expected = RestApiRuntimeException.class)
+    public void testInvokeFailWithNoDetailsMessage() throws Exception
+    {
+        when(delegate.getIdByName("name")).thenThrow(new RuntimeException());
+        testApi.getIdByName("name");
+        verify(exceptionHandler).createRestApiException(any(InvocationTargetException.class), ArgumentMatchers.<String>isNull());
+    }
+
     @DetailedErrorMessage(fields = "id")
     private interface TestApi
     {
@@ -82,6 +91,8 @@ public class ExceptionDecoratorInvocationHandlerTest
 
         @Path("/{id}/status")
         String getItemStatus(@PathParam("id") String id);
+
+        String getIdByName(@QueryParam("name") String name);
     }
 
     @AllArgsConstructor
