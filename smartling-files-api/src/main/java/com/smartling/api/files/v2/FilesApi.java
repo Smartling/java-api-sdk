@@ -40,7 +40,7 @@ import static javax.ws.rs.core.MediaType.WILDCARD;
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
 @Path("/files-api/v2")
-@DetailedErrorMessage(fields = "fileUri")
+@DetailedErrorMessage(args = "fileUri")
 public interface FilesApi
 {
     @POST

@@ -3,6 +3,8 @@ package com.smartling.api.v2.client;
 import com.smartling.api.v2.client.exception.RestApiExceptionHandler;
 import com.smartling.api.v2.client.exception.server.DetailedErrorMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import javax.ws.rs.PathParam;
@@ -14,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +29,7 @@ import java.util.Set;
  *
  * @param <T> the type being proxied
  */
+@Slf4j
 class ExceptionDecoratorInvocationHandler<T> implements InvocationHandler
 {
     private final T delegate;
@@ -47,12 +51,12 @@ class ExceptionDecoratorInvocationHandler<T> implements InvocationHandler
         }
         catch (InvocationTargetException ex)
         {
-            if (delegate.getClass().isAnnotationPresent(DetailedErrorMessage.class)) {
+            if (isAnnotationPresent(delegate.getClass(), DetailedErrorMessage.class)) {
                 if (!detailsBuilders.containsKey(method)) {
-                    detailsBuilders.put(method, MessageDetailsBuilder.inspect(method));
+                    detailsBuilders.put(method, inspect(method));
                 }
                 List<MessageDetailsBuilder> detailsBuilders = this.detailsBuilders.get(method);
-                StringBuilder errorDetails = new StringBuilder();
+                StringBuilder errorDetails = new StringBuilder(", method=").append(method.getName());
                 for (MessageDetailsBuilder detailsBuilder : detailsBuilders) {
                     detailsBuilder.writeMessage(errorDetails, args);
                 }
@@ -63,6 +67,80 @@ class ExceptionDecoratorInvocationHandler<T> implements InvocationHandler
         }
     }
 
+    private List<MessageDetailsBuilder> inspect(Method method)
+    {
+        Set<String> argNames = new HashSet<>();
+        DetailedErrorMessage annotation = method.getAnnotation(DetailedErrorMessage.class);
+        if (annotation != null) {
+            argNames.addAll(Arrays.asList(annotation.args()));
+        }
+        annotation = getAnnotationFromInterfaces(delegate.getClass(), DetailedErrorMessage.class);
+        if (annotation != null) {
+            argNames.addAll(Arrays.asList(annotation.args()));
+        }
+        if (argNames.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return lookupArgs(method, argNames);
+    }
+
+    private List<MessageDetailsBuilder> lookupArgs(Method method, Set<String> argNames) {
+        List<MessageDetailsBuilder> result = new ArrayList<>();
+        Annotation[][] parametersAnnotations = method.getParameterAnnotations();
+        for (int i = 0; i < parametersAnnotations.length && !argNames.isEmpty(); i++) {
+            Annotation[] parameterAnnotations = parametersAnnotations[i];
+            String argName = null;
+            PathParam path = getFromArray(parameterAnnotations, PathParam.class);
+            if (path != null) {
+                argName = path.value();
+            } else {
+                QueryParam query = getFromArray(parameterAnnotations, QueryParam.class);
+                if (query != null) {
+                    argName = query.value();
+                }
+            }
+            if (argName == null) {
+                Class<?> parameterType = method.getParameterTypes()[i];
+                for (Field field : FieldUtils.getAllFields(parameterType)) {
+                    if (argNames.contains(field.getName())) {
+                        result.add(new MessageDetailsBuilder(i, field.getName(), field));
+                        argNames.remove(field.getName());
+                    }
+                }
+            } else {
+                if (argNames.contains(argName)) {
+                    result.add(new MessageDetailsBuilder(i, argName, null));
+                    argNames.remove(argName);
+                }
+            }
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <A extends Annotation> A getFromArray(Annotation[] parameterAnnotations, Class<A> annotationType) {
+        for (Annotation parameterAnnotation : parameterAnnotations) {
+            if (parameterAnnotation.annotationType() == annotationType) {
+                return (A) parameterAnnotation;
+            }
+        }
+        return null;
+    }
+
+    private <A extends Annotation> boolean isAnnotationPresent(Class<?> classType, final Class<A> annotationClass) {
+        return getAnnotationFromInterfaces(classType, annotationClass) != null;
+    }
+
+    private <A extends Annotation> A getAnnotationFromInterfaces(Class<?> classType, final Class<A> annotationClass) {
+        for (Class<?> anInterface : classType.getInterfaces()) {
+            if (anInterface.isAnnotationPresent(annotationClass)) {
+                return anInterface.getAnnotation(annotationClass);
+            }
+        }
+        return classType.getAnnotation(annotationClass);
+    }
+
+    @ToString
     @RequiredArgsConstructor
     static class MessageDetailsBuilder
     {
@@ -70,55 +148,16 @@ class ExceptionDecoratorInvocationHandler<T> implements InvocationHandler
         private final String argName;
         private final Field field;
 
-        static List<MessageDetailsBuilder> inspect(final Method method)
-        {
-            List<MessageDetailsBuilder> result = new ArrayList<>();
-            DetailedErrorMessage annotation = method.getAnnotation(DetailedErrorMessage.class);
-            if (annotation == null) {
-                annotation = method.getDeclaringClass().getAnnotation(DetailedErrorMessage.class);
-            }
-            Set<String> argNames = new HashSet<>(Arrays.asList(annotation.fields()));
-            Annotation[][] parametersAnnotations = method.getParameterAnnotations();
-            for (int i = 0; i < parametersAnnotations.length && !argNames.isEmpty(); i++) {
-                Annotation[] parameterAnnotations = parametersAnnotations[i];
-                for (Annotation parameterAnnotation : parameterAnnotations) {
-                    String argName;
-                    if (parameterAnnotation instanceof PathParam) {
-                        argName = ((PathParam) parameterAnnotation).value();
-                        if (argNames.contains(argName)) {
-                            result.add(new MessageDetailsBuilder(i, argName, null));
-                            argNames.remove(argName);
-                        }
-                    } else if (parameterAnnotation instanceof QueryParam) {
-                        argName = ((QueryParam) parameterAnnotation).value();
-                        if (argNames.contains(argName)) {
-                            result.add(new MessageDetailsBuilder(i, argName, null));
-                            argNames.remove(argName);
-                        }
-                    } else {
-                        Class<?> parameterType = method.getParameterTypes()[i];
-                        for (Field field : FieldUtils.getAllFields(parameterType)) {
-                            if (argNames.contains(field.getName())) {
-                                result.add(new MessageDetailsBuilder(i, field.getName(), field));
-                                argNames.remove(field.getName());
-                            }
-                        };
-                    }
-                }
-            }
-            return result;
-        }
-
         void writeMessage(StringBuilder target, Object[] args)
         {
             try {
                 Object arg = args[argNumber];
                 if (field != null) {
-                    arg = field.get(arg);
+                    arg = FieldUtils.readField(field, arg, true);
                 }
                 target.append(", ").append(argName).append("=").append(arg);
             } catch (Exception ex) {
-                // skip
+                log.warn("unable to process arg {} on {} position: ", argName, argNumber, ex);
             }
         }
     }
