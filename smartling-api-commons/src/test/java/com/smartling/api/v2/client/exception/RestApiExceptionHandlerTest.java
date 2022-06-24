@@ -58,6 +58,7 @@ public class RestApiExceptionHandlerTest
         final RestApiRuntimeException restApiRuntimeException = handler.createRestApiException(ex);
         assertEquals(ex, restApiRuntimeException.getCause());
         assertEquals(500, restApiRuntimeException.getStatus());
+        assertEquals("http_status=500", restApiRuntimeException.getMessage());
         assertEquals(Collections.emptyList(), restApiRuntimeException.getErrors());
         verify(exceptionMapper, never()).toException(any(Throwable.class), any(Response.class), any(ErrorResponse.class));
     }
@@ -68,9 +69,10 @@ public class RestApiExceptionHandlerTest
         final RuntimeException ex = new RuntimeException();
         final InvocationTargetException invocationTargetException = new InvocationTargetException(ex);
 
-        final RestApiRuntimeException restApiRuntimeException = handler.createRestApiException(invocationTargetException);
+        final RestApiRuntimeException restApiRuntimeException = handler.createRestApiException(invocationTargetException, ", details");
         assertEquals(ex, restApiRuntimeException.getCause());
         assertEquals(500, restApiRuntimeException.getStatus());
+        assertEquals("http_status=500, details", restApiRuntimeException.getMessage());
         assertEquals(Collections.emptyList(), restApiRuntimeException.getErrors());
         verify(exceptionMapper, never()).toException(any(Throwable.class), any(Response.class), any(ErrorResponse.class));
     }

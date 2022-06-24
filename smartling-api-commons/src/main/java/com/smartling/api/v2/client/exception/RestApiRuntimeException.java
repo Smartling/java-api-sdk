@@ -17,6 +17,7 @@ public class RestApiRuntimeException extends WebApplicationException
     private static final String REQUEST_ID_HEADER = "X-SL-RequestId";
 
     private final ErrorResponse errorResponse;
+    private String errorDetails;
 
     public RestApiRuntimeException(final Throwable cause)
     {
@@ -28,6 +29,10 @@ public class RestApiRuntimeException extends WebApplicationException
     {
         super(cause, response);
         this.errorResponse = errorResponse;
+    }
+
+    public void setErrorDetails(String errorDetails) {
+        this.errorDetails = errorDetails;
     }
 
     public int getStatus()
@@ -64,6 +69,9 @@ public class RestApiRuntimeException extends WebApplicationException
         final StringBuilder errorMessage = new StringBuilder();
 
         errorMessage.append("http_status=").append(getStatus());
+
+        if (errorDetails != null)
+            errorMessage.append(errorDetails);
 
         if (requestId != null)
             errorMessage.append(", requestId=").append(requestId);

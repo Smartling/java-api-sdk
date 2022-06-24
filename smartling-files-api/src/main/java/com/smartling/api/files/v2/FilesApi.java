@@ -17,6 +17,7 @@ import com.smartling.api.files.v2.pto.ImportTranslationsResponse;
 import com.smartling.api.files.v2.pto.RenameFilePto;
 import com.smartling.api.files.v2.pto.UploadFilePTO;
 import com.smartling.api.files.v2.pto.UploadFileResponse;
+import com.smartling.api.v2.client.exception.server.DetailedErrorMessage;
 import com.smartling.api.v2.response.EmptyData;
 import com.smartling.api.v2.response.ListResponse;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
@@ -39,6 +40,7 @@ import static javax.ws.rs.core.MediaType.WILDCARD;
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
 @Path("/files-api/v2")
+@DetailedErrorMessage(args = "fileUri")
 public interface FilesApi
 {
     @POST
