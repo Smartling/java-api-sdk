@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BatchStatusResponsePTO implements ResponseData
 {
-    private String status;
+    private BatchStatus status;
     private Boolean authorized;
     private String generalErrors;
     private String translationJobUid;

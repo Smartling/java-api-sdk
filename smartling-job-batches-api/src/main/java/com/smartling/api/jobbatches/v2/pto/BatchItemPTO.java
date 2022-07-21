@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BatchItemPTO implements ResponseData
 {
-    private String status;
+    private BatchItemStatus status;
     private Calendar updatedDate;
     private String errors;
     private String fileUri;
