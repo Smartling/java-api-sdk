@@ -125,25 +125,6 @@ public class JobBatchesApiTest
             "    ]" +
             "}"));
 
-        // language=JSON
-        String requestString = "{"
-            + "\"translationJobUid\":\"jobUid\","
-            + "\"authorize\":true,"
-            + "\"fileUris\":[\"fileUri.json\"],"
-            + "\"localeWorkflows\":[{\"targetLocaleId\":\"fr-FR\",\"workflowUid\":\"workflowUid\"}]"
-            + "}";
-
-        CreateBatchRequestPTO requestBody = CreateBatchRequestPTO.builder()
-            .translationJobUid("jobUid")
-            .authorize(true)
-            .fileUris(Collections.singletonList("fileUri.json"))
-            .localeWorkflows(Collections.singletonList(WorkflowPTO.builder()
-                .targetLocaleId("fr-FR")
-                .workflowUid("workflowUid")
-                .build()
-            ))
-            .build();
-
         BatchStatusResponsePTO response = jobBatchesApi.getBatchStatus(PROJECT_ID, "batchUID");
 
         assertEquals(BatchStatus.COMPLETED, response.getStatus());
