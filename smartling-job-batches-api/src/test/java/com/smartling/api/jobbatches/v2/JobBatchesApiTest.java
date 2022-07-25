@@ -1,5 +1,8 @@
 package com.smartling.api.jobbatches.v2;
 
+import com.smartling.api.jobbatches.v2.pto.BatchItemStatus;
+import com.smartling.api.jobbatches.v2.pto.BatchStatus;
+import com.smartling.api.jobbatches.v2.pto.BatchStatusResponsePTO;
 import com.smartling.api.jobbatches.v2.pto.CancelBatchActionRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.CreateBatchRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.CreateBatchResponsePTO;
@@ -98,6 +101,40 @@ public class JobBatchesApiTest
         assertEquals(POST, request.getMethod());
         assertEquals(requestString, request.getBody().readUtf8());
         assertTrue(request.getPath().startsWith(("/job-batches-api/v2/projects/" + PROJECT_ID + "/batches")));
+    }
+
+    @Test
+    public void testGetBatch() throws Exception
+    {
+        assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, "{" +
+            "    \"status\": \"COMPLETED\", \n" +
+            "    \"authorized\": true, \n" +
+            "    \"translationJobUid\": \"jobUID\", \n" +
+            "    \"projectId\": \"" + PROJECT_ID + "\", \n" +
+            "    \"files\": [ \n" +
+            "       { \n" +
+            "           \"status\": \"COMPLETED\", \n" +
+            "           \"fileUri\": \"fileURI.json\", \n" +
+            "           \"targetLocales\": [ \n" +
+            "               { \n" +
+            "                   \"localeId\": \"fr-FR\", \n" +
+            "                   \"stringsAdded\": 42 \n" +
+            "               } \n" +
+            "           ] \n" +
+            "       } \n" +
+            "    ]" +
+            "}"));
+
+        BatchStatusResponsePTO response = jobBatchesApi.getBatchStatus(PROJECT_ID, "batchUID");
+
+        assertEquals(BatchStatus.COMPLETED, response.getStatus());
+        assertEquals(true, response.getAuthorized());
+        assertEquals("jobUID", response.getTranslationJobUid());
+        assertEquals(PROJECT_ID, response.getProjectId());
+        assertEquals(BatchItemStatus.COMPLETED, response.getFiles().get(0).getStatus());
+        assertEquals("fileURI.json", response.getFiles().get(0).getFileUri());
+        assertEquals("fr-FR", response.getFiles().get(0).getTargetLocales().get(0).getLocaleId());
+        assertEquals(42, response.getFiles().get(0).getTargetLocales().get(0).getStringsAdded());
     }
 
     @Test
