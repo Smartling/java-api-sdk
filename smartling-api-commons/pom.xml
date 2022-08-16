@@ -3,20 +3,20 @@
 
     <artifactId>smartling-api-commons</artifactId>
     <packaging>jar</packaging>
-    <version>DEVORTEX3626-SNAPSHOT</version>
+    <version>0.31.2-SNAPSHOT</version>
     <name>Smartling API Commons</name>
 
     <parent>
         <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
-        <version>DEVORTEX3626-SNAPSHOT</version>
+        <version>0.31.2-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-api-test-utils</artifactId>
-            <version>DEVORTEX3626-SNAPSHOT</version>
+            <version>0.31.2-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
