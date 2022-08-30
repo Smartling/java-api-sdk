@@ -14,10 +14,10 @@ import java.util.List;
 @Builder
 public class DownloadMultipleTranslationsPTO
 {
-    @QueryParam("fileUris")
+    @QueryParam("fileUris[]")
     private List<String> fileUris;
 
-    @QueryParam("localeIds")
+    @QueryParam("localeIds[]")
     private List<String> localeIds;
 
     @QueryParam("retrievalType")
