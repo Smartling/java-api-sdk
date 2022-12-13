@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.smartling.api.v2.authentication.AuthenticationApi;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
 import com.smartling.api.v2.client.exception.RestApiExceptionMapper;
+import org.jboss.resteasy.core.providerfactory.ResteasyProviderFactoryImpl;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -138,7 +139,7 @@ public class AbstractApiFactoryTest
         final String domain = "http://foo.com";
 
         final BearerAuthStaticTokenFilter tokenFilter = new BearerAuthStaticTokenFilter(USER_IDENTIFIER);
-        ResteasyProviderFactory resteasyProviderFactory = new ResteasyProviderFactory();
+        ResteasyProviderFactory resteasyProviderFactory = new ResteasyProviderFactoryImpl();
         final ClientConfiguration config = DefaultClientConfiguration.builder()
                                                                      .baseUrl(new URL(domain))
                                                                      .resteasyProviderFactory(resteasyProviderFactory)
@@ -155,7 +156,7 @@ public class AbstractApiFactoryTest
         final String domain = "http://foo.com";
 
         HttpClientConfiguration httpClientConfiguration = new HttpClientConfiguration();
-        ResteasyProviderFactory resteasyProviderFactory = new ResteasyProviderFactory();
+        ResteasyProviderFactory resteasyProviderFactory = new ResteasyProviderFactoryImpl();
         ClientConfiguration config = DefaultClientConfiguration
             .builder()
             .baseUrl(new URL(domain))

@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import javax.ws.rs.client.ClientBuilder;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +41,7 @@ public class ExtendedMultipartFormWriterIntegrationTest
 
     private DummyMultipartApi dummyApi() throws Exception
     {
-        return new ResteasyClientBuilder().build()
+        return ((ResteasyClientBuilder) ClientBuilder.newBuilder()).build()
             .target(dummyApiEndpoint.baseUrl())
             .register(new ExtendedMultipartFormWriter())
             .proxy(DummyMultipartApi.class);
