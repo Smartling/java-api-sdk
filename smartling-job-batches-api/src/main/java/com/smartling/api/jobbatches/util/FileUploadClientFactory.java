@@ -7,6 +7,7 @@ import com.smartling.api.v2.client.unmarshal.RestApiResponseReaderInterceptor;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.ext.ContextResolver;
 import java.util.List;
@@ -25,7 +26,7 @@ public class FileUploadClientFactory extends ClientFactory
             throw new IllegalArgumentException("At least one request filter is required for authorization");
         }
 
-        ResteasyClientBuilder builder = new ResteasyClientBuilder();
+        ResteasyClientBuilder builder = ((ResteasyClientBuilder) ClientBuilder.newBuilder());
         builder.httpEngine(super.getClientHttpEngine(configuration));
 
         ContextResolver<ObjectMapper> contextResolver = super.getObjectMapperContextResolver(super.getDeserializerMap());

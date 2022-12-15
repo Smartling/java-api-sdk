@@ -30,10 +30,11 @@ import org.apache.http.ssl.SSLContexts;
 import org.jboss.resteasy.client.jaxrs.ClientHttpEngine;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
-import org.jboss.resteasy.client.jaxrs.engines.factory.ApacheHttpClient4EngineFactory;
+import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient43Engine;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import javax.net.ssl.SSLContext;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.ClientResponseFilter;
 import javax.ws.rs.ext.ContextResolver;
@@ -159,7 +160,7 @@ public class ClientFactory
     {
         final HttpClientBuilder httpClientBuilder = getHttpClientBuilder(configuration);
         final CloseableHttpClient httpClient = httpClientBuilder.build();
-        return ApacheHttpClient4EngineFactory.create(httpClient, true);
+        return new ApacheHttpClient43Engine(httpClient, true);
     }
 
     /**
@@ -216,7 +217,7 @@ public class ClientFactory
         if (!containsAuthFilter(clientRequestFilters))
             throw new IllegalArgumentException("At least one request filter is required for authorization");
 
-        final ResteasyClientBuilder builder = new ResteasyClientBuilder();
+        final ResteasyClientBuilder builder = ((ResteasyClientBuilder) ClientBuilder.newBuilder());
         builder.httpEngine(getClientHttpEngine(configuration));
 
         if (providerFactory != null)
