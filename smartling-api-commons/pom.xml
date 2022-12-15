@@ -3,20 +3,20 @@
 
     <artifactId>smartling-api-commons</artifactId>
     <packaging>jar</packaging>
-    <version>0.32.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Smartling API Commons</name>
 
     <parent>
         <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
-        <version>0.32.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-api-test-utils</artifactId>
-            <version>0.32.1-SNAPSHOT</version>
+            <version>1.0.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
