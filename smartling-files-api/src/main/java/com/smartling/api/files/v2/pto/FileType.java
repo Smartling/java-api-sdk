@@ -40,6 +40,8 @@ public enum FileType
     PDF("application/octet-stream", false),         // PDF file format
     FLUENT("text/plain", true),                     // Mozilla Fluent parser
     DOCM("application/octet-stream", false),        // Microsoft Word with macros
+    SVG("image/svg+xml", false),                    // SVG image
+    VTT("text/vtt", false),                         // Video Text Tracks Format (subtitles)
     XLSX_TEMPLATE("application/octet-stream", false);        // Smartling XLSX - https://help.smartling.com/hc/en-us/articles/1260804224670-Translating-Spreadsheets#h_01F3TKVZBVPFJSF2XZEBHDH1EQ
     private final String identifier;
     private final String mimeType;
