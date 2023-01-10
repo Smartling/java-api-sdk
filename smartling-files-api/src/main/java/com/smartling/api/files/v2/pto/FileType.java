@@ -42,6 +42,11 @@ public enum FileType
     DOCM("application/octet-stream", false),        // Microsoft Word with macros
     SVG("image/svg+xml", false),                    // SVG image
     VTT("text/vtt", false),                         // Video Text Tracks Format (subtitles)
+    DITA_ZIP("application/octet-stream", false),    // DITA zip file format
+    RTF("application/rtf", false),                  // Microsoft Rich Text Format
+    FLARE("application/octet-stream", false),       // MadCap Flare parser
+    XLIFF2("application/xml", false),               // XLIFF 2.0 parser
+    ARB("application/json", false),                 // ARB parser
     XLSX_TEMPLATE("application/octet-stream", false);        // Smartling XLSX - https://help.smartling.com/hc/en-us/articles/1260804224670-Translating-Spreadsheets#h_01F3TKVZBVPFJSF2XZEBHDH1EQ
     private final String identifier;
     private final String mimeType;
