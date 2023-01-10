@@ -47,6 +47,7 @@ public enum FileType
     FLARE("application/octet-stream", false),       // MadCap Flare parser
     XLIFF2("application/xml", false),               // XLIFF 2.0 parser
     ARB("application/json", false),                 // ARB parser
+    NONE("application/octet-stream", false),        // No content files associated with this type, used for strings-api
     XLSX_TEMPLATE("application/octet-stream", false);        // Smartling XLSX - https://help.smartling.com/hc/en-us/articles/1260804224670-Translating-Spreadsheets#h_01F3TKVZBVPFJSF2XZEBHDH1EQ
     private final String identifier;
     private final String mimeType;
