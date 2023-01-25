@@ -41,6 +41,10 @@ public class FileUploadPTO
     @PartType("text/plain")
     private String charset;
 
+    @FormParam("moveExistingStrings")
+    @PartType("text/plain")
+    private Boolean moveExistingStrings;
+
     @FormParam("file")
     @PartType("application/octet-stream")
     @PartFilename("file")
