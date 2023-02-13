@@ -11,12 +11,6 @@ import org.apache.http.HeaderElement;
 import org.apache.http.HttpHeaders;
 import org.apache.http.message.BasicHeader;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.annotation.Annotation;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.ProcessingException;
@@ -25,6 +19,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.ext.ReaderInterceptor;
 import javax.ws.rs.ext.ReaderInterceptorContext;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * Provides a response reader interceptor to remove the response wrapper
@@ -65,10 +65,12 @@ public class RestApiResponseReaderInterceptor implements ReaderInterceptor
             context.setInputStream(new ByteArrayInputStream(node.toString().getBytes(StandardCharsets.UTF_8)));
             return context.proceed();
         }
-        catch (ProcessingException ex) {
-            String body = IOUtils.toString(context.getInputStream(), StandardCharsets.UTF_8.name());
+        catch (ProcessingException ex)
+        {
+            String body = IOUtils.toString(context.getInputStream(), StandardCharsets.UTF_8);
             String annotationsView = "";
-            for (Annotation annotation : context.getAnnotations()) {
+            for (Annotation annotation : context.getAnnotations())
+            {
                 annotationsView += "\n\t\t" + annotation;
             }
             String message = "Error during response processing:\n\ttype: " + context.getType().getName()
@@ -80,7 +82,7 @@ public class RestApiResponseReaderInterceptor implements ReaderInterceptor
         }
     }
 
-    private String getResponseContentType(final ReaderInterceptorContext context)
+    protected String getResponseContentType(final ReaderInterceptorContext context)
     {
         String contentType = null;
         List<String> contentTypeHeaders = context.getHeaders() == null ? null : context.getHeaders().get(HttpHeaders.CONTENT_TYPE);
