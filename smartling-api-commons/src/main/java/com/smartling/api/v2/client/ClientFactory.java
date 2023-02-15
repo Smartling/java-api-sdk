@@ -1,6 +1,7 @@
 package com.smartling.api.v2.client;
 
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartling.api.v2.client.auth.AuthorizationRequestFilter;
 import com.smartling.api.v2.client.exception.DefaultRestApiExceptionMapper;
@@ -38,7 +39,9 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.ClientResponseFilter;
 import javax.ws.rs.ext.ContextResolver;
+import javax.ws.rs.ext.ReaderInterceptor;
 import java.lang.reflect.Proxy;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +65,7 @@ public class ClientFactory
         if (clientRequestFilters == null)
             return false;
 
-        for (ClientRequestFilter filter: clientRequestFilters)
+        for (ClientRequestFilter filter : clientRequestFilters)
         {
             if (filter instanceof AuthorizationRequestFilter)
             {
@@ -112,11 +115,11 @@ public class ClientFactory
     protected RequestConfig getRequestConfig(final HttpClientConfiguration configuration)
     {
         return RequestConfig.custom()
-                .setSocketTimeout(configuration.getSocketTimeout())
-                .setConnectTimeout(configuration.getConnectionTimeout())
-                .setConnectionRequestTimeout(configuration.getConnectionRequestTimeout())
-                .setStaleConnectionCheckEnabled(configuration.isStaleConnectionCheckEnabled())
-                .build();
+            .setSocketTimeout(configuration.getSocketTimeout())
+            .setConnectTimeout(configuration.getConnectionTimeout())
+            .setConnectionRequestTimeout(configuration.getConnectionRequestTimeout())
+            .setStaleConnectionCheckEnabled(configuration.isStaleConnectionCheckEnabled())
+            .build();
     }
 
     /**
@@ -128,8 +131,8 @@ public class ClientFactory
     protected HttpClientBuilder getHttpClientBuilder(final HttpClientConfiguration configuration)
     {
         HttpClientBuilder httpClientBuilder = HttpClients.custom()
-                .setDefaultRequestConfig(getRequestConfig(configuration))
-                .setConnectionManager(getHttpClientConnectionManager(configuration));
+            .setDefaultRequestConfig(getRequestConfig(configuration))
+            .setConnectionManager(getHttpClientConnectionManager(configuration));
 
         if (configuration.getProxyHost() != null && configuration.getProxyPort() != null)
         {
@@ -140,8 +143,8 @@ public class ClientFactory
             {
                 BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                 credentialsProvider.setCredentials(
-                        new AuthScope(proxyHost),
-                        new UsernamePasswordCredentials(configuration.getProxyUser(), configuration.getProxyPassword())
+                    new AuthScope(proxyHost),
+                    new UsernamePasswordCredentials(configuration.getProxyUser(), configuration.getProxyPassword())
                 );
                 httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
             }
@@ -175,12 +178,24 @@ public class ClientFactory
         return classJsonDeserializerMap;
     }
 
-    protected ContextResolver<ObjectMapper> getObjectMapperContextResolver(final Map<Class<?>, JsonDeserializer<?>> classJsonDeserializerMap)
+    protected Map<Class<?>, JsonSerializer<?>> getSerializerMap()
     {
-        return new RestApiContextResolver(classJsonDeserializerMap);
+        return Collections.emptyMap();
     }
 
-    public <T> T build(final List<ClientRequestFilter> clientRequestFilters, final List<ClientResponseFilter> clientResponseFilters, final String domain, final Class<T> klass)
+    protected ContextResolver<ObjectMapper> getObjectMapperContextResolver(final Map<Class<?>, JsonDeserializer<?>> classJsonDeserializerMap,
+                                                                           final Map<Class<?>, JsonSerializer<?>> classJsonSerializerMap)
+    {
+        return new RestApiContextResolver(classJsonDeserializerMap, classJsonSerializerMap);
+    }
+
+    protected ReaderInterceptor getRestApiResponseReaderInterceptor()
+    {
+        return new RestApiResponseReaderInterceptor();
+    }
+
+    public <T> T build(final List<ClientRequestFilter> clientRequestFilters, final List<ClientResponseFilter> clientResponseFilters, final String domain,
+                       final Class<T> klass)
     {
         return build(clientRequestFilters, clientResponseFilters, domain, klass, new HttpClientConfiguration(), null, null);
     }
@@ -188,13 +203,13 @@ public class ClientFactory
     /**
      * Returns a fully configured JAX-RS proxy for an API of type <code>T</code>
      *
-     * @param clientRequestFilters the <code>ClientRequestFilters</code> (required)
+     * @param clientRequestFilters  the <code>ClientRequestFilters</code> (required)
      * @param clientResponseFilters the <code>ClientResponseFilters</code> (required)
-     * @param domain the API protocol and domain (required)
-     * @param klass the <code>Class</code> of type <code>T</code>
-     * @param configuration the <code>HttpClientConfiguration</code> (required)
-     * @param providerFactory the <code>ResteasyProviderFactory</code>
-     * @param exceptionMapper the <code>RestApiExceptionMapper</code>
+     * @param domain                the API protocol and domain (required)
+     * @param klass                 the <code>Class</code> of type <code>T</code>
+     * @param configuration         the <code>HttpClientConfiguration</code> (required)
+     * @param providerFactory       the <code>ResteasyProviderFactory</code>
+     * @param exceptionMapper       the <code>RestApiExceptionMapper</code>
      * @return a full configured JAX-RS proxy for <code>T</code>
      */
     @SuppressWarnings("unchecked")
@@ -223,13 +238,13 @@ public class ClientFactory
         if (providerFactory != null)
             builder.providerFactory(providerFactory);
 
-        final ContextResolver<ObjectMapper> contextResolver = getObjectMapperContextResolver(getDeserializerMap());
+        final ContextResolver<ObjectMapper> contextResolver = getObjectMapperContextResolver(getDeserializerMap(), getSerializerMap());
 
         final ResteasyWebTarget client = builder.build()
-                .target(domain)
-                .register(new RestApiResponseReaderInterceptor())
-                .register(new ExtendedMultipartFormWriter())
-                .register(contextResolver);
+            .target(domain)
+            .register(getRestApiResponseReaderInterceptor())
+            .register(new ExtendedMultipartFormWriter())
+            .register(contextResolver);
 
         for (final ClientRequestFilter filter : clientRequestFilters)
             client.register(filter);
@@ -241,6 +256,6 @@ public class ClientFactory
         final RestApiExceptionHandler exceptionHandler = new RestApiExceptionHandler(exceptionMapper != null ? exceptionMapper : new DefaultRestApiExceptionMapper());
         final ExceptionDecoratorInvocationHandler<T> handler = new ExceptionDecoratorInvocationHandler<>(proxy, exceptionHandler);
 
-        return (T)Proxy.newProxyInstance(klass.getClassLoader(), new Class[] {klass}, handler);
+        return (T) Proxy.newProxyInstance(klass.getClassLoader(), new Class[] { klass }, handler);
     }
 }
