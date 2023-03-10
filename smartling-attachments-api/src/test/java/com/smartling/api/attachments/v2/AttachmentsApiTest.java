@@ -170,31 +170,31 @@ public class AttachmentsApiTest
         String requestBody = request.getBody().readUtf8();
         String partSeparator = requestBody.substring(0, 38);
 
-        assertEquals(requestBody, partSeparator + "\n" +
-            "Content-Disposition: form-data; name=\"file\"; filename=\"file\"\n" +
-            "Content-Type: application/octet-stream\n" +
-            "\n" +
-            "content\n" +
-            partSeparator + "\n" +
-            "Content-Disposition: form-data; name=\"name\"\n" +
-            "Content-Type: text/plain\n" +
-            "\n" +
-            "test.txt\n" +
-            partSeparator + "\n" +
-            "Content-Disposition: form-data; name=\"description\"\n" +
-            "Content-Type: text/plain\n" +
-            "\n" +
-            "description\n" +
-            partSeparator + "\n" +
-            "Content-Disposition: form-data; name=\"entityUids\"\n" +
-            "Content-Type: text/plain\n" +
-            "\n" +
-            "jobUuid1\n" +
-            partSeparator + "\n" +
-            "Content-Disposition: form-data; name=\"entityUids\"\n" +
-            "Content-Type: text/plain\n" +
-            "\n" +
-            "jobUuid2\n" +
+        assertEquals(requestBody, partSeparator + "\r\n" +
+            "Content-Disposition: form-data; name=\"file\"; filename=\"file\"\r\n" +
+            "Content-Type: application/octet-stream\r\n" +
+            "\r\n" +
+            "content\r\n" +
+            partSeparator + "\r\n" +
+            "Content-Disposition: form-data; name=\"name\"\r\n" +
+            "Content-Type: text/plain\r\n" +
+            "\r\n" +
+            "test.txt\r\n" +
+            partSeparator + "\r\n" +
+            "Content-Disposition: form-data; name=\"description\"\r\n" +
+            "Content-Type: text/plain\r\n" +
+            "\r\n" +
+            "description\r\n" +
+            partSeparator + "\r\n" +
+            "Content-Disposition: form-data; name=\"entityUids\"\r\n" +
+            "Content-Type: text/plain\r\n" +
+            "\r\n" +
+            "jobUuid1\r\n" +
+            partSeparator + "\r\n" +
+            "Content-Disposition: form-data; name=\"entityUids\"\r\n" +
+            "Content-Type: text/plain\r\n" +
+            "\r\n" +
+            "jobUuid2\r\n" +
             partSeparator + "--");
 
         assertEquals(expectedPTO.getAttachmentUid(), response.getAttachmentUid());
