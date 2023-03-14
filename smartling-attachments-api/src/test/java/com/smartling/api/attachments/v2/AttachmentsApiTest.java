@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartling.api.attachments.v2.pto.AttachmentPTO;
 import com.smartling.api.attachments.v2.pto.AttachmentType;
+import com.smartling.api.attachments.v2.pto.AttachmentUploadPTO;
 import com.smartling.api.v2.client.ClientConfiguration;
 import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
@@ -22,11 +23,13 @@ import org.junit.Test;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -41,11 +44,12 @@ public class AttachmentsApiTest
     private static final String IDENTITY_URL = "/accounts" + "/{" + ACCOUNT_UID_PARAMETER + "}" + "/{" + TYPE_PARAMETER + "}";
     private static final String LINKS = IDENTITY_URL;
     private static final String ENTITY_LINKS = LINKS + "/{" + ENTITY_UID_PARAMETER + "}";
+    private static final String ATTACHMENTS = IDENTITY_URL + "/attachments";
     private static final String BEARER_TOKEN = UUID.randomUUID().toString();
     private static final String ACCOUNT_UID = "account_uid";
     private static final String ENTITY_UID = "entity_uid";
     private static final String ATTACHMENT_TYPE = AttachmentType.JOBS.name().toLowerCase();
-    private static final List<String> PATH_PLACEHOLDERS = Arrays.asList(ACCOUNT_UID_PARAMETER, TYPE_PARAMETER, ENTITY_UID_PARAMETER, ATTACHMENT_UID_PARAMETER);
+    private static final List<String> PATH_PLACEHOLDERS = asList(ACCOUNT_UID_PARAMETER, TYPE_PARAMETER, ENTITY_UID_PARAMETER, ATTACHMENT_UID_PARAMETER);
 
     private MockWebServer mockWebServer;
     private AttachmentsApi attachmentsApi;
@@ -143,5 +147,60 @@ public class AttachmentsApiTest
         AttachmentPTO actualPTO2 = response.getItems().get(1);
         assertEquals(expectedPTO1.getAttachmentUid(), actualPTO1.getAttachmentUid());
         assertEquals(expectedPTO2.getAttachmentUid(), actualPTO2.getAttachmentUid());
+    }
+
+    @Test
+    public void testUploadAttachment() throws Exception
+    {
+        // given
+        AttachmentPTO expectedPTO = createAttachmentPTO();
+        assignResponse(HttpStatus.SC_OK, MediaType.APPLICATION_JSON, jsonResponse(expectedPTO));
+
+        AttachmentUploadPTO attachment = new AttachmentUploadPTO();
+        attachment.setFile(new ByteArrayInputStream("content".getBytes()));
+        attachment.setName("test.txt");
+        attachment.setDescription("description");
+        attachment.setEntityUids(asList("jobUuid1", "jobUuid2"));
+
+        // when
+        AttachmentPTO response = attachmentsApi.uploadAttachment(ACCOUNT_UID, ATTACHMENT_TYPE, attachment);
+
+        // then
+        RecordedRequest request = getRequestWithValidation(HttpMethod.POST, ATTACHMENTS, ACCOUNT_UID, ATTACHMENT_TYPE);
+        String requestBody = request.getBody().readUtf8();
+        String partSeparator = requestBody.substring(0, 38);
+
+        assertEquals(requestBody, partSeparator + "\r\n" +
+            "Content-Disposition: form-data; name=\"file\"; filename=\"file\"\r\n" +
+            "Content-Type: application/octet-stream\r\n" +
+            "\r\n" +
+            "content\r\n" +
+            partSeparator + "\r\n" +
+            "Content-Disposition: form-data; name=\"name\"\r\n" +
+            "Content-Type: text/plain\r\n" +
+            "\r\n" +
+            "test.txt\r\n" +
+            partSeparator + "\r\n" +
+            "Content-Disposition: form-data; name=\"description\"\r\n" +
+            "Content-Type: text/plain\r\n" +
+            "\r\n" +
+            "description\r\n" +
+            partSeparator + "\r\n" +
+            "Content-Disposition: form-data; name=\"entityUids\"\r\n" +
+            "Content-Type: text/plain\r\n" +
+            "\r\n" +
+            "jobUuid1\r\n" +
+            partSeparator + "\r\n" +
+            "Content-Disposition: form-data; name=\"entityUids\"\r\n" +
+            "Content-Type: text/plain\r\n" +
+            "\r\n" +
+            "jobUuid2\r\n" +
+            partSeparator + "--");
+
+        assertEquals(expectedPTO.getAttachmentUid(), response.getAttachmentUid());
+        assertEquals(expectedPTO.getName(), response.getName());
+        assertEquals(expectedPTO.getDescription(), response.getDescription());
+        assertEquals(expectedPTO.getCreatedDate(), response.getCreatedDate());
+        assertEquals(expectedPTO.getCreatedByUserUid(), response.getCreatedByUserUid());
     }
 }
