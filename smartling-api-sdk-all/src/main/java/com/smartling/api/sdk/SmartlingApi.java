@@ -9,6 +9,7 @@ import com.smartling.api.locales.v2.LocalesApi;
 import com.smartling.api.jobs.v3.TranslationJobsApi;
 import com.smartling.api.projects.v2.ProjectsApi;
 import com.smartling.api.reports.v3.ReportsApi;
+import com.smartling.glossary.v3.GlossaryApi;
 
 /**
  * Provides APIs for working with the Smartling Platform.
@@ -87,4 +88,12 @@ public interface SmartlingApi
      * @return {@link ReportsApi}
      */
     ReportsApi reportsApi();
+
+    /**
+     * Returns an API for working with Smartling
+     * <a href="https://api-reference.smartling.com/#tag/Glossary">glossary</a>.
+     *
+     * @return {@link ReportsApi}
+     */
+    GlossaryApi glossaryApi();
 }
