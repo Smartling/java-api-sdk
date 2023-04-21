@@ -50,8 +50,7 @@ public interface ImportExportApi {
     /**
      * Initialize Import glossary.
      * Upload file, and perform validation. ( NO changes will be done during this method call ).
-     * In case of success - glossary import will be created with 'PENDING' status
-     * (see {@link GlossaryImportPTO#getImportStatus()}).
+     * In case of success - glossary import will be created with 'PENDING' status.
      *
      * @param accountUid  account identifier
      * @param glossaryUid glossary identifier in {@link UUID} format
@@ -67,7 +66,6 @@ public interface ImportExportApi {
 
     /**
      * Allow to check status of the import process.
-     * Status will be reflected in scope of  {@link GlossaryImportPTO#getImportStatus()}.
      * Statuses :
      * - PENDING - file uploaded and validations passed;
      * - IN_PROGRESS - import confirmed by client - and running;
