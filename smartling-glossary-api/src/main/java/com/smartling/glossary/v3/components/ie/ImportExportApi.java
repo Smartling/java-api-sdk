@@ -86,7 +86,7 @@ public interface ImportExportApi {
     /**
      * Confirms glossary import.
      * Only imports with STATUS : 'PENDING' may be confirmed.
-     * Import process will be running in async mode, {@link this#importStatus} may be used for import process monitoring.
+     * Import process will be running in async mode, #importStatus property may be used for import process monitoring.
      *
      * @param accountUid  account identifier
      * @param glossaryUid glossary identifier in {@link UUID} format
