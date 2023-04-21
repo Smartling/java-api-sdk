@@ -19,6 +19,8 @@ import com.smartling.api.projects.v2.ProjectsApiFactory;
 import com.smartling.api.reports.v3.ReportsApi;
 import com.smartling.api.reports.v3.ReportsApiFactory;
 import com.smartling.api.v2.client.ClientFactory;
+import com.smartling.glossary.v3.GlossaryApi;
+import com.smartling.glossary.v3.GlossaryApiFactory;
 
 final class SmartlingApiImpl implements SmartlingApi
 {
@@ -31,6 +33,7 @@ final class SmartlingApiImpl implements SmartlingApi
     private final AttachmentsApi attachmentsApi;
     private final ContextsApi contextsApi;
     private final ReportsApi reportsApi;
+    private final GlossaryApi glossaryApi;
 
     SmartlingApiImpl(String userIdentifier, String userSecret)
     {
@@ -49,6 +52,7 @@ final class SmartlingApiImpl implements SmartlingApi
         attachmentsApi = new AttachmentsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
         contextsApi = new ContextsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
         reportsApi = new ReportsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
+        glossaryApi = new GlossaryApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
     }
 
     @Override
@@ -103,5 +107,10 @@ final class SmartlingApiImpl implements SmartlingApi
     public ReportsApi reportsApi()
     {
         return reportsApi;
+    }
+
+    @Override
+    public GlossaryApi glossaryApi() {
+        return glossaryApi;
     }
 }
