@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Translation progress meta inf.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

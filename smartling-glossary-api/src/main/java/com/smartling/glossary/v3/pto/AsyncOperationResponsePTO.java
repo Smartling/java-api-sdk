@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Async response with the operation UID.
+ * Async response with the operation uid.
  */
 @Data
 @AllArgsConstructor

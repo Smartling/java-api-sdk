@@ -23,15 +23,15 @@ public class GlossaryEntryCommandPTO {
     /**
      * Glossary entry part of speech.
      * One of :
-     * - "Noun",
-     * - "Verb",
-     * - "Adjective",
-     * - "Adverb",
-     * - "Pronoun",
-     * - "Preposition",
-     * - "Interjection",
-     * - "Conjunction",
-     * - "Proper Noun".
+     * - Noun,
+     * - Verb,
+     * - Adjective,
+     * - Adverb,
+     * - Pronoun,
+     * - Preposition,
+     * - Interjection,
+     * - Conjunction,
+     * - Proper Noun.
      */
     private String partOfSpeech;
     /**

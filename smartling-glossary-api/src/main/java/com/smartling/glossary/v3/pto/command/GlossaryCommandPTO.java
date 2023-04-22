@@ -9,6 +9,9 @@ import lombok.NonNull;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Glossary created/update command data.
+ */
 @Data
 @Builder
 @AllArgsConstructor

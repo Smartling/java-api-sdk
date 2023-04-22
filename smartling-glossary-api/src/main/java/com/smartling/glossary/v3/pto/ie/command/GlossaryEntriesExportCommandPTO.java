@@ -9,6 +9,9 @@ import lombok.NonNull;
 
 import java.util.List;
 
+/**
+ * Export command data and filter.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,8 +29,8 @@ public class GlossaryEntriesExportCommandPTO {
     /**
      * Required when {@link this#format} set to 'TBX' value.
      * Supported :
-     * - 'TBXcoreStructV02' - for TBX v2 core;
-     * - 'TBXcoreStructV03' - for TBX v3 core.
+     * - TBXcoreStructV02 - for TBX v2 core;
+     * - TBXcoreStructV03 - for TBX v3 core.
      */
     private String tbxVersion;
     /**

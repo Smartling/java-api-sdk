@@ -19,7 +19,9 @@ public class SortCommandPTO {
     private String field;
     /**
      * Sort direction.
-     * ASC, DESC.
+     * One of:
+     *  - ASC;
+     *  - DESC.
      */
     private String direction;
 }

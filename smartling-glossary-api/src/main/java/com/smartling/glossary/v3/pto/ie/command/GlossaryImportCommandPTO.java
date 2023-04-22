@@ -12,6 +12,9 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.core.MediaType;
 import java.io.InputStream;
 
+/**
+ * Glossary entries import meta data.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -43,9 +46,9 @@ public class GlossaryImportCommandPTO {
     /**
      * Import file type.
      * One of :
-     * - "text/csv" - for csv file,
-     * - "text/xml" - for any tbx file,
-     * - "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" - for xlsx file.
+     * - text/csv - for csv file,
+     * - text/xml - for any tbx file,
+     * - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet - for xlsx file.
      */
     @FormParam("importFileMediaType")
     @PartType(MediaType.TEXT_PLAIN)

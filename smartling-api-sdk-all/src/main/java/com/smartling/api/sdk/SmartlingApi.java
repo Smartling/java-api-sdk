@@ -91,7 +91,7 @@ public interface SmartlingApi
 
     /**
      * Returns an API for working with Smartling
-     * <a href="https://api-reference.smartling.com/#tag/Glossary">glossary</a>.
+     * <a href="https://api-reference.smartling.com/#tag/Glossary-API">glossary</a>.
      *
      * @return {@link ReportsApi}
      */

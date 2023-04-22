@@ -49,12 +49,9 @@ public abstract class AuditionDateCommandPTO {
     /**
      * Allow defining on which level ( entry / translation ) filtering should be performed.
      * USE  values:
-     * <p>
-     * ENTRY - to filter on glossary entry level,
-     * <p>
-     * LOCALE - to filter on glossary entry translation level,
-     * <p>
-     * ANY - to filter on both levels ( this is default ).
+     * - ENTRY - to filter on glossary entry level,
+     * - LOCALE - to filter on glossary entry translation level,
+     * - ANY - to filter on both levels ( this is default ).
      */
     private String level;
 

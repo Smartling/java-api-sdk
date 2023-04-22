@@ -8,6 +8,9 @@ import lombok.NonNull;
 
 import java.util.List;
 
+/**
+ * Archive / restore glossary data.
+ */
 @Data
 @Builder
 @AllArgsConstructor

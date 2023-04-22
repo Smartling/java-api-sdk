@@ -37,7 +37,6 @@ public class GetGlossaryEntriesByFilterCommandPTO {
      * - ACTIVE - only active;
      * - ARCHIVED - only archived;
      * - BOTH  - active + archived.
-     * <p>
      */
     private String entryState;
     /**
