@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
- * QueryParam annotation added to make possible use of passing params through GET request
+ * QueryParam annotation added to make possible use of passing params through GET request.
  */
 @Data
 @AllArgsConstructor
