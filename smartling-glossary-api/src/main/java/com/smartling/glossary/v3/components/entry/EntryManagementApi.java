@@ -8,7 +8,6 @@ import com.smartling.glossary.v3.pto.entry.GlossaryEntryResponsePTO;
 import com.smartling.glossary.v3.pto.entry.command.EntriesBulkActionCommandPTO;
 import com.smartling.glossary.v3.pto.entry.command.EntriesBulkUpdateLabelsCommandPTO;
 import com.smartling.glossary.v3.pto.entry.command.GlossaryEntryCommandPTO;
-import com.smartling.glossary.v3.pto.entry.command.filter.GetGlossariesEntriesByFilterCommandPTO;
 import com.smartling.glossary.v3.pto.entry.command.filter.GetGlossaryEntriesByFilterCommandPTO;
 
 import javax.ws.rs.Consumes;
@@ -90,17 +89,6 @@ public interface EntryManagementApi {
                                                                  @PathParam(GLOSSARY_UID) String glossaryUid,
                                                                  GetGlossaryEntriesByFilterCommandPTO commandPTO);
 
-    /**
-     * Search glossary entries in scope of multiple glossaries.
-     *
-     * @param accountUid account uid
-     * @param commandPTO {@link GlossaryEntryCommandPTO}
-     * @return {@link ListResponse} of {@link GlossaryEntryBaseResponsePTO}
-     */
-    @POST
-    @Path(value = "/accounts/{accountUid}/entries/search")
-    ListResponse<GlossaryEntryResponsePTO> searchEntriesInMultipleGlossaries(@PathParam(ACCOUNT_UID) String accountUid,
-                                                                             GetGlossariesEntriesByFilterCommandPTO commandPTO);
 
     /**
      * Archive glossary entries.

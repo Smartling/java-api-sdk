@@ -11,7 +11,6 @@ import com.smartling.glossary.v3.pto.entry.GlossaryEntryResponsePTO;
 import com.smartling.glossary.v3.pto.entry.command.EntriesBulkActionCommandPTO;
 import com.smartling.glossary.v3.pto.entry.command.EntriesBulkUpdateLabelsCommandPTO;
 import com.smartling.glossary.v3.pto.entry.command.GlossaryEntryCommandPTO;
-import com.smartling.glossary.v3.pto.entry.command.filter.GetGlossariesEntriesByFilterCommandPTO;
 import com.smartling.glossary.v3.pto.entry.command.filter.GetGlossaryEntriesByFilterCommandPTO;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -259,88 +258,6 @@ public class EntryManagementApiTest {
 
     }
 
-    @Test
-    public void testEntriesSearchMultipleGlossary() throws Exception {
-        final String searchResponse = "{\n"
-            + "\t\"response\": {\n"
-            + "\t\t\"code\": \"SUCCESS\",\n"
-            + "\t\t\"data\": {\n"
-            + "\t\t\t\"totalCount\": 2,\n"
-            + "\t\t\t\"items\": [{\n"
-            + "\t\t\t\t\"entryUid\": \"37915662-1f42-4a51-afe4-a9eaf32dfa37\",\n"
-            + "\t\t\t\t\"glossaryUid\": \"bad90990-4be1-4570-81da-b719cddd5352\",\n"
-            + "\t\t\t\t\"definition\": \"no EN  present in DB\",\n"
-            + "\t\t\t\t\"partOfSpeech\": null,\n"
-            + "\t\t\t\t\"labelUids\": [],\n"
-            + "\t\t\t\t\"translations\": [{\n"
-            + "\t\t\t\t\t\"localeId\": \"en-US\",\n"
-            + "\t\t\t\t\t\"fallbackLocaleId\": null,\n"
-            + "\t\t\t\t\t\"term\": \"4\",\n"
-            + "\t\t\t\t\t\"notes\": null,\n"
-            + "\t\t\t\t\t\"caseSensitive\": false,\n"
-            + "\t\t\t\t\t\"exactMatch\": false,\n"
-            + "\t\t\t\t\t\"doNotTranslate\": false,\n"
-            + "\t\t\t\t\t\"disabled\": false,\n"
-            + "\t\t\t\t\t\"variants\": [],\n"
-            + "\t\t\t\t\t\"customFieldValues\": [],\n"
-            + "\t\t\t\t\t\"createdByUserUid\": \"671b520051b2\",\n"
-            + "\t\t\t\t\t\"modifiedByUserUid\": \"671b520051b2\",\n"
-            + "\t\t\t\t\t\"createdDate\": \"2023-03-30T10:38:09Z\",\n"
-            + "\t\t\t\t\t\"modifiedDate\": \"2023-03-30T10:38:09Z\"\n"
-            + "\t\t\t\t}],\n"
-            + "\t\t\t\t\"customFieldValues\": [],\n"
-            + "\t\t\t\t\"archived\": false,\n"
-            + "\t\t\t\t\"createdByUserUid\": \"671b520051b2\",\n"
-            + "\t\t\t\t\"modifiedByUserUid\": \"671b520051b2\",\n"
-            + "\t\t\t\t\"createdDate\": \"2023-03-30T10:38:09Z\",\n"
-            + "\t\t\t\t\"modifiedDate\": \"2023-03-30T10:38:43Z\"\n"
-            + "\t\t\t}, {\n"
-            + "\t\t\t\t\"entryUid\": \"d71c254c-3aba-43db-b93d-dd6d8ca8f334\",\n"
-            + "\t\t\t\t\"glossaryUid\": \"bad90990-4be1-4570-81da-b719cddd5352\",\n"
-            + "\t\t\t\t\"definition\": \"en present in DB\",\n"
-            + "\t\t\t\t\"partOfSpeech\": null,\n"
-            + "\t\t\t\t\"labelUids\": [],\n"
-            + "\t\t\t\t\"translations\": [{\n"
-            + "\t\t\t\t\t\"localeId\": \"en-US\",\n"
-            + "\t\t\t\t\t\"fallbackLocaleId\": null,\n"
-            + "\t\t\t\t\t\"term\": \"4\",\n"
-            + "\t\t\t\t\t\"notes\": null,\n"
-            + "\t\t\t\t\t\"caseSensitive\": false,\n"
-            + "\t\t\t\t\t\"exactMatch\": false,\n"
-            + "\t\t\t\t\t\"doNotTranslate\": false,\n"
-            + "\t\t\t\t\t\"disabled\": false,\n"
-            + "\t\t\t\t\t\"variants\": [],\n"
-            + "\t\t\t\t\t\"customFieldValues\": [],\n"
-            + "\t\t\t\t\t\"createdByUserUid\": \"671b520051b2\",\n"
-            + "\t\t\t\t\t\"modifiedByUserUid\": \"671b520051b2\",\n"
-            + "\t\t\t\t\t\"createdDate\": \"2023-03-30T10:38:25Z\",\n"
-            + "\t\t\t\t\t\"modifiedDate\": \"2023-03-30T10:38:25Z\"\n"
-            + "\t\t\t\t}],\n"
-            + "\t\t\t\t\"customFieldValues\": [],\n"
-            + "\t\t\t\t\"archived\": false,\n"
-            + "\t\t\t\t\"createdByUserUid\": \"671b520051b2\",\n"
-            + "\t\t\t\t\"modifiedByUserUid\": \"671b520051b2\",\n"
-            + "\t\t\t\t\"createdDate\": \"2023-03-30T10:38:25Z\",\n"
-            + "\t\t\t\t\"modifiedDate\": \"2023-03-30T10:38:38Z\"\n"
-            + "\t\t\t}]\n"
-            + "\t\t}\n"
-            + "\t}\n"
-            + "}";
-        assignResponse(200, searchResponse);
-
-        ListResponse<GlossaryEntryResponsePTO> glossaryResponsePTO = entriesAPi.searchEntriesInMultipleGlossaries("56a0b220",
-            GetGlossariesEntriesByFilterCommandPTO.builder().glossaryUids(Collections.singletonList("\"bad90990-4be1-4570-81da-b719cddd5352\"")).query("4")
-                .entryState("BOTH").build());
-
-        assertNotNull(glossaryResponsePTO);
-        assertNotNull(glossaryResponsePTO.getItems());
-        assertEquals(2, glossaryResponsePTO.getTotalCount());
-        assertEquals(2, glossaryResponsePTO.getItems().size());
-
-        RecordedRequest recordedRequest = mockWebServer.takeRequest();
-        assertEquals("POST", recordedRequest.getMethod());
-
-    }
 
     @Test
     public void testBulkArchive() throws Exception {
