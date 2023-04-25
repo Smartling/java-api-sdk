@@ -13,4 +13,4 @@ smartling-strings-api/          @klegins-smartling @AlexanderNovak
 smartling-attachments-api/      @klegins-smartling @AlexanderNovak
 smartling-contexts-api/         @vbarhatov @MihailTymoshenko @dsavchenko-sm
 smartling-reports-api/          @data-team
-
+smartling-file-translations-api/ @klegins-smartling @andy-radchenko @RRagnar @ksoloviov-smartling

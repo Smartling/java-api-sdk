@@ -6,6 +6,8 @@ import com.smartling.api.contexts.v2.ContextsApi;
 import com.smartling.api.contexts.v2.ContextsApiFactory;
 import com.smartling.api.files.v2.FilesApi;
 import com.smartling.api.files.v2.FilesApiFactory;
+import com.smartling.api.filetranslations.v2.FileTranslationsApi;
+import com.smartling.api.filetranslations.v2.FileTranslationsApiFactory;
 import com.smartling.api.jobbatches.v2.JobBatchesApi;
 import com.smartling.api.jobbatches.v2.JobBatchesApiFactory;
 import com.smartling.api.jobs.v3.TranslationJobsApi;
@@ -34,6 +36,7 @@ final class SmartlingApiImpl implements SmartlingApi
     private final ContextsApi contextsApi;
     private final ReportsApi reportsApi;
     private final GlossaryApi glossaryApi;
+    private final FileTranslationsApi fileTranslationsApi;
 
     SmartlingApiImpl(String userIdentifier, String userSecret)
     {
@@ -53,6 +56,7 @@ final class SmartlingApiImpl implements SmartlingApi
         contextsApi = new ContextsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
         reportsApi = new ReportsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
         glossaryApi = new GlossaryApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
+        fileTranslationsApi = new FileTranslationsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
     }
 
     @Override
@@ -112,5 +116,11 @@ final class SmartlingApiImpl implements SmartlingApi
     @Override
     public GlossaryApi glossaryApi() {
         return glossaryApi;
+    }
+
+    @Override
+    public FileTranslationsApi fileTranslationsApi()
+    {
+        return fileTranslationsApi;
     }
 }
