@@ -62,5 +62,10 @@
             <version>1.6.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.smartling.api</groupId>
+            <artifactId>smartling-glossary-api</artifactId>
+            <version>1.6.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
