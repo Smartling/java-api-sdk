@@ -122,6 +122,9 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -181,6 +184,7 @@
         <module>smartling-contexts-api</module>
         <module>smartling-reports-api</module>
         <module>smartling-glossary-api</module>
+        <module>smartling-file-translations-api</module>
         <module>smartling-api-sdk-all</module> <!-- keep last -->
     </modules>
 

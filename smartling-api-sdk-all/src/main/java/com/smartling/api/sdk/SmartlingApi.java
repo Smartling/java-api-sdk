@@ -3,6 +3,7 @@ package com.smartling.api.sdk;
 import com.smartling.api.attachments.v2.AttachmentsApi;
 import com.smartling.api.contexts.v2.ContextsApi;
 import com.smartling.api.files.v2.FilesApi;
+import com.smartling.api.filetranslations.v2.FileTranslationsApi;
 import com.smartling.api.issues.v2.IssuesApi;
 import com.smartling.api.jobbatches.v2.JobBatchesApi;
 import com.smartling.api.locales.v2.LocalesApi;
@@ -96,4 +97,12 @@ public interface SmartlingApi
      * @return {@link GlossaryApi}
      */
     GlossaryApi glossaryApi();
+
+    /**
+     * Returns an API for working with
+     * <a href="https://api-reference.smartling.com/#tag/File-Machine-Translations-(MT)">File Translations</a>.
+     *
+     * @return {@link FileTranslationsApi}
+     */
+    FileTranslationsApi fileTranslationsApi();
 }
