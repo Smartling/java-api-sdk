@@ -10,7 +10,7 @@ import com.smartling.api.locales.v2.LocalesApi;
 import com.smartling.api.jobs.v3.TranslationJobsApi;
 import com.smartling.api.projects.v2.ProjectsApi;
 import com.smartling.api.reports.v3.ReportsApi;
-import com.smartling.glossary.v3.GlossaryApi;
+import com.smartling.api.glossary.v3.GlossaryApi;
 
 /**
  * Provides APIs for working with the Smartling Platform.

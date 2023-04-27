@@ -21,8 +21,8 @@ import com.smartling.api.projects.v2.ProjectsApiFactory;
 import com.smartling.api.reports.v3.ReportsApi;
 import com.smartling.api.reports.v3.ReportsApiFactory;
 import com.smartling.api.v2.client.ClientFactory;
-import com.smartling.glossary.v3.GlossaryApi;
-import com.smartling.glossary.v3.GlossaryApiFactory;
+import com.smartling.api.glossary.v3.GlossaryApi;
+import com.smartling.api.glossary.v3.GlossaryApiFactory;
 
 final class SmartlingApiImpl implements SmartlingApi
 {
