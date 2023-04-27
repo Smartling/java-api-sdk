@@ -51,6 +51,7 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -305,6 +306,7 @@ public class FileTranslationsApiTest
         assertEquals(httpMethod, request.getMethod());
         assertEquals("Bearer authToken", request.getHeader(HttpHeaders.AUTHORIZATION));
         assertEquals(request.getPath(), path);
+        assertThat(request.getHeader(HttpHeaders.USER_AGENT), startsWith("smartling-file-translations-api-java/"));
         return request;
     }
 

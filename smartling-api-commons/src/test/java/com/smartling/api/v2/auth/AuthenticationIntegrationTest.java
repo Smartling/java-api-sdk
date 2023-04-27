@@ -16,6 +16,7 @@ import com.smartling.api.v2.client.exception.server.MaintanenceModeErrorExceptio
 import com.smartling.api.v2.client.exception.server.ServerApiException;
 import com.smartling.api.v2.response.ResponseCode;
 import com.smartling.api.v2.tests.wiremock.SmartlingWireMock;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -103,6 +104,8 @@ public class AuthenticationIntegrationTest
 
         smartlingApi.verify(getRequestedFor(urlEqualTo(DUMMY_API))
             .withHeader("Authorization", equalTo("Bearer accessTokenValue")));
+        smartlingApi.verify(postRequestedFor(urlEqualTo("/auth-api/v2/authenticate"))
+            .withHeader(HttpHeaders.USER_AGENT, matching("smartling-api-commons-java/.*")));
     }
 
     @Test
@@ -193,6 +196,11 @@ public class AuthenticationIntegrationTest
 
         smartlingApi.verify(1, getRequestedFor(urlEqualTo(DUMMY_API))
             .withHeader("Authorization", equalTo("Bearer refreshedAccessTokenValue")));
+
+        smartlingApi.verify(postRequestedFor(urlEqualTo("/auth-api/v2/authenticate"))
+            .withHeader(HttpHeaders.USER_AGENT, matching("smartling-api-commons-java/.*")));
+        smartlingApi.verify(postRequestedFor(urlEqualTo("/auth-api/v2/authenticate/refresh"))
+            .withHeader(HttpHeaders.USER_AGENT, matching("smartling-api-commons-java/.*")));
     }
 
     @Test
