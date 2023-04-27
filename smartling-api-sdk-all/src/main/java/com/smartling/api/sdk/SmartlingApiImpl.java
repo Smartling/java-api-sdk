@@ -1,5 +1,7 @@
 package com.smartling.api.sdk;
 
+import com.smartling.api.accounts.v2.AccountsApi;
+import com.smartling.api.accounts.v2.AccountsApiFactory;
 import com.smartling.api.attachments.v2.AttachmentsApi;
 import com.smartling.api.attachments.v2.AttachmentsApiFactory;
 import com.smartling.api.contexts.v2.ContextsApi;
@@ -26,6 +28,7 @@ import com.smartling.glossary.v3.GlossaryApiFactory;
 
 final class SmartlingApiImpl implements SmartlingApi
 {
+    private final AccountsApi accountsApi;
     private final IssuesApi issuesApi;
     private final LocalesApi localesApi;
     private final TranslationJobsApi translationJobsApi;
@@ -46,6 +49,7 @@ final class SmartlingApiImpl implements SmartlingApi
     SmartlingApiImpl(String userIdentifier, String userSecret, ClientFactory clientFactory)
     {
         // FIXME: use a shared bearer filter
+        accountsApi = new AccountsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
         issuesApi = new IssuesApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
         localesApi = new LocalesApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
         translationJobsApi = new TranslationJobsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
@@ -57,6 +61,12 @@ final class SmartlingApiImpl implements SmartlingApi
         reportsApi = new ReportsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
         glossaryApi = new GlossaryApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
         fileTranslationsApi = new FileTranslationsApiFactory(clientFactory).buildApi(userIdentifier, userSecret);
+    }
+
+    @Override
+    public AccountsApi accountsApi()
+    {
+        return accountsApi;
     }
 
     @Override

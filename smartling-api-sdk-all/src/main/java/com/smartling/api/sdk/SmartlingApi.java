@@ -1,5 +1,6 @@
 package com.smartling.api.sdk;
 
+import com.smartling.api.accounts.v2.AccountsApi;
 import com.smartling.api.attachments.v2.AttachmentsApi;
 import com.smartling.api.contexts.v2.ContextsApi;
 import com.smartling.api.files.v2.FilesApi;
@@ -17,6 +18,14 @@ import com.smartling.glossary.v3.GlossaryApi;
  */
 public interface SmartlingApi
 {
+    /**
+     * Returns an API for working with Smartling
+     * <a href="https://api-reference.smartling.com/#tag/Account-and-Projects">accounts</a>.
+     *
+     * @return {@link AccountsApi}
+     */
+    AccountsApi accountsApi();
+
     /**
      * Returns an API to for working with Smartling
      * <a href="https://api-reference.smartling.com/#tag/Issues">issues</a>.

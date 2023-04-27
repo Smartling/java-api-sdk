@@ -1,0 +1,32 @@
+{
+    "response": {
+        "code": "SUCCESS",
+        "data": {
+            "totalCount": 2,
+            "items": [
+                {
+                    "projectId": "2ab430ac1",
+                    "projectName": "Crawler Creator Test",
+                    "accountUid": "2f23eaae9",
+                    "archived": true,
+                    "projectTypeCode": "GDN",
+                    "projectTypeDisplayValue": null,
+                    "packageUid": "8dab856631c8",
+                    "sourceLocaleId": "en-US",
+                    "sourceLocaleDescription": "English (United States) [en-US]"
+                },
+                {
+                    "projectId": "f58140a34",
+                    "projectName": "GDN Protected Test",
+                    "accountUid": "2f23eaae9",
+                    "archived": false,
+                    "projectTypeCode": "GDN",
+                    "projectTypeDisplayValue": null,
+                    "packageUid": "8dab856631c8",
+                    "sourceLocaleId": "en-US",
+                    "sourceLocaleDescription": "English (United States) [en-US]"
+                }
+            ]
+        }
+    }
+}
