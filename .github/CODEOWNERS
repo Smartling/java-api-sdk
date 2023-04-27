@@ -1,6 +1,7 @@
 # Global owners
 *   @foo4u @bloy-smartling @vlinetskiysml @AlexArcher
 
+smartling-accounts-api/         @dimitrystd @vfisyuk-smartling
 smartling-authorization-api/    @foo4u
 smartling-jobs-api/             @foo4u @vlinetskiysml @andreyfurdylo @PavloMyrotiuk @ishulyak-smartling
 smartling-job-batches-api/      @dimitrystd @dkBrazz @sl-mmuradov @rmalyona @iskrypka-smartling

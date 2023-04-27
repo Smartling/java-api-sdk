@@ -13,6 +13,11 @@
     <dependencies>
         <dependency>
             <groupId>com.smartling.api</groupId>
+            <artifactId>smartling-accounts-api</artifactId>
+            <version>1.8.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smartling.api</groupId>
             <artifactId>smartling-issues-api</artifactId>
             <version>1.8.5-SNAPSHOT</version>
         </dependency>
