@@ -12,6 +12,15 @@
         <version>1.8.3-SNAPSHOT</version>
     </parent>
 
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>com.smartling.api</groupId>
