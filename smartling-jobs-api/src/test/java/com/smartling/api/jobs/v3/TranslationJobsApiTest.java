@@ -661,11 +661,15 @@ public class TranslationJobsApiTest
         String requestString = "{"
             + "\"hashcodes\":[\"hashcode1\",\"hashcode2\"],"
             + "\"fileUris\":[\"/file/file1.properties\"],"
-            + "\"translationJobUids\":[\"jobUid1\",\"jobUid2\"]"
+            + "\"translationJobUids\":[\"jobUid1\",\"jobUid2\"],"
+            + "\"paging\": {"
+            + "    \"offset\": 30,"
+            + "    \"limit\": 30"
+            + "  }"
             + "}";
 
         TranslationJobSearchCommandPTO command = new TranslationJobSearchCommandPTO(asList("hashcode1", "hashcode2"), asList("/file/file1.properties"),
-            asList("jobUid1", "jobUid2"));
+            asList("jobUid1", "jobUid2"), PagingCommandPTO.builder().offset(30).limit(30).build());
         ListResponse<TranslationJobListItemPTO> listResponse = translationJobsApi.translationJobsSearch(PROJECT_ID, command);
 
         assertEquals(2, listResponse.getTotalCount());

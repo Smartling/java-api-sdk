@@ -14,4 +14,5 @@ public class TranslationJobSearchCommandPTO
     private List<String> hashcodes;
     private List<String> fileUris;
     private List<String> translationJobUids;
+    private PagingCommandPTO paging;
 }
