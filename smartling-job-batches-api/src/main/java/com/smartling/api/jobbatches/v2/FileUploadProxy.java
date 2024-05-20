@@ -5,6 +5,8 @@ import com.smartling.api.jobbatches.v2.pto.BatchStatusResponsePTO;
 import com.smartling.api.jobbatches.v2.pto.CancelBatchActionRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.CreateBatchRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.CreateBatchResponsePTO;
+import com.smartling.api.jobbatches.v2.pto.CreateJobRequestPTO;
+import com.smartling.api.jobbatches.v2.pto.CreateJobResponsePTO;
 import com.smartling.api.jobbatches.v2.pto.FileUploadPTO;
 import com.smartling.api.jobbatches.v2.pto.RegisterBatchActionRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.SearchParamsPTO;
@@ -84,5 +86,10 @@ public class FileUploadProxy implements JobBatchesApi
     @Override
     public void cancelFile(String projectId, String batchUid, CancelBatchActionRequestPTO request) {
         delegate.cancelFile(projectId, batchUid, request);
+    }
+
+    @Override
+    public CreateJobResponsePTO createJob(String projectId, CreateJobRequestPTO createJobRequest) {
+        return delegate.createJob(projectId, createJobRequest);
     }
 }
