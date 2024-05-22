@@ -4,6 +4,8 @@ import com.smartling.api.jobbatches.v2.pto.BatchStatusResponsePTO;
 import com.smartling.api.jobbatches.v2.pto.CancelBatchActionRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.CreateBatchRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.CreateBatchResponsePTO;
+import com.smartling.api.jobbatches.v2.pto.CreateJobRequestPTO;
+import com.smartling.api.jobbatches.v2.pto.CreateJobResponsePTO;
 import com.smartling.api.jobbatches.v2.pto.RegisterBatchActionRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.StreamFileUploadPTO;
 import com.smartling.api.jobbatches.v2.pto.BatchPTO;
@@ -55,4 +57,8 @@ public interface JobBatchesApi
     @PUT
     @Path("job-batches-api/v2/projects/{projectId}/batches/{batchUid}")
     void cancelFile(@PathParam("projectId") String projectId, @PathParam("batchUid") String batchUid, CancelBatchActionRequestPTO request);
+
+    @POST
+    @Path("job-batches-api/v2/projects/{projectId}/jobs")
+    CreateJobResponsePTO createJob(@PathParam("projectId") String projectId, CreateJobRequestPTO createJobRequest);
 }

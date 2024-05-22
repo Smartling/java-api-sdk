@@ -6,6 +6,8 @@ import com.smartling.api.jobbatches.v2.pto.BatchStatusResponsePTO;
 import com.smartling.api.jobbatches.v2.pto.CancelBatchActionRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.CreateBatchRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.CreateBatchResponsePTO;
+import com.smartling.api.jobbatches.v2.pto.CreateJobRequestPTO;
+import com.smartling.api.jobbatches.v2.pto.CreateJobResponsePTO;
 import com.smartling.api.jobbatches.v2.pto.RegisterBatchActionRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.WorkflowPTO;
 import com.smartling.api.v2.client.ClientConfiguration;
@@ -185,5 +187,57 @@ public class JobBatchesApiTest
         assertEquals(PUT, actualRequest.getMethod());
         assertEquals(expectedRequest, actualRequest.getBody().readUtf8());
         assertTrue(actualRequest.getPath().startsWith(("/job-batches-api/v2/projects/" + PROJECT_ID + "/batches/" + BATCH_UID)));
+    }
+
+    @Test
+    public void testCreateJob() throws InterruptedException {
+        // language=JSON
+        assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, "{\n" +
+            "    \"translationJobUid\": \"job-uid\",\n" +
+            "    \"jobName\": \"Job name\",\n" +
+            "    \"jobNumber\": \"job-number\",\n" +
+            "    \"dueDate\": \"2024-05-21T10:07:44Z\",\n" +
+            "    \"targetLocaleIds\": [\n" +
+            "        \"fr-FR\"\n" +
+            "    ],\n" +
+            "    \"createdDate\": \"2024-05-20T10:07:44Z\",\n" +
+            "    \"jobStatus\": \"AWAITING_AUTHORIZATION\",\n" +
+            "    \"referenceNumber\": \"reference-number\",\n" +
+            "    \"description\": \"Job description\"\n" +
+            "}"));
+
+        // language=JSON
+        String expectedRequestBody = "{" +
+            "\"nameTemplate\":\"Job name\"," +
+            "\"description\":\"Job description\"," +
+            "\"targetLocaleIds\":[\"fr-FR\"]," +
+            "\"mode\":\"REUSE_EXISTING\"," +
+            "\"salt\":\"RANDOM_ALPHANUMERIC\"," +
+            "\"timeZoneName\":\"America/New_York\"" +
+            "}";
+
+        CreateJobRequestPTO createJobRequest = CreateJobRequestPTO.builder()
+            .nameTemplate("Job name")
+            .description("Job description")
+            .targetLocaleIds(Collections.singletonList("fr-FR"))
+            .timeZoneName("America/New_York")
+            .build();
+
+        CreateJobResponsePTO createJobResponse = jobBatchesApi.createJob(PROJECT_ID, createJobRequest);
+
+        assertEquals("job-uid", createJobResponse.getTranslationJobUid());
+        assertEquals("Job name", createJobResponse.getJobName());
+        assertEquals("job-number", createJobResponse.getJobNumber());
+        assertEquals("2024-05-21T10:07:44Z", createJobResponse.getDueDate());
+        assertEquals(Collections.singletonList("fr-FR"), createJobResponse.getTargetLocaleIds());
+        assertEquals("2024-05-20T10:07:44Z", createJobResponse.getCreatedDate());
+        assertEquals("AWAITING_AUTHORIZATION", createJobResponse.getJobStatus());
+        assertEquals("reference-number", createJobResponse.getReferenceNumber());
+        assertEquals("Job description", createJobResponse.getDescription());
+
+        RecordedRequest request = mockWebServer.takeRequest();
+        assertEquals(POST, request.getMethod());
+        assertEquals("/job-batches-api/v2/projects/" + PROJECT_ID + "/jobs", request.getPath());
+        assertEquals(expectedRequestBody, request.getBody().readUtf8());
     }
 }
