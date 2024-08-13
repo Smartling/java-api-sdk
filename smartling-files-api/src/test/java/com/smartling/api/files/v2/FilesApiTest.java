@@ -1,14 +1,17 @@
 package com.smartling.api.files.v2;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.smartling.api.files.v2.pto.DownloadTranslationPTO;
 import com.smartling.api.files.v2.pto.FileItemPTO;
 import com.smartling.api.files.v2.pto.FileLocaleStatusResponse;
 import com.smartling.api.files.v2.pto.FileStatusResponse;
 import com.smartling.api.files.v2.pto.FileType;
 import com.smartling.api.files.v2.pto.GetFilesListPTO;
 import com.smartling.api.files.v2.pto.OrderBy;
+import com.smartling.api.files.v2.pto.RetrievalType;
 import com.smartling.api.files.v2.pto.UploadFilePTO;
 import com.smartling.api.files.v2.pto.UploadFileResponse;
+import com.smartling.api.files.v2.resteasy.ext.TranslatedFileMultipart;
 import com.smartling.api.v2.client.ClientConfiguration;
 import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
@@ -17,14 +20,20 @@ import com.smartling.api.v2.response.ListResponse;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
+import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -32,8 +41,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.smartling.api.files.v2.pto.FileType.JSON;
+import static java.util.Collections.singletonList;
+import static org.jboss.resteasy.plugins.providers.multipart.MultipartConstants.MULTIPART_MIXED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -312,6 +324,272 @@ public class FilesApiTest
 
         RecordedRequest recordedRequest = mockWebServer.takeRequest();
         assertEquals("POST", recordedRequest.getMethod());
+    }
+
+    @Test
+    public void testDownloadTranslatedFileMultipartSuccess() throws Exception
+    {
+        final String boundary = UUID.randomUUID().toString();
+        final String responseBody = "--" + boundary + "\r\n"
+            + "Content-Type: application/octet-stream; charset=UTF-8\r\n"
+            + "Content-Disposition: attachment; filename=\"myfile.properties\";\r\n"
+            + "\r\n"
+            + "key1=value1\nkey2=value2\r\n"
+            + "--" + boundary + "\r\n"
+            + "Content-Type: application/json; charset=UTF-8\r\n"
+            + "\r\n"
+            + "{\"key\":\"value\"}\r\n"
+            + "--" + boundary + "--";
+
+        final MockResponse response = new MockResponse()
+            .setResponseCode(200)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MULTIPART_MIXED + "; boundary=" + boundary)
+            .setBody(responseBody);
+        mockWebServer.enqueue(response);
+
+        final TranslatedFileMultipart translatedFileMultipart = filesApi.downloadTranslatedFileMultipart(
+            PROJECT_ID,
+            "es-ES",
+            DownloadTranslationPTO.builder()
+                .fileUri("myfile.properties")
+                .retrievalType(RetrievalType.PENDING)
+                .includeOriginalStrings(true)
+                .build()
+        );
+
+        assertNotNull(translatedFileMultipart);
+        assertNotNull(translatedFileMultipart.getTranslatedFileMetadata());
+
+        final MultivaluedMap<String, String> headers = new MultivaluedHashMap<>();
+        headers.put(HttpHeaders.CONTENT_TYPE, singletonList("application/octet-stream; charset=UTF-8"));
+        headers.put(HttpHeaders.CONTENT_DISPOSITION, singletonList("attachment; filename=\"myfile.properties\";"));
+        assertEquals(headers, translatedFileMultipart.getFileHeaders());
+        assertEquals(MediaType.APPLICATION_OCTET_STREAM_TYPE.withCharset("UTF-8"), translatedFileMultipart.getFileMediaType());
+        final InputStream inputStream = translatedFileMultipart.getFileBody();
+        final String fileString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+        assertEquals("key1=value1\nkey2=value2", fileString);
+
+        final RecordedRequest recordedRequest = mockWebServer.takeRequest();
+        assertEquals("GET", recordedRequest.getMethod());
+    }
+
+    @Test(expected = RestApiRuntimeException.class)
+    public void testDownloadTranslatedFileMultipartWhenFailedDueToBoundaryAbsence()
+    {
+        final String boundary = UUID.randomUUID().toString();
+        final String responseBody = "--" + boundary + "\r\n"
+            + "Content-Type: application/octet-stream; charset=UTF-8\r\n"
+            + "Content-Disposition: attachment; filename=\"myfile.properties\";\r\n"
+            + "\r\n"
+            + "key1=value1\nkey2=value2\r\n"
+            + "--" + boundary + "\r\n"
+            + "Content-Type: application/json; charset=UTF-8\r\n"
+            + "\r\n"
+            + "{\"key\":\"value\"}\r\n"
+            + "--" + boundary + "--";
+
+        final MockResponse response = new MockResponse()
+            .setResponseCode(200)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MULTIPART_MIXED)
+            .setBody(responseBody);
+        mockWebServer.enqueue(response);
+
+        filesApi.downloadTranslatedFileMultipart(
+            PROJECT_ID,
+            "es-ES",
+            DownloadTranslationPTO.builder()
+                .fileUri("myfile.properties")
+                .retrievalType(RetrievalType.PENDING)
+                .includeOriginalStrings(true)
+                .build()
+        );
+    }
+
+    @Test(expected = RestApiRuntimeException.class)
+    public void testDownloadTranslatedFileMultipartWhenFailedDueToBigNumberOfParts()
+    {
+        final String boundary = UUID.randomUUID().toString();
+        final String responseBody = "--" + boundary + "\r\n"
+            + "Content-Type: application/octet-stream; charset=UTF-8\r\n"
+            + "Content-Disposition: attachment; filename=\"myfile.properties\";\r\n"
+            + "\r\n"
+            + "key1=value1\nkey2=value2\r\n"
+            + "--" + boundary + "\r\n"
+            + "Content-Type: application/json; charset=UTF-8\r\n"
+            + "\r\n"
+            + "{\"key\":\"value\"}\r\n"
+            + "--" + boundary + "\r\n"
+            + "Content-Type: application/json; charset=UTF-8\r\n"
+            + "\r\n"
+            + "{\"key\":\"value\"}\r\n"
+            + "--" + boundary + "--";
+
+        final MockResponse response = new MockResponse()
+            .setResponseCode(200)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MULTIPART_MIXED + "; boundary=" + boundary)
+            .setBody(responseBody);
+        mockWebServer.enqueue(response);
+
+        filesApi.downloadTranslatedFileMultipart(
+            PROJECT_ID,
+            "es-ES",
+            DownloadTranslationPTO.builder()
+                .fileUri("myfile.properties")
+                .retrievalType(RetrievalType.PENDING)
+                .includeOriginalStrings(true)
+                .build()
+        );
+    }
+
+    @Test(expected = RestApiRuntimeException.class)
+    public void testDownloadTranslatedFileMultipartWhenFailedDueToSmallNumberOfParts()
+    {
+        final String boundary = UUID.randomUUID().toString();
+        final String responseBody = "--" + boundary + "\r\n"
+            + "Content-Type: application/octet-stream; charset=UTF-8\r\n"
+            + "Content-Disposition: attachment; filename=\"myfile.properties\";\r\n"
+            + "\r\n"
+            + "key1=value1\nkey2=value2\r\n"
+            + "--" + boundary + "--";
+
+        final MockResponse response = new MockResponse()
+            .setResponseCode(200)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MULTIPART_MIXED + "; boundary=" + boundary)
+            .setBody(responseBody);
+        mockWebServer.enqueue(response);
+
+        filesApi.downloadTranslatedFileMultipart(
+            PROJECT_ID,
+            "es-ES",
+            DownloadTranslationPTO.builder()
+                .fileUri("myfile.properties")
+                .retrievalType(RetrievalType.PENDING)
+                .includeOriginalStrings(true)
+                .build()
+        );
+    }
+
+    @Test(expected = RestApiRuntimeException.class)
+    public void testDownloadTranslatedFileMultipartWhenFailedDueToInvalidMetadataContentType()
+    {
+        final String boundary = UUID.randomUUID().toString();
+        final String responseBody = "--" + boundary + "\r\n"
+            + "Content-Type: application/octet-stream; charset=UTF-8\r\n"
+            + "Content-Disposition: attachment; filename=\"myfile.properties\";\r\n"
+            + "\r\n"
+            + "key1=value1\nkey2=value2\r\n"
+            + "--" + boundary + "\r\n"
+            + "Content-Type: application/octet-stream; charset=UTF-8\r\n"
+            + "\r\n"
+            + "{\"key\":\"value\"}\r\n"
+            + "--" + boundary + "--";
+
+        final MockResponse response = new MockResponse()
+            .setResponseCode(200)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MULTIPART_MIXED + "; boundary=" + boundary)
+            .setBody(responseBody);
+        mockWebServer.enqueue(response);
+
+        filesApi.downloadTranslatedFileMultipart(
+            PROJECT_ID,
+            "es-ES",
+            DownloadTranslationPTO.builder()
+                .fileUri("myfile.properties")
+                .retrievalType(RetrievalType.PENDING)
+                .includeOriginalStrings(true)
+                .build()
+        );
+    }
+
+    @Test(expected = RestApiRuntimeException.class)
+    public void testDownloadTranslatedFileMultipartWhenFailedDueToAbsenceOfMetadataJson()
+    {
+        final String boundary = UUID.randomUUID().toString();
+        final String responseBody = "--" + boundary + "\r\n"
+            + "Content-Type: application/octet-stream; charset=UTF-8\r\n"
+            + "Content-Disposition: attachment; filename=\"myfile.properties\";\r\n"
+            + "\r\n"
+            + "key1=value1\nkey2=value2\r\n"
+            + "--" + boundary + "\r\n"
+            + "Content-Type: application/json; charset=UTF-8\r\n"
+            + "\r\n"
+            + "\r\n"
+            + "--" + boundary + "--";
+
+        final MockResponse response = new MockResponse()
+            .setResponseCode(200)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MULTIPART_MIXED + "; boundary=" + boundary)
+            .setBody(responseBody);
+        mockWebServer.enqueue(response);
+
+        filesApi.downloadTranslatedFileMultipart(
+            PROJECT_ID,
+            "es-ES",
+            DownloadTranslationPTO.builder()
+                .fileUri("myfile.properties")
+                .retrievalType(RetrievalType.PENDING)
+                .includeOriginalStrings(true)
+                .build()
+        );
+    }
+
+    @Test(expected = RestApiRuntimeException.class)
+    public void testDownloadTranslatedFileMultipartWhenFailedDueToInvalidMetadataJson()
+    {
+        final String boundary = UUID.randomUUID().toString();
+        final String responseBody = "--" + boundary + "\r\n"
+            + "Content-Type: application/octet-stream; charset=UTF-8\r\n"
+            + "Content-Disposition: attachment; filename=\"myfile.properties\";\r\n"
+            + "\r\n"
+            + "key1=value1\nkey2=value2\r\n"
+            + "--" + boundary + "\r\n"
+            + "Content-Type: application/json; charset=UTF-8\r\n"
+            + "{\"key\r\n"
+            + "\r\n"
+            + "--" + boundary + "--";
+
+        final MockResponse response = new MockResponse()
+            .setResponseCode(200)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MULTIPART_MIXED + "; boundary=" + boundary)
+            .setBody(responseBody);
+        mockWebServer.enqueue(response);
+
+        filesApi.downloadTranslatedFileMultipart(
+            PROJECT_ID,
+            "es-ES",
+            DownloadTranslationPTO.builder()
+                .fileUri("myfile.properties")
+                .retrievalType(RetrievalType.PENDING)
+                .includeOriginalStrings(true)
+                .build()
+        );
+    }
+
+    @Test(expected = RestApiRuntimeException.class)
+    public void testDownloadTranslatedFileMultipartWhenFailedDueToBrokenResponse() throws Exception
+    {
+        final String boundary = UUID.randomUUID().toString();
+        final String responseBody = "--" + boundary + "\r\n"
+            + "Content-Type: application/octet-stream; charset=UTF-8\r\n"
+            + "Content-Disposition: attachment; filename=\"myfile.properties\";\r\n"
+            + "\r\n"
+            + "key1=value1\nkey2=";
+
+        final MockResponse response = new MockResponse()
+            .setResponseCode(200)
+            .setHeader(HttpHeaders.CONTENT_TYPE, MULTIPART_MIXED + "; boundary=" + boundary)
+            .setBody(responseBody);
+        mockWebServer.enqueue(response);
+
+        filesApi.downloadTranslatedFileMultipart(
+            PROJECT_ID,
+            "es-ES",
+            DownloadTranslationPTO.builder()
+                .fileUri("myfile.properties")
+                .retrievalType(RetrievalType.PENDING)
+                .includeOriginalStrings(true)
+                .build()
+        );
     }
 
     private static Date date(String date) throws ParseException
