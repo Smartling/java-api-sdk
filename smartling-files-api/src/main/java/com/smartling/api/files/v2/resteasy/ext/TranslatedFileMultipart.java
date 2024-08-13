@@ -22,8 +22,7 @@ public class TranslatedFileMultipart
 
     public void close()
     {
-        if (null != fileBody)
-            IOUtils.closeQuietly(fileBody);
+        IOUtils.closeQuietly(fileBody);
         if (null != multipartInput)
             multipartInput.close();
     }
