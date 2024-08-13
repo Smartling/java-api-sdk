@@ -7,7 +7,7 @@ import com.smartling.api.v2.client.ClientConfiguration;
 import com.smartling.api.v2.client.ClientFactory;
 import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.auth.AuthorizationRequestFilter;
-import org.jboss.resteasy.client.jaxrs.internal.LocalResteasyProviderFactory;
+import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 public class FilesApiFactory extends AbstractApiFactory<FilesApi>
@@ -33,7 +33,7 @@ public class FilesApiFactory extends AbstractApiFactory<FilesApi>
     {
         ResteasyProviderFactory resteasyProviderFactory = config.getResteasyProviderFactory();
         if (null == resteasyProviderFactory)
-            resteasyProviderFactory = new LocalResteasyProviderFactory(ResteasyProviderFactory.getInstance());
+            resteasyProviderFactory = new ResteasyClientBuilderImpl().getProviderFactory();
         resteasyProviderFactory.register(TranslatedFileMultipartReader.class);
 
         ClientConfiguration filesConfig = DefaultClientConfiguration.builder()
