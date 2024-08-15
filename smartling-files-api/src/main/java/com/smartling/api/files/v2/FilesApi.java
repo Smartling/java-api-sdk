@@ -20,6 +20,7 @@ import com.smartling.api.files.v2.pto.UploadFileResponse;
 import com.smartling.api.v2.client.exception.server.DetailedErrorMessage;
 import com.smartling.api.v2.response.EmptyData;
 import com.smartling.api.v2.response.ListResponse;
+import com.smartling.api.files.v2.resteasy.ext.TranslatedFileMultipart;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import javax.ws.rs.BeanParam;
@@ -36,6 +37,7 @@ import java.io.InputStream;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static javax.ws.rs.core.MediaType.WILDCARD;
+import static org.jboss.resteasy.plugins.providers.multipart.MultipartConstants.MULTIPART_MIXED;
 
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
@@ -65,6 +67,11 @@ public interface FilesApi
     @Path("/projects/{projectId}/locales/{localeId}/file")
     @Produces(WILDCARD)
     InputStream downloadTranslatedFile(@PathParam("projectId") String projectId, @PathParam("localeId") String localeId, @BeanParam DownloadTranslationPTO downloadTranslationPTO);
+
+    @GET
+    @Path("/projects/{projectId}/locales/{localeId}/file")
+    @Produces(MULTIPART_MIXED)
+    TranslatedFileMultipart downloadTranslatedFileMultipart(@PathParam("projectId") String projectId, @PathParam("localeId") String localeId, @BeanParam DownloadTranslationPTO downloadTranslationPTO);
 
     @GET
     @Path("/projects/{projectId}/locales/all/file/zip")

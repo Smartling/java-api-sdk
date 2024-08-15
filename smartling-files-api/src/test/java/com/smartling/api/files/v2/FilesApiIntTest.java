@@ -7,6 +7,7 @@ import com.smartling.api.files.v2.pto.FileLocaleStatusResponse;
 import com.smartling.api.files.v2.pto.GetFileLastModifiedPTO;
 import com.smartling.api.files.v2.pto.UploadFilePTO;
 import com.smartling.api.files.v2.pto.UploadFileResponse;
+import com.smartling.api.files.v2.resteasy.ext.TranslatedFileMultipart;
 import com.smartling.api.v2.client.ClientConfiguration;
 import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
@@ -85,6 +86,44 @@ public class FilesApiIntTest
         );
 
         assertEquals(IOUtils.toString(response, UTF_8), rawBody);
+    }
+
+    @Test
+    public void shouldRetrieveTranslationMultipart() throws Exception
+    {
+        final String boundary = UUID.randomUUID().toString();
+        final String responseBody = "--" + boundary + "\r\n"
+            + "Content-Type: application/octet-stream; charset=UTF-8\r\n"
+            + "Content-Disposition: attachment; filename=\"myfile.properties\";\r\n"
+            + "\r\n"
+            + "key1=value1\nkey2=value2\r\n"
+            + "--" + boundary + "\r\n"
+            + "Content-Type: application/json; charset=UTF-8\r\n"
+            + "\r\n"
+            + "{\"key\":\"value\"}\r\n"
+            + "--" + boundary + "--";
+
+        smartlingApi.stubFor(get(urlPathMatching("/files-api/v2/projects/.+/locales/zh-CN/file.*"))
+            .withQueryParam("fileUri", equalTo(FILE_URI))
+            .withQueryParam("retrievalType", equalTo(PUBLISHED.toString()))
+            .willReturn(aResponse()
+                .withHeader("Content-Type", "multipart/mixed; boundary=" + boundary)
+                .withBody(responseBody)
+            )
+        );
+
+        TranslatedFileMultipart response = filesApi.downloadTranslatedFileMultipart(
+            PROJECT_ID,
+            "zh-CN",
+            DownloadTranslationPTO.builder()
+                .fileUri(FILE_URI)
+                .retrievalType(PUBLISHED)
+                .build()
+        );
+
+        InputStream stream = response.getFileBody();
+
+        assertEquals(IOUtils.toString(stream, UTF_8), "key1=value1\nkey2=value2");
     }
 
     @Test
