@@ -27,7 +27,7 @@ import static javax.ws.rs.core.MediaType.WILDCARD;
 @Path("/glossary-api/v3")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface ImportExportApi {
+public interface ImportExportApi extends AutoCloseable {
     /**
      * Export glossary - by filter.
      * Caller of the method is responsible for closing the stream after reading its content.

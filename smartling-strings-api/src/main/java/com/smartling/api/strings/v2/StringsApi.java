@@ -21,7 +21,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/strings-api/v2")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface StringsApi
+public interface StringsApi extends AutoCloseable
 {
     @POST
     @Path("/projects/{projectUid}")

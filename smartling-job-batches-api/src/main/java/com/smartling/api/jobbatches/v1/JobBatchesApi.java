@@ -22,7 +22,7 @@ import javax.ws.rs.core.MediaType;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface JobBatchesApi
+public interface JobBatchesApi extends AutoCloseable
 {
     @POST
     @Path("job-batches-api/v1/projects/{projectId}/batches")

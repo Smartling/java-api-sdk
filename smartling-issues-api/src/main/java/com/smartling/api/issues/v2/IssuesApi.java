@@ -32,7 +32,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/issues-api/v2")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface IssuesApi
+public interface IssuesApi extends AutoCloseable
 {
     @GET
     @Path("/dictionary/issue-states")

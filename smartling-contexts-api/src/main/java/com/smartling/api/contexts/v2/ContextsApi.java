@@ -29,7 +29,7 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 @Path("/context-api/v2")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public interface ContextsApi
+public interface ContextsApi extends AutoCloseable
 {
     @POST
     @Path("/projects/{projectId}/contexts")

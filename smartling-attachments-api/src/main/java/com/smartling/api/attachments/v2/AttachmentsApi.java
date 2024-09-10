@@ -13,7 +13,7 @@ import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 @Path("/attachments-api/v2")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface AttachmentsApi
+public interface AttachmentsApi extends AutoCloseable
 {
     @GET
     @Path("/accounts/{accountUid}/{type}/{entityUid}")

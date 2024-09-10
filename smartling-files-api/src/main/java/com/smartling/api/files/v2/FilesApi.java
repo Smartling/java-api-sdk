@@ -43,7 +43,7 @@ import static org.jboss.resteasy.plugins.providers.multipart.MultipartConstants.
 @Consumes(APPLICATION_JSON)
 @Path("/files-api/v2")
 @DetailedErrorMessage(args = "fileUri")
-public interface FilesApi
+public interface FilesApi extends AutoCloseable
 {
     @POST
     @Path("/projects/{projectId}/file")

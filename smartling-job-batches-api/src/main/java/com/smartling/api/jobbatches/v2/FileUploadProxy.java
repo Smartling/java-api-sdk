@@ -13,6 +13,7 @@ import com.smartling.api.jobbatches.v2.pto.SearchParamsPTO;
 import com.smartling.api.jobbatches.v2.pto.StreamFileUploadPTO;
 import com.smartling.api.v2.response.ListResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 
@@ -27,13 +28,15 @@ import static com.smartling.api.jobbatches.util.FileUploadProxyUtils.sendRequest
 @Slf4j
 public class FileUploadProxy implements JobBatchesApi
 {
-    private JobBatchesApi delegate;
-    private ResteasyWebTarget client;
+    private final JobBatchesApi delegate;
+    private final ResteasyClient client;
+    private final ResteasyWebTarget target;
 
-    FileUploadProxy(JobBatchesApi delegate, ResteasyWebTarget client)
+    FileUploadProxy(JobBatchesApi delegate, ResteasyClient client, ResteasyWebTarget target)
     {
         this.delegate = delegate;
         this.client = client;
+        this.target = target;
     }
 
     @Override
@@ -62,7 +65,7 @@ public class FileUploadProxy implements JobBatchesApi
         addClientLibIdIfNeeded(output);
 
         String path = getPathAnnotationValue(JobBatchesApi.class,"addFileAsync", String.class, String.class, FileUploadPTO.class);
-        Response response = sendRequest(client, path, projectId, batchUid, output);
+        Response response = sendRequest(target, path, projectId, batchUid, output);
         releaseConnection(response);
     }
 
@@ -74,7 +77,7 @@ public class FileUploadProxy implements JobBatchesApi
         addClientLibIdIfNeeded(output);
 
         String path = getPathAnnotationValue(JobBatchesApi.class,"addFileAsStreamAsync", String.class, String.class, StreamFileUploadPTO.class);
-        Response response = sendRequest(client, path, projectId, batchUid, output);
+        Response response = sendRequest(target, path, projectId, batchUid, output);
         releaseConnection(response);
     }
 
@@ -91,5 +94,12 @@ public class FileUploadProxy implements JobBatchesApi
     @Override
     public CreateJobResponsePTO createJob(String projectId, CreateJobRequestPTO createJobRequest) {
         return delegate.createJob(projectId, createJobRequest);
+    }
+
+    @Override
+    public void close() throws Exception
+    {
+        client.close();
+        delegate.close();
     }
 }

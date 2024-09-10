@@ -10,7 +10,7 @@ import java.util.List;
 @Path("/locales-api/v2")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface LocalesApi
+public interface LocalesApi extends AutoCloseable
 {
     /**
      * Returns a list of all locales used by Smartling.
