@@ -26,15 +26,7 @@ public class CloseClientInvocationHandler  implements InvocationHandler
     {
         if ("close".equals(method.getName()) && method.getParameterCount() == 0)
         {
-            try
-            {
-                client.close();
-            }
-            catch (Exception ex)
-            {
-                log.error("Error on closing a client.", ex);
-            }
-
+            client.close();
             return null;
         }
 
