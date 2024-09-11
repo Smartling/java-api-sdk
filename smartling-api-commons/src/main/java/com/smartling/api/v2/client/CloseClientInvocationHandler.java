@@ -7,10 +7,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 /**
- *
+ * Provides an invocation handler to close resources acquired by the API proxy.
  */
-@Slf4j
-public class CloseClientInvocationHandler  implements InvocationHandler
+public class CloseClientInvocationHandler implements InvocationHandler
 {
     private final InvocationHandler subhandler;
     private final Client client;
