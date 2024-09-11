@@ -25,7 +25,7 @@ import static javax.ws.rs.core.MediaType.WILDCARD;
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
 @Path("/file-translations-api/v2")
-public interface FileTranslationsApi
+public interface FileTranslationsApi extends AutoCloseable
 {
     /**
      * Upload file to perform further actions on it

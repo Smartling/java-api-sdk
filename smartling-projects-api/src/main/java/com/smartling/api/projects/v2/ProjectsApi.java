@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/projects-api/v2")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface ProjectsApi
+public interface ProjectsApi extends AutoCloseable
 {
     /**
      * Obtains details about a project.

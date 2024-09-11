@@ -54,7 +54,7 @@ import java.util.List;
 @Path("/jobs-api/v3")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface TranslationJobsApi
+public interface TranslationJobsApi extends AutoCloseable
 {
     String API_JOBS_ENDPOINT = "/projects/{projectId}/jobs";
     String API_JOBS_SEARCH_ENDPOINT = API_JOBS_ENDPOINT + "/search";

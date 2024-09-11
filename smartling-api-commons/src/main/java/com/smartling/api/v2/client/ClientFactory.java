@@ -255,7 +255,8 @@ public class ClientFactory
         final T proxy = client.proxy(klass);
         final RestApiExceptionHandler exceptionHandler = new RestApiExceptionHandler(exceptionMapper != null ? exceptionMapper : new DefaultRestApiExceptionMapper());
         final ExceptionDecoratorInvocationHandler<T> handler = new ExceptionDecoratorInvocationHandler<>(proxy, exceptionHandler);
+        final CloseClientInvocationHandler closeClientInvocationHandler = new CloseClientInvocationHandler(handler, client.getResteasyClient());
 
-        return (T) Proxy.newProxyInstance(klass.getClassLoader(), new Class[] { klass }, handler);
+        return (T) Proxy.newProxyInstance(klass.getClassLoader(), new Class[] { klass }, closeClientInvocationHandler);
     }
 }

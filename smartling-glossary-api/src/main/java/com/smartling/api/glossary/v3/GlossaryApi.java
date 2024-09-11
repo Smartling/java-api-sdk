@@ -17,6 +17,6 @@ import javax.ws.rs.core.MediaType;
 @Path("/glossary-api/v3")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface GlossaryApi extends GlossaryManagementApi, EntryManagementApi, EntryAuthorizeForTranslationApi, ImportExportApi, LabelManagementApi {
+public interface GlossaryApi extends GlossaryManagementApi, EntryManagementApi, EntryAuthorizeForTranslationApi, ImportExportApi, LabelManagementApi, AutoCloseable {
 
 }

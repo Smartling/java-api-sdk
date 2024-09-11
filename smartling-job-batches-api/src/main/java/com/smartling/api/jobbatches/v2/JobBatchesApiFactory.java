@@ -4,6 +4,7 @@ import com.smartling.api.jobbatches.util.FileUploadClientFactory;
 import com.smartling.api.jobbatches.util.LibNameVersionHolder;
 import com.smartling.api.v2.client.*;
 import com.smartling.api.v2.client.auth.AuthorizationRequestFilter;
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 import javax.ws.rs.client.ClientRequestContext;
@@ -59,9 +60,14 @@ public class JobBatchesApiFactory extends AbstractApiFactory<JobBatchesApi>
         List<ClientRequestFilter> fileUploadFilters = new ArrayList<>(clientRequestFilters.size() + 1);
         fileUploadFilters.add(authFilter);
 
-        ResteasyWebTarget client = new FileUploadClientFactory().build(fileUploadFilters, jobsBatchConfig.getBaseUrl().toString(), httpClientConfiguration);
+        FileUploadClientFactory factory = new FileUploadClientFactory();
+        ResteasyClient client = factory.build(httpClientConfiguration);
+        ResteasyWebTarget target = factory.build(
+            client,
+            fileUploadFilters,
+            jobsBatchConfig.getBaseUrl().toString());
 
-        return new FileUploadProxy(jobBatchesApi, client);
+        return new FileUploadProxy(jobBatchesApi, client, target);
     }
 
     private ClientRequestFilter userAgentFilter()

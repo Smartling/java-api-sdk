@@ -28,7 +28,7 @@ import static com.smartling.api.glossary.v3.components.Common.GLOSSARY_UID;
 @Path("/glossary-api/v3")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface GlossaryManagementApi {
+public interface GlossaryManagementApi extends AutoCloseable {
     /**
      * Read glossary.
      *

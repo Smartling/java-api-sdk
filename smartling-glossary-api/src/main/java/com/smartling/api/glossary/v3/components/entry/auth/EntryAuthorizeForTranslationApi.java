@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/glossary-api/v3")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface EntryAuthorizeForTranslationApi {
+public interface EntryAuthorizeForTranslationApi extends AutoCloseable {
 
     /**
      * Allow to authorize entries for translation.

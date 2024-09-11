@@ -22,7 +22,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/glossary-api/v3")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface LabelManagementApi {
+public interface LabelManagementApi extends AutoCloseable {
 
     /**
      * Read all labels that exists in scope of the account.

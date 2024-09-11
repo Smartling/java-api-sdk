@@ -15,7 +15,7 @@ import java.io.InputStream;
 @Path("/reports-api/v3")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface ReportsApi
+public interface ReportsApi extends AutoCloseable
 {
     /**
      * Obtains word count report data

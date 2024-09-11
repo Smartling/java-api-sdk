@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/accounts-api/v2")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface AccountsApi
+public interface AccountsApi extends AutoCloseable
 {
     /**
      * Returns the list of projects for an account.
