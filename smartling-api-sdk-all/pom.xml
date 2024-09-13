@@ -4,10 +4,10 @@
     <parent>
         <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
-        <version>1.12.4</version>
+        <version>1.12.6</version>
     </parent>
     <artifactId>smartling-api-sdk</artifactId>
-    <version>1.12.4</version>
+    <version>1.12.6</version>
     <packaging>jar</packaging>
     <name>Smartling API SDK</name>
     <dependencies>

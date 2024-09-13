@@ -4,10 +4,10 @@
     <parent>
         <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
-        <version>1.12.4</version>
+        <version>1.12.6</version>
     </parent>
     <artifactId>smartling-contexts-api</artifactId>
-    <version>1.12.4</version>
+    <version>1.12.6</version>
     <name>Smartling Contexts API</name>
     <dependencies>
         <dependency>
