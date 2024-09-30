@@ -8,7 +8,10 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
+import java.io.InputStream;
+
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
+import static javax.ws.rs.core.MediaType.WILDCARD;
 
 @Path("/attachments-api/v2")
 @Produces(MediaType.APPLICATION_JSON)
@@ -23,4 +26,9 @@ public interface AttachmentsApi extends AutoCloseable
     @Path("/accounts/{accountUid}/{type}/attachments")
     @Consumes(MULTIPART_FORM_DATA)
     AttachmentPTO uploadAttachment(@PathParam("accountUid") String accountUid, @PathParam("type") String type, @MultipartForm AttachmentUploadPTO attachmentUploadPTO);
+
+    @GET
+    @Path("/accounts/{accountUid}/{type}/attachments/{attachmentUid}")
+    @Produces(WILDCARD)
+    InputStream downloadAttachment(@PathParam("accountUid") String accountUid, @PathParam("type") String type, @PathParam("attachmentUid") String attachmentUid);
 }
