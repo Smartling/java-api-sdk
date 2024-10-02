@@ -15,6 +15,7 @@ import com.smartling.api.v2.response.SuccessResponse;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
@@ -24,6 +25,9 @@ import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +35,7 @@ import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class AttachmentsApiTest
@@ -45,9 +50,11 @@ public class AttachmentsApiTest
     private static final String LINKS = IDENTITY_URL;
     private static final String ENTITY_LINKS = LINKS + "/{" + ENTITY_UID_PARAMETER + "}";
     private static final String ATTACHMENTS = IDENTITY_URL + "/attachments";
+    private static final String DOWNLOAD_ATTACHMENT = ATTACHMENTS + "/{" + ATTACHMENT_UID_PARAMETER + "}";
     private static final String BEARER_TOKEN = UUID.randomUUID().toString();
     private static final String ACCOUNT_UID = "account_uid";
     private static final String ENTITY_UID = "entity_uid";
+    private static final String ATTACHMENT_UID = "attachment_uid";
     private static final String ATTACHMENT_TYPE = AttachmentType.JOBS.name().toLowerCase();
     private static final List<String> PATH_PLACEHOLDERS = asList(ACCOUNT_UID_PARAMETER, TYPE_PARAMETER, ENTITY_UID_PARAMETER, ATTACHMENT_UID_PARAMETER);
 
@@ -202,5 +209,22 @@ public class AttachmentsApiTest
         assertEquals(expectedPTO.getDescription(), response.getDescription());
         assertEquals(expectedPTO.getCreatedDate(), response.getCreatedDate());
         assertEquals(expectedPTO.getCreatedByUserUid(), response.getCreatedByUserUid());
+    }
+
+    @Test
+    public void testDownloadAttachment() throws IOException, InterruptedException {
+        // given
+        String attachmentContent = "Attachment content\nThe end.";
+        assignResponse(HttpStatus.SC_OK, "application/zip;charset=UTF-8", attachmentContent);
+
+        // when
+        InputStream response = attachmentsApi.downloadAttachment(ACCOUNT_UID, ATTACHMENT_TYPE, ATTACHMENT_UID);
+
+        // then
+
+        getRequestWithValidation(HttpMethod.GET, DOWNLOAD_ATTACHMENT, ACCOUNT_UID, ATTACHMENT_TYPE, ENTITY_UID, ATTACHMENT_UID);
+
+        assertNotNull(response);
+        assertEquals(attachmentContent, IOUtils.toString(response, StandardCharsets.UTF_8));
     }
 }
