@@ -1,5 +1,6 @@
 package com.smartling.api.attachments.v2.pto;
 
+import com.smartling.resteasy.ext.FileFormParam;
 import com.smartling.resteasy.ext.ListFormParam;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,8 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AttachmentUploadPTO
 {
-    @FormParam("file")
-    @PartFilename("file")
+    @FileFormParam(value = "file", filenameField = "name")
     @PartType("application/octet-stream")
     private InputStream file;
 
