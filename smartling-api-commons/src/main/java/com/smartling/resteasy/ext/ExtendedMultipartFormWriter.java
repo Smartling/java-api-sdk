@@ -1,5 +1,6 @@
 package com.smartling.resteasy.ext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.resteasy.annotations.providers.multipart.PartType;
 import org.jboss.resteasy.plugins.providers.multipart.FieldEnablerPrivilegedAction;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormAnnotationWriter;
@@ -33,7 +34,8 @@ public class ExtendedMultipartFormWriter extends MultipartFormAnnotationWriter
     @Override
     protected void getFields(Class<?> type, MultipartFormDataOutput output, Object obj) throws IOException
     {
-        for (Field field : type.getDeclaredFields())
+        Field[] declaredFields = type.getDeclaredFields();
+        for (Field field : declaredFields)
         {
             if (field.isAnnotationPresent(DynamicFormParam.class) && field.isAnnotationPresent(PartType.class))
             {
@@ -84,9 +86,40 @@ public class ExtendedMultipartFormWriter extends MultipartFormAnnotationWriter
                     }
                 }
             }
+            if (field.isAnnotationPresent(FileFormParam.class) && field.isAnnotationPresent(PartType.class))
+            {
+                AccessController.doPrivileged(new FieldEnablerPrivilegedAction(field));
+
+                FileFormParam fileFormParam = field.getAnnotation(FileFormParam.class);
+                String name = fileFormParam.value();
+                Object value = safeExtractValue(obj, field);
+                String mediaType = field.getAnnotation(PartType.class).value();
+                String filename = getFilename(obj, declaredFields, field);
+
+                output.addFormData(name, value, field.getType(), field.getGenericType(), MediaType.valueOf(mediaType), filename);
+            }
         }
 
         super.getFields(type, output, obj);
+    }
+
+    private String getFilename(Object obj, Field[] declaredFields, Field field)
+    {
+        String filenameField = field.getAnnotation(FileFormParam.class).filenameField();
+        if (StringUtils.isNotEmpty(filenameField))
+        {
+            for (Field declaredField : declaredFields)
+            {
+                if (declaredField.getName().equals(filenameField))
+                {
+                    AccessController.doPrivileged(new FieldEnablerPrivilegedAction(declaredField));
+
+                    return (String) safeExtractValue(obj, declaredField);
+                }
+            }
+        }
+
+        return getFilename(field);
     }
 
     private Object safeExtractValue(Object obj, Field field)

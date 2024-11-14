@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.smartling.resteasy.ext.ExtendedMultipartFormWriter;
 import com.smartling.resteasy.ext.data.DummyMultipartApi;
 import com.smartling.resteasy.ext.data.FormWithDynamicParams;
+import com.smartling.resteasy.ext.data.FormWithFileFormParams;
 import com.smartling.resteasy.ext.data.FormWithListParams;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.junit.Before;
@@ -12,6 +13,7 @@ import org.junit.Test;
 
 import javax.ws.rs.client.ClientBuilder;
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -96,6 +98,38 @@ public class ExtendedMultipartFormWriterIntegrationTest
             .withRequestBodyPart(aMultipart()
                 .withName(LIST_PARAM_NAME)
                 .withBody(equalTo("string value"))
+                .build())
+        );
+    }
+
+    @Test
+    public void shouldExtractFileFormParams() throws Exception
+    {
+        FormWithFileFormParams form = new FormWithFileFormParams();
+        form.setFile1(new ByteArrayInputStream("file1 data".getBytes(StandardCharsets.UTF_8)));
+        form.setFile1Name("file1.txt");
+        form.setFile2(new ByteArrayInputStream("file2 data".getBytes(StandardCharsets.UTF_8)));
+        form.setFile3(new ByteArrayInputStream("file3 data".getBytes(StandardCharsets.UTF_8)));
+
+
+        dummyApi().postFileFormParams(form);
+
+        dummyApiEndpoint.verify(postRequestedFor(urlEqualTo(DUMMY_MULTIPART_API + "/file-fields"))
+            .withRequestBodyPart(aMultipart()
+                .withHeader("Content-Disposition", equalTo("form-data; name=\"file1\"; filename=\"file1.txt\""))
+                .withBody(equalTo("file1 data"))
+                .build())
+            .withRequestBodyPart(aMultipart()
+                .withHeader("Content-Disposition", equalTo("form-data; name=\"file2\"; filename=\"file2\""))
+                .withBody(equalTo("file2 data"))
+                .build())
+            .withRequestBodyPart(aMultipart()
+                .withHeader("Content-Disposition", equalTo("form-data; name=\"file3\""))
+                .withBody(equalTo("file3 data"))
+                .build())
+            .withRequestBodyPart(aMultipart()
+                .withName("file1Name")
+                .withBody(equalTo("file1.txt"))
                 .build())
         );
     }

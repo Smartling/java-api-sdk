@@ -178,7 +178,7 @@ public class AttachmentsApiTest
         String partSeparator = requestBody.substring(0, 38);
 
         assertEquals(requestBody, partSeparator + "\r\n" +
-            "Content-Disposition: form-data; name=\"file\"; filename=\"file\"\r\n" +
+            "Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"\r\n" +
             "Content-Type: application/octet-stream\r\n" +
             "\r\n" +
             "content\r\n" +
