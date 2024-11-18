@@ -11,10 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WorkflowPTO
+public class ContentAssignmentPTO
 {
-    private String targetLocaleId;
-    private String workflowUid;
-    private String contentAssignmentStrategy;
-    private List<ContentAssignmentPTO> contentAssignments;
+    private String workflowStepUid;
+    private List<String> userUids;
 }
