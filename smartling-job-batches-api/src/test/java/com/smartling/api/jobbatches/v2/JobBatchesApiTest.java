@@ -72,7 +72,7 @@ public class JobBatchesApiTest
             + "\"translationJobUid\":\"jobUid\","
             + "\"authorize\":true,"
             + "\"fileUris\":[\"fileUri.json\"],"
-            + "\"localeWorkflows\":[{\"targetLocaleId\":\"fr-FR\",\"workflowUid\":\"workflowUid\",\"contentAssignmentStrategy\":null,\"contentAssignments\":null}]"
+            + "\"localeWorkflows\":[{\"targetLocaleId\":\"fr-FR\",\"workflowUid\":\"workflowUid\",\"contentAssignments\":null}]"
             + "}";
 
         CreateBatchRequestPTO requestBody = CreateBatchRequestPTO.builder()
@@ -113,7 +113,6 @@ public class JobBatchesApiTest
             +   "{"
             +       "\"targetLocaleId\":\"fr-FR\","
             +       "\"workflowUid\":\"workflowUid\","
-            +       "\"contentAssignmentStrategy\":\"strategy\","
             +       "\"contentAssignments\":["
             +           "{"
             +               "\"workflowStepUid\":\"workflowStepUid1\","
@@ -131,15 +130,14 @@ public class JobBatchesApiTest
             .localeWorkflows(Collections.singletonList(WorkflowPTO.builder()
                 .targetLocaleId("fr-FR")
                 .workflowUid("workflowUid")
-                .contentAssignmentStrategy(strategy)
-                    .contentAssignments(
-                        Collections.singletonList(
-                            ContentAssignmentPTO.builder()
-                            .workflowStepUid(workflowStepUid)
-                            .userUids(Collections.singletonList(userUid))
-                            .build()
-                        )
-                    )
+                 .contentAssignments(
+                     Collections.singletonList(
+                         ContentAssignmentPTO.builder()
+                         .workflowStepUid(workflowStepUid)
+                         .userUids(Collections.singletonList(userUid))
+                         .build()
+                     )
+                 )
                 .build()
             ))
             .build();

@@ -15,6 +15,5 @@ public class WorkflowPTO
 {
     private String targetLocaleId;
     private String workflowUid;
-    private String contentAssignmentStrategy;
     private List<ContentAssignmentPTO> contentAssignments;
 }
