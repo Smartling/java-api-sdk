@@ -1,6 +1,16 @@
 package com.smartling.api.jobbatches.v2;
 
-import com.smartling.api.jobbatches.v2.pto.*;
+import com.smartling.api.jobbatches.v2.pto.BatchItemStatus;
+import com.smartling.api.jobbatches.v2.pto.BatchStatus;
+import com.smartling.api.jobbatches.v2.pto.BatchStatusResponsePTO;
+import com.smartling.api.jobbatches.v2.pto.CancelBatchActionRequestPTO;
+import com.smartling.api.jobbatches.v2.pto.CreateBatchRequestPTO;
+import com.smartling.api.jobbatches.v2.pto.CreateBatchResponsePTO;
+import com.smartling.api.jobbatches.v2.pto.CreateJobRequestPTO;
+import com.smartling.api.jobbatches.v2.pto.CreateJobResponsePTO;
+import com.smartling.api.jobbatches.v2.pto.RegisterBatchActionRequestPTO;
+import com.smartling.api.jobbatches.v2.pto.WorkflowPTO;
+import com.smartling.api.jobbatches.v2.pto.ContentAssignmentPTO;
 import com.smartling.api.v2.client.ClientConfiguration;
 import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
