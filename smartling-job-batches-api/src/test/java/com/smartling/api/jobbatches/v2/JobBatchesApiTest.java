@@ -10,6 +10,7 @@ import com.smartling.api.jobbatches.v2.pto.CreateJobRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.CreateJobResponsePTO;
 import com.smartling.api.jobbatches.v2.pto.RegisterBatchActionRequestPTO;
 import com.smartling.api.jobbatches.v2.pto.WorkflowPTO;
+import com.smartling.api.jobbatches.v2.pto.ContentAssignmentPTO;
 import com.smartling.api.v2.client.ClientConfiguration;
 import com.smartling.api.v2.client.DefaultClientConfiguration;
 import com.smartling.api.v2.client.auth.BearerAuthStaticTokenFilter;
@@ -81,7 +82,7 @@ public class JobBatchesApiTest
             + "\"translationJobUid\":\"jobUid\","
             + "\"authorize\":true,"
             + "\"fileUris\":[\"fileUri.json\"],"
-            + "\"localeWorkflows\":[{\"targetLocaleId\":\"fr-FR\",\"workflowUid\":\"workflowUid\"}]"
+            + "\"localeWorkflows\":[{\"targetLocaleId\":\"fr-FR\",\"workflowUid\":\"workflowUid\",\"contentAssignments\":null}]"
             + "}";
 
         CreateBatchRequestPTO requestBody = CreateBatchRequestPTO.builder()
@@ -92,6 +93,62 @@ public class JobBatchesApiTest
                     .targetLocaleId("fr-FR")
                     .workflowUid("workflowUid")
                     .build()
+            ))
+            .build();
+
+        CreateBatchResponsePTO response = jobBatchesApi.createBatch(PROJECT_ID, requestBody);
+
+        assertEquals("createdBatchUid", response.getBatchUid());
+
+        RecordedRequest request = mockWebServer.takeRequest();
+        assertEquals(POST, request.getMethod());
+        assertEquals(requestString, request.getBody().readUtf8());
+        assertTrue(request.getPath().startsWith(("/job-batches-api/v2/projects/" + PROJECT_ID + "/batches")));
+    }
+
+    @Test
+    public void testCreateBatchWithWorkflowStepAssignments() throws Exception
+    {
+        assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, "{\"batchUid\" : \"createdBatchUid\"}"));
+
+        String workflowStepUid = "workflowStepUid1";
+        String userUid = "userUid1";
+        String strategy = "strategy";
+        // language=JSON
+        String requestString = "{"
+            + "\"translationJobUid\":\"jobUid\","
+            + "\"authorize\":true,"
+            + "\"fileUris\":[\"fileUri.json\"],"
+            + "\"localeWorkflows\":["
+            +   "{"
+            +       "\"targetLocaleId\":\"fr-FR\","
+            +       "\"workflowUid\":\"workflowUid\","
+            +       "\"contentAssignments\":["
+            +           "{"
+            +               "\"workflowStepUid\":\"workflowStepUid1\","
+            +               "\"userUids\":[\"userUid1\"]"
+            +           "}"
+            +       "]"
+            +      "}"
+            +   "]"
+            + "}";
+
+        CreateBatchRequestPTO requestBody = CreateBatchRequestPTO.builder()
+            .translationJobUid("jobUid")
+            .authorize(true)
+            .fileUris(Collections.singletonList("fileUri.json"))
+            .localeWorkflows(Collections.singletonList(WorkflowPTO.builder()
+                .targetLocaleId("fr-FR")
+                .workflowUid("workflowUid")
+                 .contentAssignments(
+                     Collections.singletonList(
+                         ContentAssignmentPTO.builder()
+                         .workflowStepUid(workflowStepUid)
+                         .userUids(Collections.singletonList(userUid))
+                         .build()
+                     )
+                 )
+                .build()
             ))
             .build();
 
