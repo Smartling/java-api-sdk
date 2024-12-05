@@ -22,6 +22,12 @@ public class BindingPTO extends BindingRequestPTO implements ResponseData
         this.bindingUid = bindingUid;
     }
 
+    public BindingPTO(String bindingUid, String contextUid, String stringHashcode, CoordinatesPTO coordinates, Integer page)
+    {
+        super(contextUid, stringHashcode, coordinates, page);
+        this.bindingUid = bindingUid;
+    }
+
     public BindingPTO(String bindingUid, String contextUid, String stringHashcode, TimecodePTO timecode, CoordinatesPTO coordinates)
     {
         super(contextUid, stringHashcode, timecode, coordinates);
