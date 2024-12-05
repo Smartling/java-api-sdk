@@ -71,7 +71,7 @@ public class ContextsApiTest
         "    \"code\": \"SUCCESS\",\n" +
         "    \"data\": {\n" +
         "      \"created\": {\n" +
-        "        \"totalCount\": 2,\n" +
+        "        \"totalCount\": 3,\n" +
         "        \"items\": [\n" +
         "        {\n" +
         "          \"bindingUid\": \"bindingUid1\",\n" +
@@ -94,6 +94,18 @@ public class ContextsApiTest
         "            \"width\": 2,\n" +
         "            \"height\": 1\n" +
         "          }\n" +
+        "        },\n" +
+        "        {\n" +
+        "          \"bindingUid\": \"bindingUid3\",\n" +
+        "          \"contextUid\": \"contextUid3\",\n" +
+        "          \"stringHashcode\": \"stringHashcode3\",\n" +
+        "          \"coordinates\": {\n" +
+        "            \"top\": 4,\n" +
+        "            \"left\": 3,\n" +
+        "            \"width\": 2,\n" +
+        "            \"height\": 1\n" +
+        "          },\n" +
+        "          \"page\": 5" +
         "        }\n" +
         "        ]\n" +
         "      },\n" +
@@ -116,6 +128,7 @@ public class ContextsApiTest
         "          \"contextUid\": \"context_uid\",\n" +
         "          \"stringHashcode\": \"hashcode1\",\n" +
         "          \"contextPosition\": 100002,\n" +
+        "          \"page\": 34," +
         "          \"coordinates\": {\n" +
         "            \"top\": 1,\n" +
         "            \"left\": 2,\n" +
@@ -325,18 +338,36 @@ public class ContextsApiTest
 
         BindingsRequestPTO bindingsRequestPTO = new BindingsRequestPTO(asList(
             new BindingRequestPTO("requestContext1", "requestString1", new CoordinatesPTO(1, 2, 3, 4)),
-            new BindingRequestPTO("requestContext2", "requestString2", (CoordinatesPTO)null)
+            new BindingRequestPTO("requestContext2", "requestString2", (CoordinatesPTO)null),
+            new BindingRequestPTO("requestContext3", "requestString3", new CoordinatesPTO(1, 2, 3, 4), 5)
         ));
 
         BatchBindingPTO batchBindingResponse = contextApi.createBindings(PROJECT_UID, bindingsRequestPTO);
 
-        assertThat(batchBindingResponse.getCreated().getTotalCount(), is(2L));
+        assertThat(batchBindingResponse.getCreated().getTotalCount(), is(3L));
         List<BindingPTO> items = batchBindingResponse.getCreated().getItems();
-        assertThat(items.size(), is(2));
+        assertThat(items.size(), is(3));
 
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals("POST", request.getMethod());
         assertTrue(request.getPath().contains("/projects/" + PROJECT_UID + "/bindings"));
+        BindingPTO binding1 = items.get(0);
+        assertThat(binding1.getBindingUid(), is("bindingUid1"));
+        assertThat(binding1.getContextUid(), is("contextUid1"));
+        assertThat(binding1.getStringHashcode(), is("stringHashcode1"));
+        assertThat(binding1.getCoordinates(), is(new CoordinatesPTO(1, 2, 3, 4)));
+
+        BindingPTO binding2 = items.get(1);
+        assertThat(binding2.getBindingUid(), is("bindingUid2"));
+        assertThat(binding2.getContextUid(), is("contextUid2"));
+        assertThat(binding2.getStringHashcode(), is("stringHashcode2"));
+
+        BindingPTO binding3 = items.get(2);
+        assertThat(binding3.getBindingUid(), is("bindingUid3"));
+        assertThat(binding3.getContextUid(), is("contextUid3"));
+        assertThat(binding3.getStringHashcode(), is("stringHashcode3"));
+        assertThat(binding3.getPage(), is(5));
+        assertThat(binding3.getCoordinates(), is(new CoordinatesPTO(4, 3, 2, 1)));
     }
 
     @Test
@@ -344,13 +375,21 @@ public class ContextsApiTest
     {
         assignResponse(LIST_BINDINGS_RESPONSE);
 
-        contextApi.listBindings(PROJECT_UID,
+        PaginatedListResponse<BindingPTO>bindings=contextApi.listBindings(PROJECT_UID,
             new BatchBindingRequestPTO(Collections.singletonList("hashcode1"), null, null, null), null
         );
 
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals("POST", request.getMethod());
         assertTrue(request.getPath().contains("/projects/" + PROJECT_UID + "/bindings/list"));
+        assertThat(bindings.getItems().size(), is(1));
+        BindingPTO binding = bindings.getItems().get(0);
+        assertThat(binding.getBindingUid(), is("binding1"));
+        assertThat(binding.getContextUid(), is("context_uid"));
+        assertThat(binding.getStringHashcode(), is("hashcode1"));
+        assertThat(binding.getContextPosition(), is(100002));
+        assertThat(binding.getPage(), is(34));
+        assertThat(binding.getCoordinates(), is(new CoordinatesPTO(1, 2, 3, 4)));
     }
 
     @Test
