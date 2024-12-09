@@ -17,12 +17,21 @@ public class BindingRequestPTO
     protected List<String> anchors;
     protected TimecodePTO timecode;
     protected CoordinatesPTO coordinates;
+    protected Integer page;
 
     public BindingRequestPTO(String contextUid, String stringHashcode, CoordinatesPTO coordinates)
     {
         this.contextUid = contextUid;
         this.stringHashcode = stringHashcode;
         this.coordinates = coordinates;
+    }
+
+    public BindingRequestPTO(String contextUid, String stringHashcode, CoordinatesPTO coordinates, Integer page)
+    {
+        this.contextUid = contextUid;
+        this.stringHashcode = stringHashcode;
+        this.coordinates = coordinates;
+        this.page = page;
     }
 
     public BindingRequestPTO(String contextUid, String stringHashcode, TimecodePTO timecode, CoordinatesPTO coordinates)
