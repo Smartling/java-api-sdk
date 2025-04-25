@@ -7,7 +7,9 @@ import com.smartling.api.files.v2.pto.FileLocaleStatusResponse;
 import com.smartling.api.files.v2.pto.FileStatusResponse;
 import com.smartling.api.files.v2.pto.FileType;
 import com.smartling.api.files.v2.pto.GetFilesListPTO;
+import com.smartling.api.files.v2.pto.GetRecentlyPublishedFilesPTO;
 import com.smartling.api.files.v2.pto.OrderBy;
+import com.smartling.api.files.v2.pto.RecentlyPublishedFileItemPTO;
 import com.smartling.api.files.v2.pto.RetrievalType;
 import com.smartling.api.files.v2.pto.UploadFilePTO;
 import com.smartling.api.files.v2.pto.UploadFileResponse;
@@ -263,6 +265,46 @@ public class FilesApiTest
         assertTrue(recordedRequest.getPath().contains("offset=100"));
         assertTrue(recordedRequest.getPath().contains("fileTypes=XML"));
         assertTrue(recordedRequest.getPath().contains("fileTypes=JSON"));
+    }
+
+    @Test
+    public void testGetRecentlyPublishedFilesList() throws Exception {
+        String getRecentlyPublishedFilesListResponseBody = "" +
+            "{\n" +
+            "    \"items\": [\n" +
+            "        {\n" +
+            "            \"fileUri\": \"" + FILE_URI + "\",\n" +
+            "            \"localeId\": \"de-DE\",\n" +
+            "            \"publishedDate\": \"2018-07-21T00:56:34Z\"\n" +
+            "        }\n" +
+            "    ],\n" +
+            "    \"totalCount\": 1\n" +
+            "}\n";
+        assignResponse(200, String.format(SUCCESS_RESPONSE_ENVELOPE, getRecentlyPublishedFilesListResponseBody));
+
+        ListResponse<RecentlyPublishedFileItemPTO> response = filesApi.getRecentlyPublishedFiles(
+            PROJECT_ID,
+            GetRecentlyPublishedFilesPTO.builder()
+                .publishedAfter("2018-07-20T00:6:34Z")
+                .fileUris(singletonList(FILE_URI))
+                .localeIds(singletonList("de-DE"))
+                .limit(10)
+                .offset(100)
+                .build());
+
+        assertEquals(1, response.getItems().size());
+        assertEquals(FILE_URI, response.getItems().get(0).getFileUri());
+        assertEquals(date("2018-07-21T00:56:34Z"), response.getItems().get(0).getPublishedDate());
+        assertEquals("de-DE", response.getItems().get(0).getLocaleId());
+
+        RecordedRequest recordedRequest = mockWebServer.takeRequest();
+        assertEquals("GET", recordedRequest.getMethod());
+        assertTrue(recordedRequest.getPath().contains("/projects/" + PROJECT_ID + "/files/list/recently-published"));
+        assertTrue(recordedRequest.getPath().contains("fileUris" + URLEncoder.encode("[]", "UTF-8") + "=" + FILE_URI));
+        assertTrue(recordedRequest.getPath().contains("publishedAfter=" + URLEncoder.encode("2018-07-20T00:6:34Z", "UTF-8")));
+        assertTrue(recordedRequest.getPath().contains("localeIds" + URLEncoder.encode("[]", "UTF-8") + "=" + "de-DE"));
+        assertTrue(recordedRequest.getPath().contains("limit=10"));
+        assertTrue(recordedRequest.getPath().contains("offset=100"));
     }
 
     @Test(expected = RestApiRuntimeException.class)

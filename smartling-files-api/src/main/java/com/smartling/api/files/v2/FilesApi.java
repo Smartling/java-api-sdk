@@ -12,8 +12,10 @@ import com.smartling.api.files.v2.pto.FileStatusResponse;
 import com.smartling.api.files.v2.pto.FileTypesListPTO;
 import com.smartling.api.files.v2.pto.GetFileLastModifiedPTO;
 import com.smartling.api.files.v2.pto.GetFilesListPTO;
+import com.smartling.api.files.v2.pto.GetRecentlyPublishedFilesPTO;
 import com.smartling.api.files.v2.pto.ImportTranslationsPTO;
 import com.smartling.api.files.v2.pto.ImportTranslationsResponse;
+import com.smartling.api.files.v2.pto.RecentlyPublishedFileItemPTO;
 import com.smartling.api.files.v2.pto.RenameFilePto;
 import com.smartling.api.files.v2.pto.UploadFilePTO;
 import com.smartling.api.files.v2.pto.UploadFileResponse;
@@ -86,6 +88,10 @@ public interface FilesApi extends AutoCloseable
     @GET
     @Path("/projects/{projectId}/files/list")
     ListResponse<FileItemPTO> getFilesList(@PathParam("projectId") String projectId, @BeanParam GetFilesListPTO getFilesListPTO);
+
+    @GET
+    @Path("/projects/{projectId}/files/list/recently-published")
+    ListResponse<RecentlyPublishedFileItemPTO> getRecentlyPublishedFiles(@PathParam("projectId") String projectId, @BeanParam GetRecentlyPublishedFilesPTO getRecentlyPublishedFilesPTO);
 
     @GET
     @Path("/files-api/v2/projects/{projectId}/file-types")
