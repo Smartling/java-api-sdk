@@ -299,7 +299,7 @@ public class FilesApiTest
 
         RecordedRequest recordedRequest = mockWebServer.takeRequest();
         assertEquals("GET", recordedRequest.getMethod());
-        assertTrue(recordedRequest.getPath().contains("/projects/" + PROJECT_ID + "/files/list/recently-published"));
+        assertTrue(recordedRequest.getPath().contains("/published-files-api/v2/projects/" + PROJECT_ID + "/files/list/recently-published"));
         assertTrue(recordedRequest.getPath().contains("fileUris" + URLEncoder.encode("[]", "UTF-8") + "=" + FILE_URI));
         assertTrue(recordedRequest.getPath().contains("publishedAfter=" + URLEncoder.encode("2018-07-20T00:6:34Z", "UTF-8")));
         assertTrue(recordedRequest.getPath().contains("localeIds" + URLEncoder.encode("[]", "UTF-8") + "=" + "de-DE"));
