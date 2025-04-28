@@ -634,11 +634,6 @@ public class FilesApiTest
         );
     }
 
-    @Test
-    public void aaa() {
-
-    }
-
     private static Date date(String date) throws ParseException
     {
         return FAPI_DATE_FORMAT.parse(date);
