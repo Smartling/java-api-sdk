@@ -275,7 +275,7 @@ public class FilesApiTest
             "        {\n" +
             "            \"fileUri\": \"" + FILE_URI + "\",\n" +
             "            \"localeId\": \"de-DE\",\n" +
-            "            \"publishedDate\": \"2018-07-21T00:56:34Z\"\n" +
+            "            \"publishDate\": \"2018-07-21T00:56:34Z\"\n" +
             "        }\n" +
             "    ],\n" +
             "    \"totalCount\": 1\n" +
@@ -294,7 +294,7 @@ public class FilesApiTest
 
         assertEquals(1, response.getItems().size());
         assertEquals(FILE_URI, response.getItems().get(0).getFileUri());
-        assertEquals(date("2018-07-21T00:56:34Z"), response.getItems().get(0).getPublishedDate());
+        assertEquals(date("2018-07-21T00:56:34Z"), response.getItems().get(0).getPublishDate());
         assertEquals("de-DE", response.getItems().get(0).getLocaleId());
 
         RecordedRequest recordedRequest = mockWebServer.takeRequest();
@@ -632,6 +632,11 @@ public class FilesApiTest
                 .includeOriginalStrings(true)
                 .build()
         );
+    }
+
+    @Test
+    public void aaa() {
+
     }
 
     private static Date date(String date) throws ParseException

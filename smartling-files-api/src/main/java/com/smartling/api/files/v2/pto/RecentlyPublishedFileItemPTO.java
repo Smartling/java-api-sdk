@@ -14,5 +14,5 @@ public class RecentlyPublishedFileItemPTO implements ResponseData
 {
     private String fileUri;
     private String localeId;
-    private Date publishedDate;
+    private Date publishDate;
 }
