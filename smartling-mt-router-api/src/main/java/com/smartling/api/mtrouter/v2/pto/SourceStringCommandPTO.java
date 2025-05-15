@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SourceStringCommandPTO
 {
-    private String  key;
-    private String  sourceText;
+    private String key;
+    private String sourceText;
 }
