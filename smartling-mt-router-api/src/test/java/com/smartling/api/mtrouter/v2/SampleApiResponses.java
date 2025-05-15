@@ -2,7 +2,7 @@ package com.smartling.api.mtrouter.v2;
 
 interface SampleApiResponses
 {
-    String SUCCESS_RESPONSE_ENVELOPE = "{\"response\":{\"code\":\"SUCCESS\",\"data\":%s}})";
+    String SUCCESS_RESPONSE_ENVELOPE = "{\"response\":{\"code\":\"SUCCESS\",\"data\":%s}}";
 
     String ERRONEOUS_GENERATE_ACCOUNT_TRANSLATION_RESPONSE_BODY = "{\n"
         + "            \"totalCount\": 1,\n"
