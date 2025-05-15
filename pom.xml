@@ -186,6 +186,7 @@
         <module>smartling-reports-api</module>
         <module>smartling-glossary-api</module>
         <module>smartling-file-translations-api</module>
+        <module>smartling-mt-router-api</module>
         <module>smartling-api-sdk-all</module> <!-- keep last -->
     </modules>
 
