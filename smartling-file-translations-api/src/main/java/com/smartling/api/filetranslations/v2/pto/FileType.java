@@ -27,7 +27,9 @@ public enum FileType
     XLIFF2("application/xml", true), // XLIFF 2.0 parser
     CSV("text/csv", true),                          // CSV (Comma-separated values)
     XLSX_TEMPLATE("application/octet-stream", false),        // Smartling XLSX - https://help.smartling.com/hc/en-us/articles/1260804224670-Translating-Spreadsheets#h_01F3TKVZBVPFJSF2XZEBHDH1EQ
-    ANDROID("application/xml", true); // ANDROID parser
+    ANDROID("application/xml", true), // ANDROID parser
+    JSON("application/json", true),
+    ;
     private final String identifier;
     private final String mimeType;
     private final boolean isTextFormat;
