@@ -1,25 +1,27 @@
 package com.smartling.api.filetranslations.v2.pto.file;
 
 
+import com.smartling.api.filetranslations.v2.pto.FileType;
+
 public class FileUploadRequest
 {
-    private String fileType;
+    private FileType fileType;
 
     public FileUploadRequest()
     {
     }
 
-    public FileUploadRequest(String fileType)
+    public FileUploadRequest(FileType fileType)
     {
         this.fileType = fileType;
     }
 
-    public String getFileType()
+    public FileType getFileType()
     {
         return fileType;
     }
 
-    public void setFileType(String fileType)
+    public void setFileType(FileType fileType)
     {
         this.fileType = fileType;
     }
