@@ -91,6 +91,7 @@ public class FileTranslationsApiTest
     @After
     public void tearDown() throws Exception
     {
+        sut.close();
         mockWebServer.shutdown();
     }
 
@@ -100,7 +101,7 @@ public class FileTranslationsApiTest
         assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, String.format("{\"fileUid\":\"%s\"}", FILE_UID)));
 
         FileUploadRequest request = new FileUploadRequest();
-        request.setFileType(FileType.PLAIN_TEXT);
+        request.setFileType(FileType.PLAIN_TEXT.getIdentifier());
         FileUploadPTO fileUploadPTO = new FileUploadPTO();
         fileUploadPTO.setRequest(request);
         fileUploadPTO.setFile(new ByteArrayInputStream("whatever".getBytes(StandardCharsets.UTF_8)));
@@ -109,7 +110,7 @@ public class FileTranslationsApiTest
         FileUploadResponse response = sut.uploadFile(ACCOUNT_UID, fileUploadPTO);
 
         LinkedHashMap<String, Part> parts = toParts(getRequestWithValidation(HttpMethod.POST, String.format("/file-translations-api/v2/accounts/%s/files", ACCOUNT_UID)));
-        assertThat(toObj(parts.get("request").getBodyUtf8(), FileUploadRequest.class).getFileType(), is(FileType.PLAIN_TEXT));
+        assertThat(toObj(parts.get("request").getBodyUtf8(), FileUploadRequest.class).getFileType(), is(FileType.PLAIN_TEXT.getIdentifier()));
         assertThat(parts.get("file").getBodyUtf8(), is("whatever"));
 
         assertNotNull(response);
