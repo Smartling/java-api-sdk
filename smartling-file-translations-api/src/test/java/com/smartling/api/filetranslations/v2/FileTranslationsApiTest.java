@@ -91,7 +91,6 @@ public class FileTranslationsApiTest
     @After
     public void tearDown() throws Exception
     {
-        sut.close();
         mockWebServer.shutdown();
     }
 
