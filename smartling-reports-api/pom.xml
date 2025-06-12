@@ -4,10 +4,10 @@
     <parent>
         <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
-        <version>1.19.1-SNAPSHOT</version>
+        <version>1.19.2</version>
     </parent>
     <artifactId>smartling-reports-api</artifactId>
-    <version>1.19.1-SNAPSHOT</version>
+    <version>1.19.2</version>
     <name>Smartling Reports API</name>
 
     <build>
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-api-commons</artifactId>
-            <version>1.19.1-SNAPSHOT</version>
+            <version>1.19.2</version>
         </dependency>
     </dependencies>
 </project>
