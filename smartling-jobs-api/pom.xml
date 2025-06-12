@@ -12,6 +12,16 @@
     <version>1.19.1-SNAPSHOT</version>
     <name>Smartling Jobs API</name>
 
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>com.smartling.api</groupId>

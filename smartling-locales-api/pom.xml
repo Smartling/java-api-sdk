@@ -1,19 +1,28 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.smartling.api</groupId>
-    <artifactId>smartling-sdk-parent</artifactId>
-    <version>1.19.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>smartling-locales-api</artifactId>
-  <version>1.19.1-SNAPSHOT</version>
-  <name>Smartling Locales API</name>
-  <dependencies>
-    <dependency>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
         <groupId>com.smartling.api</groupId>
-        <artifactId>smartling-api-commons</artifactId>
+        <artifactId>smartling-sdk-parent</artifactId>
         <version>1.19.1-SNAPSHOT</version>
-    </dependency>
-  </dependencies>
+    </parent>
+    <artifactId>smartling-locales-api</artifactId>
+    <version>1.19.1-SNAPSHOT</version>
+    <name>Smartling Locales API</name>
+    
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>com.smartling.api</groupId>
+            <artifactId>smartling-api-commons</artifactId>
+            <version>1.19.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>
