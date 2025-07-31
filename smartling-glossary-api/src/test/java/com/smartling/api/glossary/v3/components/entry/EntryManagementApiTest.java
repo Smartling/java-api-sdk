@@ -81,6 +81,7 @@ public class EntryManagementApiTest {
         + "            ],\n"
         + "            \"customFieldValues\": [],\n"
         + "            \"archived\": false,\n"
+        + "            \"suggestionStatus\": \"SUGGESTED\",\n"
         + "            \"createdByUserUid\": \"671b520051b2\",\n"
         + "            \"modifiedByUserUid\": \"671b520051b2\",\n"
         + "            \"createdDate\": \"2023-03-30T10:38:09Z\",\n"
@@ -127,6 +128,7 @@ public class EntryManagementApiTest {
         assertEquals("bad90990-4be1-4570-81da-b719cddd5352", glossaryResponsePTO.getGlossaryUid());
         assertEquals("37915662-1f42-4a51-afe4-a9eaf32dfa37", glossaryResponsePTO.getEntryUid());
         assertEquals("no EN  present in DB", glossaryResponsePTO.getDefinition());
+        assertEquals("SUGGESTED", glossaryResponsePTO.getSuggestionStatus());
         assertNotNull(glossaryResponsePTO.getTranslations());
         assertNotNull(glossaryResponsePTO.getLabelUids());
         assertNotNull(glossaryResponsePTO.getCustomFieldValues());

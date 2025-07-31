@@ -49,6 +49,11 @@ public class GlossaryEntryBaseResponsePTO implements ResponseData {
      * Archived flag.
      */
     private boolean archived;
+
+    /**
+     * Optional Suggestion status of the entry. SUGGESTED or APPROVED.
+     */
+    private String suggestionStatus;
     /**
      * Uid of the creator.
      */
