@@ -9,4 +9,13 @@ if ! ./mvnw -Prelease conventional-commits:validate; then
 fi
 
 ./mvnw -B -Prelease -DskipTests -Darguments='-DskipTests' -s .circleci/settings.xml conventional-commits:version release:prepare
-./mvnw -B -DskipTests -Darguments=-DskipTests -s .circleci/settings.xml release:perform
+
+# Get the tag created by release:prepare
+TAG=$(git describe --tags --abbrev=0)
+echo "Deploying tag: $TAG"
+
+# Checkout the tagged version
+git checkout $TAG
+
+# Deploy using central-publishing-maven-plugin
+./mvnw -B -Prelease -DskipTests -s .circleci/settings.xml clean deploy
