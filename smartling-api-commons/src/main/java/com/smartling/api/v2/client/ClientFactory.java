@@ -7,6 +7,8 @@ import com.smartling.api.v2.client.auth.AuthorizationRequestFilter;
 import com.smartling.api.v2.client.exception.DefaultRestApiExceptionMapper;
 import com.smartling.api.v2.client.exception.RestApiExceptionHandler;
 import com.smartling.api.v2.client.exception.RestApiExceptionMapper;
+import com.smartling.api.v2.client.request.RequestContextFilter;
+import com.smartling.api.v2.client.request.RequestContextInvocationHandler;
 import com.smartling.api.v2.client.unmarshal.DetailsDeserializer;
 import com.smartling.api.v2.client.unmarshal.RestApiContextResolver;
 import com.smartling.api.v2.client.unmarshal.RestApiResponseReaderInterceptor;
@@ -40,6 +42,7 @@ import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.ClientResponseFilter;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.ReaderInterceptor;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Collections;
 import java.util.HashMap;
@@ -252,11 +255,15 @@ public class ClientFactory
         for (final ClientResponseFilter filter : clientResponseFilters)
             client.register(filter);
 
+        client.register(new DefaultRequestIdFilter());
+        client.register(new RequestContextFilter());
+
         final T proxy = client.proxy(klass);
         final RestApiExceptionHandler exceptionHandler = new RestApiExceptionHandler(exceptionMapper != null ? exceptionMapper : new DefaultRestApiExceptionMapper());
-        final ExceptionDecoratorInvocationHandler<T> handler = new ExceptionDecoratorInvocationHandler<>(proxy, exceptionHandler);
-        final CloseClientInvocationHandler closeClientInvocationHandler = new CloseClientInvocationHandler(handler, client.getResteasyClient());
+        InvocationHandler handler = new ExceptionDecoratorInvocationHandler<>(proxy, exceptionHandler);
+        handler = new CloseClientInvocationHandler(handler, client.getResteasyClient());
+        handler = new RequestContextInvocationHandler(handler);
 
-        return (T) Proxy.newProxyInstance(klass.getClassLoader(), new Class[] { klass }, closeClientInvocationHandler);
+        return (T) Proxy.newProxyInstance(klass.getClassLoader(), new Class[] { klass }, handler);
     }
 }

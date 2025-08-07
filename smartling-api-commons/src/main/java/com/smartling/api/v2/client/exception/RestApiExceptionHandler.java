@@ -1,10 +1,12 @@
 package com.smartling.api.v2.client.exception;
 
+import com.smartling.api.v2.client.request.RequestContextHolder;
 import com.smartling.api.v2.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.client.ResponseProcessingException;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.InvocationTargetException;
 
@@ -39,9 +41,13 @@ public class RestApiExceptionHandler
         {
             restApiRuntimeException = (RestApiRuntimeException)throwable.getCause();
         }
+        else if (throwable instanceof ResponseProcessingException)
+        {
+            restApiRuntimeException = new RestApiRuntimeException(throwable, ((ResponseProcessingException) throwable).getResponse(), null);
+        }
         else
         {
-            restApiRuntimeException = new RestApiRuntimeException(throwable);
+            restApiRuntimeException = new RestApiRuntimeException(throwable, RequestContextHolder.getContext());
         }
 
         restApiRuntimeException.setErrorDetails(errorDetails);

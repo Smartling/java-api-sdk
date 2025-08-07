@@ -1,14 +1,15 @@
 package com.smartling.api.v2.client.exception;
 
+import com.smartling.api.v2.client.request.RequestContext;
 import com.smartling.api.v2.response.Error;
 import com.smartling.api.v2.response.ErrorResponse;
 import com.smartling.api.v2.response.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collections;
-import java.util.List;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 public class RestApiRuntimeException extends WebApplicationException
@@ -25,6 +26,12 @@ public class RestApiRuntimeException extends WebApplicationException
         this.errorResponse = null;
     }
 
+    public RestApiRuntimeException(final Throwable cause, RequestContext requestContext)
+    {
+        super(cause, buildErrorResponse(requestContext));
+        this.errorResponse = null;
+    }
+
     public RestApiRuntimeException(final Throwable cause, final Response response, final ErrorResponse errorResponse)
     {
         super(cause, response);
@@ -37,11 +44,7 @@ public class RestApiRuntimeException extends WebApplicationException
 
     public int getStatus()
     {
-        final Response response = getResponse();
-        if (response == null)
-            return 500;
-
-        return response.getStatus();
+        return getResponse().getStatus();
     }
 
     public ResponseCode getResponseCode()
@@ -64,7 +67,7 @@ public class RestApiRuntimeException extends WebApplicationException
     @Override
     public String getMessage()
     {
-        final String requestId = getResponse().getHeaderString(REQUEST_ID_HEADER);
+        String requestId = getResponse().getHeaderString(REQUEST_ID_HEADER);
 
         final StringBuilder errorMessage = new StringBuilder();
 
@@ -88,5 +91,18 @@ public class RestApiRuntimeException extends WebApplicationException
         }
 
         return errorMessage.toString();
+    }
+
+    private static Response buildErrorResponse(RequestContext requestContext)
+    {
+        if (requestContext != null && requestContext.getHeaders() != null)
+        {
+            return Response
+                .status(Response.Status.INTERNAL_SERVER_ERROR)
+                .header(REQUEST_ID_HEADER, requestContext.getHeaders().getFirst(REQUEST_ID_HEADER))
+                .build();
+        }
+
+        return Response.serverError().build();
     }
 }
