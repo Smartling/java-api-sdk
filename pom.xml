@@ -207,10 +207,6 @@
     </developers>
 
     <distributionManagement>
-        <repository>
-            <id>sonatype-oss-staging</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
         <snapshotRepository>
             <id>github</id>
             <url>https://maven.pkg.github.com/smartling/java-api-sdk</url>
@@ -238,6 +234,47 @@
                             <tagNameFormat>v@{project.version}</tagNameFormat>
                             <allowTimestampedSnapshots>false</allowTimestampedSnapshots>
                             <scmCommentPrefix xml:space="preserve">ci: </scmCommentPrefix>
+                            <!-- Skip release:perform goal - use central-publishing-maven-plugin instead -->
+                            <goals>prepare</goals>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.1.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.8.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>false</autoPublish>
+                            <waitUntil>uploaded</waitUntil>
+                            <checksums>required</checksums>
+                            <deploymentName>Java API SDK (${project.version})</deploymentName>
                         </configuration>
                     </plugin>
                 </plugins>
