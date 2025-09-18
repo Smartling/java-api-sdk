@@ -21,7 +21,9 @@ import org.junit.Test;
 
 import javax.ws.rs.core.HttpHeaders;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class StringsApiTest
 {
@@ -196,6 +198,18 @@ public class StringsApiTest
     }
 
     @Test
+    public void getSourceStringsPost() throws Exception
+    {
+        assignResponse(HttpStatus.SC_OK, SOURCE_STRINGS);
+
+        SourceStringListPTO sourceStrings = stringsApi.getSourceStringsPost(PROJECT_UID, new GetSourceStringsCommandPTO());
+        assertNotNull(sourceStrings);
+        RecordedRequest request = mockWebServer.takeRequest();
+        assertEquals("POST", request.getMethod());
+        assertTrue(request.getPath().contains("/projects/" + PROJECT_UID + "/source-strings"));
+    }
+
+    @Test
     public void testGetTranslations() throws Exception
     {
         assignResponse(HttpStatus.SC_OK, TRANSLATIONS);
@@ -204,6 +218,18 @@ public class StringsApiTest
         assertNotNull(translations);
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals("GET", request.getMethod());
+        assertTrue(request.getPath().contains("/projects/" + PROJECT_UID + "/translations"));
+    }
+
+    @Test
+    public void testGetTranslationsPost() throws Exception
+    {
+        assignResponse(HttpStatus.SC_OK, TRANSLATIONS);
+
+        ListResponse<TranslationsPTO> translations = stringsApi.getTranslationsPost(PROJECT_UID, new TranslationsCommandPTO());
+        assertNotNull(translations);
+        RecordedRequest request = mockWebServer.takeRequest();
+        assertEquals("POST", request.getMethod());
         assertTrue(request.getPath().contains("/projects/" + PROJECT_UID + "/translations"));
     }
 }

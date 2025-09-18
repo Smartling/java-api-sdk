@@ -35,7 +35,15 @@ public interface StringsApi extends AutoCloseable
     @Path("/projects/{projectUid}/source-strings")
     SourceStringListPTO getSourceStrings(@PathParam("projectUid") String projectUid, @BeanParam GetSourceStringsCommandPTO sourceStringsCommand);
 
+    @POST
+    @Path("/projects/{projectUid}/source-strings")
+    SourceStringListPTO getSourceStringsPost(@PathParam("projectUid") String projectUid, GetSourceStringsCommandPTO sourceStringsCommand);
+
     @GET
     @Path("/projects/{projectUid}/translations")
     ListResponse<TranslationsPTO> getTranslations(@PathParam("projectUid") String projectUid, @BeanParam TranslationsCommandPTO translationsCommand);
+
+    @POST
+    @Path("/projects/{projectUid}/translations")
+    ListResponse<TranslationsPTO> getTranslationsPost(@PathParam("projectUid") String projectUid, TranslationsCommandPTO translationsCommand);
 }
