@@ -1,10 +1,15 @@
 package com.smartling.api.files.v2;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.smartling.api.files.v2.pto.DownloadMultipleFilesTranslationsPTO;
 import com.smartling.api.files.v2.pto.DownloadTranslationPTO;
+import com.smartling.api.files.v2.pto.FileFilter;
 import com.smartling.api.files.v2.pto.FileLocaleLastModifiedPTO;
+import com.smartling.api.files.v2.pto.FileLocalePTO;
 import com.smartling.api.files.v2.pto.FileLocaleStatusResponse;
+import com.smartling.api.files.v2.pto.FileNameMode;
 import com.smartling.api.files.v2.pto.GetFileLastModifiedPTO;
+import com.smartling.api.files.v2.pto.LocaleMode;
 import com.smartling.api.files.v2.pto.UploadFilePTO;
 import com.smartling.api.files.v2.pto.UploadFileResponse;
 import com.smartling.api.files.v2.resteasy.ext.TranslatedFileMultipart;
@@ -19,7 +24,6 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,6 +31,7 @@ import java.util.UUID;
 import static com.github.tomakehurst.wiremock.client.WireMock.aMultipart;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
@@ -34,10 +39,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
-import static com.smartling.api.v2.tests.wiremock.SmartlingWireMock.success;
 import static com.smartling.api.files.v2.pto.FileType.JSON;
 import static com.smartling.api.files.v2.pto.RetrievalType.PUBLISHED;
+import static com.smartling.api.v2.tests.wiremock.SmartlingWireMock.postJson;
+import static com.smartling.api.v2.tests.wiremock.SmartlingWireMock.success;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 public class FilesApiIntTest
@@ -153,7 +160,7 @@ public class FilesApiIntTest
             .fileUri(FILE_URI)
             .file(new ByteArrayInputStream(rawBody.getBytes()))
             .directives(directives)
-            .localeIdsToAuthorize(Arrays.asList("de-DE", "fr"))
+            .localeIdsToAuthorize(asList("de-DE", "fr"))
             .build());
 
         assertEquals(uploadFileResponse.getFileUri(), FILE_URI);
@@ -259,5 +266,61 @@ public class FilesApiIntTest
         smartlingApi.verify(getRequestedFor(urlPathEqualTo("/files-api/v2/projects/" + PROJECT_ID + "/locales/" + locale + "/file/status"))
             .withQueryParam("fileUri", equalTo(FILE_URI))
         );
+    }
+
+    @Test
+    public void shouldRetrieveMultipleFilesTranslations() throws Exception
+    {
+        final String rawResponseBody = UUID.randomUUID().toString();
+
+        final FileLocalePTO firstFileLocalePTO = FileLocalePTO.builder()
+            .fileUri(FILE_URI + "1")
+            .localeIds(asList("de-DE", "fr"))
+            .build();
+
+        final FileLocalePTO secondFileLocalePTO = FileLocalePTO.builder()
+            .fileUri(FILE_URI + "2")
+            .localeIds(asList("es-ES", "uk-UA", "zh-CN"))
+            .build();
+
+        final DownloadMultipleFilesTranslationsPTO requestBody = DownloadMultipleFilesTranslationsPTO.builder()
+            .files(asList(firstFileLocalePTO, secondFileLocalePTO))
+            .retrievalType(PUBLISHED)
+            .includeOriginalStrings(true)
+            .fileNameMode(FileNameMode.TRIM_LEADING)
+            .localeMode(LocaleMode.LOCALE_IN_NAME)
+            .zipFileName("archive.zip")
+            .fileFilter(FileFilter.PUBLISHED_FILES_ONLY)
+            .build();
+
+        smartlingApi.stubFor(postJson(urlPathMatching("/files-api/v2/projects/.+/files/zip"))
+            .withRequestBody(equalToJson("{\n" +
+                "  \"files\": [{\n" +
+                "    \"fileUri\": \"" + FILE_URI + "1\",\n" +
+                "    \"localeIds\": [\"de-DE\", \"fr\"]\n" +
+                "  },{\n" +
+                "    \"fileUri\": \"" + FILE_URI + "2\",\n" +
+                "    \"localeIds\": [\"es-ES\", \"uk-UA\", \"zh-CN\"]\n" +
+                "  }],\n" +
+                "  \"retrievalType\": \"PUBLISHED\",\n" +
+                "  \"includeOriginalStrings\": true,\n" +
+                "  \"fileNameMode\": \"TRIM_LEADING\",\n" +
+                "  \"localeMode\": \"LOCALE_IN_NAME\",\n" +
+                "  \"zipFileName\": \"archive.zip\",\n" +
+                "  \"fileFilter\": \"PUBLISHED_FILES_ONLY\"\n" +
+                "}")
+            )
+            .willReturn(aResponse()
+                .withHeader("Content-Type", "application/octet-stream")
+                .withBody(rawResponseBody)
+            )
+        );
+
+        final InputStream response = filesApi.downloadMultipleFileTranslations(
+            PROJECT_ID,
+            requestBody
+        );
+
+        assertEquals(IOUtils.toString(response, UTF_8), rawResponseBody);
     }
 }
