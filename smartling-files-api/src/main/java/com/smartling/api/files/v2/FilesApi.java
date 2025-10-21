@@ -2,6 +2,7 @@ package com.smartling.api.files.v2;
 
 import com.smartling.api.files.v2.pto.DeleteFilePTO;
 import com.smartling.api.files.v2.pto.DownloadAllFileTranslationsPTO;
+import com.smartling.api.files.v2.pto.DownloadMultipleFilesTranslationsPTO;
 import com.smartling.api.files.v2.pto.DownloadMultipleTranslationsPTO;
 import com.smartling.api.files.v2.pto.DownloadTranslationPTO;
 import com.smartling.api.files.v2.pto.ExportTranslationsPTO;
@@ -19,10 +20,10 @@ import com.smartling.api.files.v2.pto.RecentlyPublishedFileItemPTO;
 import com.smartling.api.files.v2.pto.RenameFilePto;
 import com.smartling.api.files.v2.pto.UploadFilePTO;
 import com.smartling.api.files.v2.pto.UploadFileResponse;
+import com.smartling.api.files.v2.resteasy.ext.TranslatedFileMultipart;
 import com.smartling.api.v2.client.exception.server.DetailedErrorMessage;
 import com.smartling.api.v2.response.EmptyData;
 import com.smartling.api.v2.response.ListResponse;
-import com.smartling.api.files.v2.resteasy.ext.TranslatedFileMultipart;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import javax.ws.rs.BeanParam;
@@ -33,7 +34,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-
 import java.io.InputStream;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -79,10 +79,25 @@ public interface FilesApi extends AutoCloseable
     @Produces(WILDCARD)
     InputStream downloadAllFileTranslations(@PathParam("projectId") String projectId, @BeanParam DownloadAllFileTranslationsPTO downloadAllFileTranslationsPTO);
 
+    /**
+     * @deprecated use downloadMultipleFileTranslations with POST method
+     */
+    @Deprecated
     @GET
     @Path("/files-api/v2/projects/{projectId}/files/zip")
     @Produces(WILDCARD)
     InputStream downloadMultipleFileTranslations(@PathParam("projectId") String projectId, @BeanParam DownloadMultipleTranslationsPTO downloadMultipleTranslationsPTO);
+
+    /**
+     * Download multiple translated files as zip archive
+     *
+     * @return {@link InputStream} for zip archive with translated files, if files found for the given file filter;
+     *         null, if no files found for the given file filter.
+     */
+    @POST
+    @Path("/files-api/v2/projects/{projectId}/files/zip")
+    @Produces(WILDCARD)
+    InputStream downloadMultipleFileTranslations(@PathParam("projectId") String projectId, DownloadMultipleFilesTranslationsPTO downloadMultipleTranslationsPTO);
 
     @GET
     @Path("/files-api/v2/projects/{projectId}/files/list")
