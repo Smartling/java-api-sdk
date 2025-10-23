@@ -22,16 +22,19 @@ public class GlossaryEntryCommandPTO {
     private String definition;
     /**
      * Glossary entry part of speech.
-     * One of :
-     * - Noun,
-     * - Verb,
-     * - Adjective,
-     * - Adverb,
-     * - Pronoun,
-     * - Preposition,
-     * - Interjection,
-     * - Conjunction,
-     * - Proper Noun.
+     * Supported values (case-insensitive):
+     * - NOUN / Noun
+     * - VERB / Verb
+     * - ADJECTIVE / Adjective
+     * - ADVERB / Adverb
+     * - PRONOUN / Pronoun
+     * - PREPOSITION / Preposition
+     * - INTERJECTION / Interjection
+     * - CONJUNCTION / Conjunction
+     * - PROPER_NOUN / "Proper Noun"
+     * <p>
+     * The field accepts both uppercase enum constants and human-readable formats.
+     * Invalid values will result in deserialization errors with appropriate error handling.
      */
     private String partOfSpeech;
     /**
