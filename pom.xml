@@ -163,12 +163,14 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.11.2</version>
                 <configuration>
+                    <detectOfflineLinks>false</detectOfflineLinks>
+                    <failOnError>false</failOnError>
                     <links>
-                        <link>https://docs.oracle.com/javaee/7/api/</link>
-<!--                        <link>https://docs.jboss.org/resteasy/docs/3.0.24.Final/javadocs/</link>-->
-                        <link>https://fasterxml.github.io/jackson-core/javadoc/2.8/</link>
-                        <link>https://fasterxml.github.io/jackson-databind/javadoc/2.8/</link>
-                        <link>https://hc.apache.org/httpcomponents-client-4.5.x/httpclient/apidocs/</link>
+                        <link>https://docs.oracle.com/en/java/javase/17/docs/api/</link>
+                        <link>https://jakarta.ee/specifications/restful-ws/3.1/apidocs/</link>
+                        <link>https://hc.apache.org/httpcomponents-client-4.5.x/current/httpclient/apidocs/</link>
+                        <link>https://www.slf4j.org/apidocs/</link>
+                        <link>https://javadoc.io/doc/org.projectlombok/lombok/latest/index.html</link>
                     </links>
                     <defaultAuthor>Smartling, Inc.</defaultAuthor>
                     <version>true</version>
