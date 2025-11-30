@@ -2,6 +2,26 @@
 
 Java SDK for integrating with the [Smartling API].
 
+> **Note**: Version 2.x requires Java 17+. If you need Java 8 compatibility, use version 1.x (maintenance mode).
+
+## SDK Versions
+
+We maintain two major versions of this SDK:
+
+### Version 2.x (Current - Recommended)
+- **Branch**: `2.x`
+- **Java Compatibility**: Java 17+
+- **Status**: Active development
+- **Recommendation**: All new projects should use 2.x. Existing projects are strongly encouraged to migrate.
+
+### Version 1.x (Maintenance Mode)
+- **Branch**: `master`
+- **Java Compatibility**: Java 8+
+- **Status**: Maintenance only - critical fixes and security updates
+- **Future**: Will be deprecated once migration to 2.x is complete
+
+We strongly encourage all users to migrate to version 2.x to benefit from modern Java features, improved performance, and continued feature development. Version 1.x will eventually be deprecated as Smartling projects and clients complete their migration.
+
 ## Using this SDK
 
 The Smartling API SDK is distributed via Maven Central and is compatible with JDK 1.7
