@@ -56,6 +56,7 @@ public class DetailsDeserializerTest
     public void testDeserializeNullBody() throws Exception
     {
         when(node.getNodeType()).thenReturn(JsonNodeType.NULL);
+        when(node.isNull()).thenReturn(true);
         final Details details = detailsDeserializer.deserialize(parser, null);
         assertNull(details);
     }

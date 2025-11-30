@@ -133,7 +133,7 @@ public class AuthenticationIntegrationTest
             "\tgenericType: class com.smartling.api.v2.authentication.pto.Authentication\n" +
             "\tannotations: [\n" +
             "\t\t@javax.ws.rs.POST()\n" +
-            "\t\t@javax.ws.rs.Path(value=\"/authenticate\")\n" +
+            "\t\t@javax.ws.rs.Path(\"/authenticate\")\n" +
             "\t]\n" +
             "\theaders: [Content-Type=*/*,Matched-Stub-Id=" + stubMapping.getId() + ",Server=Jetty(9.2.28.v20190418),Transfer-Encoding=chunked,Vary=Accept-Encoding, User-Agent]\n" +
             "\tmedia type: */*\n" +
