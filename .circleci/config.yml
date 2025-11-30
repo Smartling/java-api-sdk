@@ -2,7 +2,7 @@ version: 2
 jobs:
     test:
         docker:
-            - image: openjdk:17
+            - image: amazoncorretto:17
         steps:
             - checkout
             - run:
@@ -17,7 +17,7 @@ jobs:
                   path: test-results
     deploy:
         docker:
-            - image: openjdk:17
+            - image: amazoncorretto:17
         steps:
             - add_ssh_keys:
                   fingerprints:
