@@ -135,7 +135,7 @@ public class AuthenticationIntegrationTest
             "\t\t@javax.ws.rs.POST()\n" +
             "\t\t@javax.ws.rs.Path(\"/authenticate\")\n" +
             "\t]\n" +
-            "\theaders: [Content-Type=*/*,Matched-Stub-Id=" + stubMapping.getId() + ",Server=Jetty(9.2.28.v20190418),Transfer-Encoding=chunked,Vary=Accept-Encoding, User-Agent]\n" +
+            "\theaders: [Content-Type=*/*,Matched-Stub-Id=" + stubMapping.getId() + ",Transfer-Encoding=chunked,Vary=Accept-Encoding, User-Agent]\n" +
             "\tmedia type: */*\n" +
             "\tbody: {\"response\":{\"code\":\"SUCCESS\",\"data\":{\"accessToken\":\"accessTokenValue\",\"refreshToken\":\"refreshTokenValue\",\"expiresIn\":480,\"refreshExpiresIn\":21600,\"tokenType\":\"Bearer\"}}}";
         String actualMessage = null;
