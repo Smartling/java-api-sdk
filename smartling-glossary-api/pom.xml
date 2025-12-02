@@ -5,11 +5,11 @@
     <parent>
         <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
-        <version>1.26.3-SNAPSHOT</version>
+        <version>1.27.0</version>
     </parent>
 
     <artifactId>smartling-glossary-api</artifactId>
-    <version>1.26.3-SNAPSHOT</version>
+    <version>1.27.0</version>
     <name>Smartling Glossary API</name>
 
     <build>
@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-api-commons</artifactId>
-            <version>1.26.3-SNAPSHOT</version>
+            <version>1.27.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-api-test-utils</artifactId>
-            <version>1.26.3-SNAPSHOT</version>
+            <version>1.27.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
