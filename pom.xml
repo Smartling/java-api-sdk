@@ -27,11 +27,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <org.powermock.version>2.0.4</org.powermock.version>
-        <org.jboss.resteasy.version>4.6.1.Final</org.jboss.resteasy.version>
+        <org.jboss.resteasy.version>4.7.10.Final</org.jboss.resteasy.version>
         <apache.httpclient.version>4.5.14</apache.httpclient.version>
-        <jackson.version>2.12.3</jackson.version>
-        <okhttp.version>4.9.3</okhttp.version>
-        <wiremock.version>2.26.0</wiremock.version>
+        <jackson.version>2.15.4</jackson.version>
+        <okhttp.version>4.12.0</okhttp.version>
+        <wiremock.version>2.27.2</wiremock.version>
     </properties>
 
     <dependencyManagement>

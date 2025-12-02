@@ -183,16 +183,6 @@ public class AttachmentsApiTest
             "\r\n" +
             "content\r\n" +
             partSeparator + "\r\n" +
-            "Content-Disposition: form-data; name=\"name\"\r\n" +
-            "Content-Type: text/plain\r\n" +
-            "\r\n" +
-            "test.txt\r\n" +
-            partSeparator + "\r\n" +
-            "Content-Disposition: form-data; name=\"description\"\r\n" +
-            "Content-Type: text/plain\r\n" +
-            "\r\n" +
-            "description\r\n" +
-            partSeparator + "\r\n" +
             "Content-Disposition: form-data; name=\"entityUids\"\r\n" +
             "Content-Type: text/plain\r\n" +
             "\r\n" +
@@ -202,6 +192,16 @@ public class AttachmentsApiTest
             "Content-Type: text/plain\r\n" +
             "\r\n" +
             "jobUuid2\r\n" +
+            partSeparator + "\r\n" +
+            "Content-Disposition: form-data; name=\"name\"\r\n" +
+            "Content-Type: text/plain\r\n" +
+            "\r\n" +
+            "test.txt\r\n" +
+            partSeparator + "\r\n" +
+            "Content-Disposition: form-data; name=\"description\"\r\n" +
+            "Content-Type: text/plain\r\n" +
+            "\r\n" +
+            "description\r\n" +
             partSeparator + "--");
 
         assertEquals(expectedPTO.getAttachmentUid(), response.getAttachmentUid());
