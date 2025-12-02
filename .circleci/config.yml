@@ -2,7 +2,7 @@ version: 2
 jobs:
     test:
         docker:
-            - image: cimg/openjdk:11.0
+            - image: cimg/openjdk:17.0
         steps:
             - checkout
             - run:
@@ -17,7 +17,7 @@ jobs:
                   path: test-results
     deploy:
         docker:
-            - image: cimg/openjdk:11.0
+            - image: cimg/openjdk:17.0
         steps:
             - add_ssh_keys:
                   fingerprints:
@@ -49,4 +49,6 @@ workflows:
                       - test
                   filters:
                       branches:
-                          only: master
+                          only:
+                              - master
+                              - 2.x

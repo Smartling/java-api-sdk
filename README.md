@@ -15,15 +15,15 @@ The official Java SDK for the [Smartling Translation Management Platform](https:
 
 ## Requirements
 
-- **Java 8 or higher** (JDK 1.8+)
-- Maven 3.6+ or Gradle 5.0+
+- **Java 17 or higher** (JDK 17+)
+- Maven 3.8+ or Gradle 7.0+
 
 ### Core Dependencies
 
 - RESTEasy 4.7.10 (JAX-RS client implementation)
 - Jackson 2.15.4 (JSON serialization)
 - Apache HttpClient 4.5.14 (HTTP transport)
-- SLF4J 1.7.28 (Logging facade)
+- SLF4J 2.0.16 (Logging facade)
 
 ## Installation
 
@@ -35,7 +35,7 @@ Add the SDK to your `pom.xml`:
 <dependency>
     <groupId>com.smartling.api</groupId>
     <artifactId>smartling-api-sdk</artifactId>
-    <version>1.26.2</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -45,7 +45,7 @@ Add the SDK to your `build.gradle`:
 
 ```gradle
 dependencies {
-    implementation 'com.smartling.api:smartling-api-sdk:1.26.2'
+    implementation 'com.smartling.api:smartling-api-sdk:2.0.0'
 }
 ```
 
@@ -90,19 +90,18 @@ For detailed examples and tutorials, visit our [samples repository](https://gith
 
 ## Version Support
 
-### Current Version (1.x)
+### Current Version (2.x)
+
+- **Minimum Java Version**: Java 17 (JDK 17)
+- **Status**: Stable and production-ready
+
+### Previous Version (1.x)
 
 - **Minimum Java Version**: Java 8 (JDK 1.8)
 - **End of Support**: December 1, 2026
-- **Status**: Stable and production-ready
+- **Status**: Maintenance mode - critical fixes only
 
-### Upcoming Version (2.x)
-
-- **Minimum Java Version**: Java 17 (JDK 17)
-- **Release**: Coming soon
-- **Migration Guide**: Will be provided upon release
-
-We recommend planning your migration to Java 17+ to ensure continued support beyond 2026.
+For projects still using Java 8-16, continue using version 1.x. We recommend planning your migration to Java 17+ to access new features and ensure continued support beyond 2026.
 
 ## Documentation
 

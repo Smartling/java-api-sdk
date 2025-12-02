@@ -53,9 +53,12 @@ public class DefaultClientConfiguration implements ClientConfiguration
     @NonNull
     private HttpClientConfiguration httpClientConfiguration = new HttpClientConfiguration();
 
+    @Builder.Default
     private ResteasyProviderFactory resteasyProviderFactory = null;
 
+    @Builder.Default
     private RestApiExceptionMapper exceptionMapper = null;
 
+    @Builder.Default
     private LibNameVersionHolder libNameVersionHolder = null;
 }

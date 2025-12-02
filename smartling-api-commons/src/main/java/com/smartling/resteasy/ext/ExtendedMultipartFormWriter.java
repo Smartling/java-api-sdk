@@ -2,7 +2,6 @@ package com.smartling.resteasy.ext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.resteasy.annotations.providers.multipart.PartType;
-import org.jboss.resteasy.plugins.providers.multipart.FieldEnablerPrivilegedAction;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormAnnotationWriter;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 import org.jboss.resteasy.spi.WriterException;
@@ -12,7 +11,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.security.AccessController;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +37,7 @@ public class ExtendedMultipartFormWriter extends MultipartFormAnnotationWriter
         {
             if (field.isAnnotationPresent(DynamicFormParam.class) && field.isAnnotationPresent(PartType.class))
             {
-                AccessController.doPrivileged(new FieldEnablerPrivilegedAction(field));
+                field.setAccessible(true);
 
                 Object value = safeExtractValue(obj, field);
 
@@ -67,7 +65,7 @@ public class ExtendedMultipartFormWriter extends MultipartFormAnnotationWriter
             }
             if (field.isAnnotationPresent(ListFormParam.class) && field.isAnnotationPresent(PartType.class))
             {
-                AccessController.doPrivileged(new FieldEnablerPrivilegedAction(field));
+                field.setAccessible(true);
                 Object value = safeExtractValue(obj, field);
 
                 if (value instanceof List)
@@ -88,7 +86,7 @@ public class ExtendedMultipartFormWriter extends MultipartFormAnnotationWriter
             }
             if (field.isAnnotationPresent(FileFormParam.class) && field.isAnnotationPresent(PartType.class))
             {
-                AccessController.doPrivileged(new FieldEnablerPrivilegedAction(field));
+                field.setAccessible(true);
 
                 FileFormParam fileFormParam = field.getAnnotation(FileFormParam.class);
                 String name = fileFormParam.value();
@@ -112,7 +110,7 @@ public class ExtendedMultipartFormWriter extends MultipartFormAnnotationWriter
             {
                 if (declaredField.getName().equals(filenameField))
                 {
-                    AccessController.doPrivileged(new FieldEnablerPrivilegedAction(declaredField));
+                    declaredField.setAccessible(true);
 
                     return (String) safeExtractValue(obj, declaredField);
                 }

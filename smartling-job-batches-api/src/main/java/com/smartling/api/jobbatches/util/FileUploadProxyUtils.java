@@ -8,7 +8,6 @@ import org.jboss.resteasy.annotations.providers.multipart.PartFilename;
 import org.jboss.resteasy.annotations.providers.multipart.PartType;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.client.jaxrs.internal.ClientResponse;
-import org.jboss.resteasy.plugins.providers.multipart.FieldEnablerPrivilegedAction;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 
 import javax.ws.rs.FormParam;
@@ -21,7 +20,6 @@ import java.io.IOException;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.security.AccessController;
 import java.util.Map;
 
 @Slf4j
@@ -65,7 +63,7 @@ public class FileUploadProxyUtils
     {
         for (Field field : type.getDeclaredFields())
         {
-            AccessController.doPrivileged(new FieldEnablerPrivilegedAction(field));
+            field.setAccessible(true);
             Object value = getFieldValue(field, obj);
             if (value == null)
             {
