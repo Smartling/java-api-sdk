@@ -31,7 +31,8 @@
         <apache.httpclient.version>4.5.14</apache.httpclient.version>
         <jackson.version>2.15.4</jackson.version>
         <okhttp.version>4.12.0</okhttp.version>
-        <wiremock.version>2.27.2</wiremock.version>
+        <wiremock.version>2.35.2</wiremock.version>
+        <commons-lang3.version>3.20.0</commons-lang3.version>
     </properties>
 
     <dependencyManagement>
@@ -41,6 +42,11 @@
                 <artifactId>httpclient</artifactId>
                 <version>${apache.httpclient.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -48,7 +54,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.10</version>
+            <version>1.18.36</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -107,7 +113,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock</artifactId>
+            <artifactId>wiremock-jre8</artifactId>
             <version>${wiremock.version}</version>
             <scope>test</scope>
         </dependency>
