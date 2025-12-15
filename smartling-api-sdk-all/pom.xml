@@ -4,78 +4,78 @@
     <parent>
         <groupId>com.smartling.api</groupId>
         <artifactId>smartling-sdk-parent</artifactId>
-        <version>1.27.1-SNAPSHOT</version>
+        <version>1.28.0</version>
     </parent>
     <artifactId>smartling-api-sdk</artifactId>
-    <version>1.27.1-SNAPSHOT</version>
+    <version>1.28.0</version>
     <packaging>jar</packaging>
     <name>Smartling API SDK</name>
     <dependencies>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-accounts-api</artifactId>
-            <version>1.27.1-SNAPSHOT</version>
+            <version>1.28.0</version>
         </dependency>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-issues-api</artifactId>
-            <version>1.27.1-SNAPSHOT</version>
+            <version>1.28.0</version>
         </dependency>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-locales-api</artifactId>
-            <version>1.27.1-SNAPSHOT</version>
+            <version>1.28.0</version>
         </dependency>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-jobs-api</artifactId>
-            <version>1.27.1-SNAPSHOT</version>
+            <version>1.28.0</version>
         </dependency>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-job-batches-api</artifactId>
-            <version>1.27.1-SNAPSHOT</version>
+            <version>1.28.0</version>
         </dependency>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-files-api</artifactId>
-            <version>1.27.1-SNAPSHOT</version>
+            <version>1.28.0</version>
         </dependency>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-projects-api</artifactId>
-            <version>1.27.1-SNAPSHOT</version>
+            <version>1.28.0</version>
         </dependency>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-strings-api</artifactId>
-            <version>1.27.1-SNAPSHOT</version>
+            <version>1.28.0</version>
         </dependency>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-contexts-api</artifactId>
-            <version>1.27.1-SNAPSHOT</version>
+            <version>1.28.0</version>
         </dependency>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-attachments-api</artifactId>
-            <version>1.27.1-SNAPSHOT</version>
+            <version>1.28.0</version>
         </dependency>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-reports-api</artifactId>
-            <version>1.27.1-SNAPSHOT</version>
+            <version>1.28.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-glossary-api</artifactId>
-            <version>1.27.1-SNAPSHOT</version>
+            <version>1.28.0</version>
         </dependency>
         <dependency>
             <groupId>com.smartling.api</groupId>
             <artifactId>smartling-file-translations-api</artifactId>
-            <version>1.27.1-SNAPSHOT</version>
+            <version>1.28.0</version>
         </dependency>
     </dependencies>
 </project>
