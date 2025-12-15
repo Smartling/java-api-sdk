@@ -49,7 +49,11 @@ public enum FileType
     ARB("application/json", false),                 // ARB parser
     NONE("application/octet-stream", false),        // No content files associated with this type, used for strings-api
     XLSX_TEMPLATE("application/octet-stream", false),        // Smartling XLSX - https://help.smartling.com/hc/en-us/articles/1260804224670-Translating-Spreadsheets#h_01F3TKVZBVPFJSF2XZEBHDH1EQ
-    XCSTRINGS("application/json", true);            // iOS String Catalog - https://help.smartling.com/hc/en-us/articles/31159241673627-iOS-String-Catalog
+    XCSTRINGS("application/json", true),            // iOS String Catalog - https://help.smartling.com/hc/en-us/articles/31159241673627-iOS-String-Catalog
+    INDD("application/octet-stream", false),        // Adobe InDesign Document
+    VSDX("application/octet-stream", false),        // Microsoft Visio Drawing
+    VSDM("application/octet-stream", false),        // Microsoft Visio Macro-Enabled Drawing
+    ;
     private final String identifier;
     private final String mimeType;
     private final boolean isTextFormat;
