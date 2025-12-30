@@ -12,6 +12,11 @@ import java.io.IOException;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
+/**
+ * WireMock utility class for Smartling API testing.
+ * Provides convenience methods for creating standardized mock responses
+ * that match the Smartling API response format.
+ */
 public class SmartlingWireMock extends WireMock
 {
     // language=JSON
@@ -40,12 +45,28 @@ public class SmartlingWireMock extends WireMock
         return (ObjectNode) readTree(RESPONSE_TEMPLATE);
     }
 
+    /**
+     * Creates a POST request matcher with JSON content type header.
+     *
+     * @param urlPattern the URL pattern to match against incoming requests
+     * @return a mapping builder configured for JSON POST requests
+     */
     public static MappingBuilder postJson(UrlPattern urlPattern)
     {
         return post(urlPattern)
             .withHeader("Content-Type", equalTo("application/json"));
     }
 
+    /**
+     * Creates a Smartling API response with the specified response code, content type, and optional data/errors.
+     *
+     * @param <T> the enum type for the response code
+     * @param responseCode the response code enum value
+     * @param contentType the Content-Type header value for the response
+     * @param data the response data as JSON string (can be null or empty)
+     * @param errors the error messages as JSON string (can be null or empty)
+     * @return a response definition builder with Smartling API format
+     */
     public static <T extends Enum<T>> ResponseDefinitionBuilder smartlingResponse(
         Enum<T> responseCode, String contentType, String data, String errors)
     {
@@ -70,23 +91,53 @@ public class SmartlingWireMock extends WireMock
             .withJsonBody(response);
     }
 
+    /**
+     * Creates a Smartling API response with application/json content type.
+     * This is a convenience method that calls the 4-arg version with "application/json" as content type.
+     *
+     * @param <T> the enum type for the response code
+     * @param responseCode the response code enum value
+     * @param data the response data as JSON string (can be null or empty)
+     * @param errors the error messages as JSON string (can be null or empty)
+     * @return a response definition builder with Smartling API format
+     */
     public static <T extends Enum<T>> ResponseDefinitionBuilder smartlingResponse(Enum<T> responseCode, String data, String errors)
     {
         return smartlingResponse(responseCode, "application/json", data, errors);
     }
 
+    /**
+     * Creates a successful Smartling API response with the provided data.
+     *
+     * @param data the response data as JSON string
+     * @return a response definition builder for a successful response
+     */
     public static ResponseDefinitionBuilder success(String data)
     {
         return smartlingResponse(ResponseCode.SUCCESS, data, null);
     }
 
+    /**
+     * Creates an error response with the specified error code and messages.
+     *
+     * @param <T> the enum type for the response code
+     * @param responseCode the error response code enum value
+     * @param errors the error messages as JSON string
+     * @return a response definition builder for an error response
+     */
     public static  <T extends Enum<T>> ResponseDefinitionBuilder error(Enum<T> responseCode, String errors)
     {
         return smartlingResponse(responseCode,null, errors);
     }
 
+    /**
+     * Standard Smartling API response codes for testing.
+     */
     public enum ResponseCode
     {
+        /**
+         * Indicates a successful API operation.
+         */
         SUCCESS
     }
 }

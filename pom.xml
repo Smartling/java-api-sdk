@@ -188,7 +188,7 @@
 <!--                        <link>https://docs.jboss.org/resteasy/docs/3.0.24.Final/javadocs/</link>-->
                         <link>https://fasterxml.github.io/jackson-core/javadoc/2.8/</link>
                         <link>https://fasterxml.github.io/jackson-databind/javadoc/2.8/</link>
-                        <link>https://hc.apache.org/httpcomponents-client-4.5.x/httpclient/apidocs/</link>
+                        <link>https://hc.apache.org/httpcomponents-client-4.5.x/current/httpclient/apidocs/</link>
                     </links>
                     <defaultAuthor>Smartling, Inc.</defaultAuthor>
                     <version>true</version>
