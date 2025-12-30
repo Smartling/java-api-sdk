@@ -23,7 +23,7 @@ The official Java SDK for the [Smartling Translation Management Platform](https:
 - RESTEasy 4.7.10 (JAX-RS client implementation)
 - Jackson 2.15.4 (JSON serialization)
 - Apache HttpClient 4.5.14 (HTTP transport)
-- SLF4J 1.7.28 (Logging facade)
+- SLF4J 2.0.17 (Logging facade)
 
 ## Installation
 
