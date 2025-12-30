@@ -32,6 +32,8 @@
         <okhttp.version>4.12.0</okhttp.version>
         <wiremock.version>2.35.2</wiremock.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
+        <slf4j.version>2.0.17</slf4j.version>
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -89,12 +91,12 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.16</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>2.0.16</version>
+            <version>${slf4j.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -162,7 +164,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.11.2</version>
+                <version>${maven-javadoc-plugin.version}</version>
                 <configuration>
                     <detectOfflineLinks>false</detectOfflineLinks>
                     <failOnError>false</failOnError>
@@ -266,7 +268,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.11.2</version>
+                        <version>${maven-javadoc-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
