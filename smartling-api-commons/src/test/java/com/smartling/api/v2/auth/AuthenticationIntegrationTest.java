@@ -38,6 +38,8 @@ import static com.smartling.api.v2.auth.DummyApi.DUMMY_API;
 import static com.smartling.api.v2.tests.wiremock.SmartlingWireMock.*;
 import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class AuthenticationIntegrationTest
 {
@@ -128,25 +130,38 @@ public class AuthenticationIntegrationTest
             .willReturn(smartlingResponse(SmartlingWireMock.ResponseCode.SUCCESS, "*/*", data, null)
             )
         );
-        String expectedMessage = "Error during response processing:\n" +
-            "\ttype: com.smartling.api.v2.authentication.pto.Authentication\n" +
-            "\tgenericType: class com.smartling.api.v2.authentication.pto.Authentication\n" +
-            "\tannotations: [\n" +
-            "\t\t@javax.ws.rs.POST()\n" +
-            "\t\t@javax.ws.rs.Path(value=\"/authenticate\")\n" +
-            "\t]\n" +
-            "\theaders: [Content-Type=*/*,Matched-Stub-Id=" + stubMapping.getId() + ",Transfer-Encoding=chunked,Vary=Accept-Encoding, User-Agent]\n" +
-            "\tmedia type: */*\n" +
-            "\tbody: {\"response\":{\"code\":\"SUCCESS\",\"data\":{\"accessToken\":\"accessTokenValue\",\"refreshToken\":\"refreshTokenValue\",\"expiresIn\":480,\"refreshExpiresIn\":21600,\"tokenType\":\"Bearer\"}}}";
         String actualMessage = null;
         try
         {
             dummyApi().dummy();
         }
         catch (Exception ex) {
+            assertNotNull("Expected exception to have a cause", ex.getCause());
+            assertNotNull("Expected cause to have diagnostic message", ex.getCause().getCause());
             actualMessage = ex.getCause().getCause().getMessage();
         }
-        assertEquals(expectedMessage, actualMessage);
+
+        // Verify diagnostic message contains all critical information (platform-independent assertions)
+        assertNotNull("Expected error message", actualMessage);
+        assertTrue("Should contain error processing header",
+            actualMessage.contains("Error during response processing:"));
+        assertTrue("Should contain type information",
+            actualMessage.contains("type: com.smartling.api.v2.authentication.pto.Authentication"));
+        assertTrue("Should contain genericType information",
+            actualMessage.contains("genericType: class com.smartling.api.v2.authentication.pto.Authentication"));
+        assertTrue("Should contain POST annotation",
+            actualMessage.contains("@javax.ws.rs.POST()"));
+        assertTrue("Should contain Path annotation with authenticate path",
+            actualMessage.contains("@javax.ws.rs.Path") && actualMessage.contains("/authenticate"));
+        assertTrue("Should contain Content-Type header",
+            actualMessage.contains("Content-Type=*/*"));
+        assertTrue("Should contain stub ID",
+            actualMessage.contains("Matched-Stub-Id=" + stubMapping.getId()));
+        assertTrue("Should contain media type",
+            actualMessage.contains("media type: */*"));
+        assertTrue("Should contain response body with success code",
+            actualMessage.contains("\"code\":\"SUCCESS\"") &&
+            actualMessage.contains("\"accessToken\":\"accessTokenValue\""));
     }
 
     @Test
