@@ -29,6 +29,7 @@ public enum FileType
     XLSX_TEMPLATE("application/octet-stream", false),        // Smartling XLSX - https://help.smartling.com/hc/en-us/articles/1260804224670-Translating-Spreadsheets#h_01F3TKVZBVPFJSF2XZEBHDH1EQ
     ANDROID("application/xml", true), // ANDROID parser
     JSON("application/json", true),
+    XLIFF("application/xml", true), // XLIFF 1.2 parser
     ;
     private final String identifier;
     private final String mimeType;

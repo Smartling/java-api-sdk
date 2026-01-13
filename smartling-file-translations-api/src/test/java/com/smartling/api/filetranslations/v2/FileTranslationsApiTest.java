@@ -3,8 +3,6 @@ package com.smartling.api.filetranslations.v2;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.smartling.api.filetranslations.v2.pto.Error;
 import com.smartling.api.filetranslations.v2.pto.FileType;
 import com.smartling.api.filetranslations.v2.pto.LanguagePTO;
@@ -44,8 +42,9 @@ import javax.ws.rs.core.HttpHeaders;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -59,13 +58,13 @@ import static org.junit.Assert.assertNotNull;
 public class FileTranslationsApiTest
 {
     private static final String SUCCESS_RESPONSE_ENVELOPE = "{\"response\":{\"code\":\"SUCCESS\",\"data\":%s}})";
-    private static final String ACCOUNT_UID = RandomStringUtils.randomAlphabetic(10);
-    private static final String FILE_UID = RandomStringUtils.randomAlphabetic(10);
-    private static final String MT_UID = RandomStringUtils.randomAlphabetic(10);
-    private static final String LANGUAGE_DETECTION_UID = RandomStringUtils.randomAlphabetic(10);
-    private static final String SOURCE_LOCALE_ID = RandomStringUtils.randomAlphabetic(10);
-    private static final String TARGET_LOCALE_ID_1 = RandomStringUtils.randomAlphabetic(5);
-    private static final String TARGET_LOCALE_ID_2 = RandomStringUtils.randomAlphabetic(5);
+    private static final String ACCOUNT_UID = RandomStringUtils.insecure().nextAlphabetic(10);
+    private static final String FILE_UID = RandomStringUtils.insecure().nextAlphabetic(10);
+    private static final String MT_UID = RandomStringUtils.insecure().nextAlphabetic(10);
+    private static final String LANGUAGE_DETECTION_UID = RandomStringUtils.insecure().nextAlphabetic(10);
+    private static final String SOURCE_LOCALE_ID = RandomStringUtils.insecure().nextAlphabetic(10);
+    private static final String TARGET_LOCALE_ID_1 = RandomStringUtils.insecure().nextAlphabetic(5);
+    private static final String TARGET_LOCALE_ID_2 = RandomStringUtils.insecure().nextAlphabetic(5);
 
     private MockWebServer mockWebServer;
     private FileTranslationsApi sut;
@@ -123,21 +122,21 @@ public class FileTranslationsApiTest
 
         MtRequest request = new MtRequest();
         request.setSourceLocaleId(SOURCE_LOCALE_ID);
-        request.setTargetLocaleIds(ImmutableList.of(TARGET_LOCALE_ID_1, TARGET_LOCALE_ID_2));
+        request.setTargetLocaleIds(Arrays.asList(TARGET_LOCALE_ID_1, TARGET_LOCALE_ID_2));
 
         MtResponse response = sut.mtFile(ACCOUNT_UID, FILE_UID, request);
 
         MtRequest recordedRequest = toObj(getRequestWithValidation(HttpMethod.POST,
             String.format("/file-translations-api/v2/accounts/%s/files/%s/mt", ACCOUNT_UID, FILE_UID)).getBody().readUtf8(), MtRequest.class);
         assertThat(recordedRequest.getSourceLocaleId(), is(SOURCE_LOCALE_ID));
-        assertThat(recordedRequest.getTargetLocaleIds(), is(ImmutableList.of(TARGET_LOCALE_ID_1, TARGET_LOCALE_ID_2)));
+        assertThat(recordedRequest.getTargetLocaleIds(), is(Arrays.asList(TARGET_LOCALE_ID_1, TARGET_LOCALE_ID_2)));
 
         assertNotNull(response);
         assertEquals(MT_UID, response.getMtUid());
     }
 
     @Test
-    public void cancelFileProcessing() throws InterruptedException, UnsupportedEncodingException
+    public void cancelFileProcessing() throws InterruptedException
     {
         assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, "{}"));
 
@@ -192,7 +191,7 @@ public class FileTranslationsApiTest
         MtStatusResponse response = new MtStatusResponse();
         response.setState(MtState.COMPLETED);
         response.setRequestedStringCount(100L);
-        Error<Map<String,String>> error = new Error<>("some.key", "some message", ImmutableMap.of("key1", "val1"));
+        Error<Map<String,String>> error = new Error<>("some.key", "some message", Collections.singletonMap("key1", "val1"));
         response.setError(error);
         MtLocaleStatus locale1Status = new MtLocaleStatus();
         locale1Status.setLocaleId(TARGET_LOCALE_ID_1);
@@ -226,7 +225,7 @@ public class FileTranslationsApiTest
         assertEquals(response.getRequestedStringCount(), status.getRequestedStringCount());
         assertThat(response.getError().getKey(), is("some.key"));
         assertThat(response.getError().getMessage(), is("some message"));
-        assertThat(response.getError().getDetails(), is(ImmutableMap.of("key1", "val1")));
+        assertThat(response.getError().getDetails(), is(Collections.singletonMap("key1", "val1")));
         assertEquals(response.getLocaleProcessStatuses().size(), status.getLocaleProcessStatuses().size());
         assertEquals(response.getLocaleProcessStatuses().get(0).getLocaleId(), status.getLocaleProcessStatuses().get(0).getLocaleId());
         assertEquals(response.getLocaleProcessStatuses().get(0).getProcessedStringCount(), status.getLocaleProcessStatuses().get(0).getProcessedStringCount());
@@ -258,7 +257,7 @@ public class FileTranslationsApiTest
     public void getLDStatus() throws InterruptedException, IOException
     {
         LanguageDetectionStatusResponse response = new LanguageDetectionStatusResponse();
-        Error<Map<String,String>> error = new Error<>("some.key", "some message", ImmutableMap.of("key1", "val1"));
+        Error<Map<String,String>> error = new Error<>("some.key", "some message", Collections.singletonMap("key1", "val1"));
         response.setError(error);
         response.setState(LanguageDetectionState.COMPLETED);
         LanguagePTO languagePTO1 = new LanguagePTO();
@@ -267,7 +266,7 @@ public class FileTranslationsApiTest
         LanguagePTO languagePTO2 = new LanguagePTO();
         languagePTO2.setLanguageId("de");
         languagePTO2.setDefaultLocaleId("de-DE");
-        response.setDetectedSourceLanguages(ImmutableList.of(languagePTO1, languagePTO2));
+        response.setDetectedSourceLanguages(Arrays.asList(languagePTO1, languagePTO2));
         String responseBody = objectMapper.writeValueAsString(response);
         assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, responseBody));
 
@@ -279,7 +278,7 @@ public class FileTranslationsApiTest
         assertEquals(response.getState(), status.getState());
         assertThat(response.getError().getKey(), is("some.key"));
         assertThat(response.getError().getMessage(), is("some message"));
-        assertThat(response.getError().getDetails(), is(ImmutableMap.of("key1", "val1")));
+        assertThat(response.getError().getDetails(), is(Collections.singletonMap("key1", "val1")));
 
         assertEquals(response.getDetectedSourceLanguages().size(), status.getDetectedSourceLanguages().size());
 
@@ -335,12 +334,10 @@ public class FileTranslationsApiTest
 
     private static class Part
     {
-        private okhttp3.Headers headers;
-        private byte[] body;
+        private final byte[] body;
 
         public Part(Headers headers, byte[] body)
         {
-            this.headers = headers;
             this.body = body;
         }
 
