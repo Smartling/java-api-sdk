@@ -141,4 +141,90 @@ public class AuthenticatorTest
         when(clock.currentTimeMillis()).thenReturn(REFRESH_TOKEN_TTL * 1000 + System.currentTimeMillis());
         assertFalse(authenticator.isRefreshable());
     }
+
+    @Test
+    public void invalidateClearsToken()
+    {
+        when(clock.currentTimeMillis()).thenReturn(System.currentTimeMillis());
+        authenticator.getAccessToken();
+        assertTrue(authenticator.isValid());
+
+        authenticator.invalidate();
+
+        assertFalse(authenticator.isValid());
+        assertFalse(authenticator.isRefreshable());
+    }
+
+    @Test
+    public void getAccessTokenAfterInvalidateReAuthenticates()
+    {
+        when(clock.currentTimeMillis()).thenReturn(System.currentTimeMillis());
+        authenticator.getAccessToken();
+        authenticator.invalidate();
+        authenticator.getAccessToken();
+
+        verify(authenticationApi, times(2)).authenticate(any(AuthenticationRequest.class));
+        verify(authenticationApi, never()).refresh(any(AuthenticationRefreshRequest.class));
+    }
+
+    @Test
+    public void getAccessTokenRefreshesAtExactExpiryBoundary()
+    {
+        Authentication shortLivedAuth = new Authentication("accessToken", "refreshToken", 480, 21600, "bearer");
+        Authentication refreshedAuth = new Authentication("newAccessToken", "newRefreshToken", 480, 21600, "bearer");
+
+        when(authenticationApi.authenticate(any(AuthenticationRequest.class))).thenReturn(shortLivedAuth);
+        when(authenticationApi.refresh(any(AuthenticationRefreshRequest.class))).thenReturn(refreshedAuth);
+
+        authenticator.getAccessToken();
+
+        when(clock.currentTimeMillis()).thenReturn(System.currentTimeMillis() + 480_000L);
+
+        String token = authenticator.getAccessToken();
+
+        assertEquals(refreshedAuth.getAccessToken(), token);
+        verify(authenticationApi, times(1)).authenticate(any(AuthenticationRequest.class));
+        verify(authenticationApi, times(1)).refresh(any(AuthenticationRefreshRequest.class));
+    }
+
+    @Test
+    public void getAccessTokenRefreshesJustBeforeRefreshTokenExpiry()
+    {
+        Authentication shortLivedAuth = new Authentication("accessToken", "refreshToken", 480, 21600, "bearer");
+        Authentication refreshedAuth = new Authentication("newAccessToken", "newRefreshToken", 480, 21600, "bearer");
+
+        when(authenticationApi.authenticate(any(AuthenticationRequest.class))).thenReturn(shortLivedAuth);
+        when(authenticationApi.refresh(any(AuthenticationRefreshRequest.class))).thenReturn(refreshedAuth);
+
+        authenticator.getAccessToken();
+
+        // Access token expired, refresh token still valid
+        when(clock.currentTimeMillis()).thenReturn(System.currentTimeMillis() + 21_510_000L);
+
+        String token = authenticator.getAccessToken();
+
+        assertEquals(refreshedAuth.getAccessToken(), token);
+        verify(authenticationApi, times(1)).authenticate(any(AuthenticationRequest.class));
+        verify(authenticationApi, times(1)).refresh(any(AuthenticationRefreshRequest.class));
+    }
+
+    @Test
+    public void getAccessTokenRefreshesWhenAccessTokenExpiredButRefreshTokenValid()
+    {
+        Authentication shortLivedAuth = new Authentication("accessToken", "refreshToken", 480, 21600, "bearer");
+        Authentication refreshedAuth = new Authentication("newAccessToken", "newRefreshToken", 480, 21600, "bearer");
+
+        when(authenticationApi.authenticate(any(AuthenticationRequest.class))).thenReturn(shortLivedAuth);
+        when(authenticationApi.refresh(any(AuthenticationRefreshRequest.class))).thenReturn(refreshedAuth);
+
+        authenticator.getAccessToken();
+
+        when(clock.currentTimeMillis()).thenReturn(System.currentTimeMillis() + 600_000L);
+
+        String token = authenticator.getAccessToken();
+
+        assertEquals(refreshedAuth.getAccessToken(), token);
+        verify(authenticationApi, times(1)).authenticate(any(AuthenticationRequest.class));
+        verify(authenticationApi, times(1)).refresh(any(AuthenticationRefreshRequest.class));
+    }
 }
