@@ -116,11 +116,18 @@ public class Authenticator
         return refreshExpiresAt > clock.currentTimeMillis();
     }
 
+    public synchronized void invalidate()
+    {
+        this.authentication = null;
+        this.expiresAt = -1;
+        this.refreshExpiresAt = -1;
+    }
+
     private synchronized String getAccessTokenInternal()
     {
         this.authentication = api.authenticate(new AuthenticationRequest(userIdentifier, userSecret));
         this.expiresAt = authentication.getExpiresIn() * 1000 + System.currentTimeMillis();
-        this.refreshExpiresAt = authentication.getRefreshExpiresIn() * 100 + System.currentTimeMillis();
+        this.refreshExpiresAt = authentication.getRefreshExpiresIn() * 1000 + System.currentTimeMillis();
         return authentication.getAccessToken();
     }
 
@@ -128,7 +135,7 @@ public class Authenticator
     {
         this.authentication = api.refresh(new AuthenticationRefreshRequest(authentication.getRefreshToken()));
         this.expiresAt = authentication.getExpiresIn() * 1000 + System.currentTimeMillis();
-        this.refreshExpiresAt = authentication.getRefreshExpiresIn() * 100 + System.currentTimeMillis();
+        this.refreshExpiresAt = authentication.getRefreshExpiresIn() * 1000 + System.currentTimeMillis();
         return authentication.getAccessToken();
     }
 }
