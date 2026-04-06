@@ -9,6 +9,7 @@ import com.smartling.api.filetranslations.v2.pto.LanguagePTO;
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadPTO;
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadRequest;
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadResponse;
+import com.smartling.api.filetranslations.v2.pto.file.ParseConfigItem;
 import com.smartling.api.filetranslations.v2.pto.ld.LanguageDetectionResponse;
 import com.smartling.api.filetranslations.v2.pto.ld.LanguageDetectionState;
 import com.smartling.api.filetranslations.v2.pto.ld.LanguageDetectionStatusResponse;
@@ -98,18 +99,22 @@ public class FileTranslationsApiTest
     {
         assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, String.format("{\"fileUid\":\"%s\"}", FILE_UID)));
 
+        ParseConfigItem configItem = new ParseConfigItem("instruction1", "value1");
         FileUploadRequest request = new FileUploadRequest();
         request.setFileType(FileType.PLAIN_TEXT);
+        request.setParseConfigItems(Collections.singletonList(configItem));
         FileUploadPTO fileUploadPTO = new FileUploadPTO();
         fileUploadPTO.setRequest(request);
         fileUploadPTO.setFile(new ByteArrayInputStream("whatever".getBytes(StandardCharsets.UTF_8)));
 
-
         FileUploadResponse response = sut.uploadFile(ACCOUNT_UID, fileUploadPTO);
 
         LinkedHashMap<String, Part> parts = toParts(getRequestWithValidation(HttpMethod.POST, String.format("/file-translations-api/v2/accounts/%s/files", ACCOUNT_UID)));
-        assertThat(toObj(parts.get("request").getBodyUtf8(), FileUploadRequest.class).getFileType(), is(FileType.PLAIN_TEXT));
-        assertThat(parts.get("file").getBodyUtf8(), is("whatever"));
+        FileUploadRequest serializedRequest = toObj(parts.get("request").getBodyUtf8(), FileUploadRequest.class);
+        assertThat(serializedRequest.getFileType(), is(FileType.PLAIN_TEXT));
+        assertThat(serializedRequest.getParseConfigItems().size(), is(1));
+        assertThat(serializedRequest.getParseConfigItems().get(0).getInstruction(), is("instruction1"));
+        assertThat(serializedRequest.getParseConfigItems().get(0).getValue(), is("value1"));
 
         assertNotNull(response);
         assertEquals(FILE_UID, response.getFileUid());
