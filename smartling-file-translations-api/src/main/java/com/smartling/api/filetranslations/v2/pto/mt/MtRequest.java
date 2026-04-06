@@ -6,6 +6,7 @@ public class MtRequest
 {
     private String sourceLocaleId;
     private List<String> targetLocaleIds;
+    private boolean pseudo;
     private String profileUid;
 
     public MtRequest()
@@ -45,6 +46,16 @@ public class MtRequest
         this.targetLocaleIds = targetLocaleIds;
     }
 
+    public boolean isPseudo()
+    {
+        return pseudo;
+    }
+
+    public void setPseudo(boolean pseudo)
+    {
+        this.pseudo = pseudo;
+    }
+
     public String getProfileUid()
     {
         return profileUid;
@@ -61,6 +72,7 @@ public class MtRequest
         return "MtRequest{" +
             "sourceLocaleId='" + sourceLocaleId + '\'' +
             ", targetLocaleIds=" + targetLocaleIds +
+            ", pseudo=" + pseudo +
             ", profileUid=" + profileUid +
             '}';
     }

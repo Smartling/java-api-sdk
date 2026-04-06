@@ -130,6 +130,7 @@ public class FileTranslationsApiTest
         MtRequest request = new MtRequest();
         request.setSourceLocaleId(SOURCE_LOCALE_ID);
         request.setTargetLocaleIds(Arrays.asList(TARGET_LOCALE_ID_1, TARGET_LOCALE_ID_2));
+        request.setPseudo(true);
 
         MtResponse response = sut.mtFile(ACCOUNT_UID, FILE_UID, request);
 
@@ -137,6 +138,7 @@ public class FileTranslationsApiTest
             String.format("/file-translations-api/v2/accounts/%s/files/%s/mt", ACCOUNT_UID, FILE_UID)).getBody().readUtf8(), MtRequest.class);
         assertThat(recordedRequest.getSourceLocaleId(), is(SOURCE_LOCALE_ID));
         assertThat(recordedRequest.getTargetLocaleIds(), is(Arrays.asList(TARGET_LOCALE_ID_1, TARGET_LOCALE_ID_2)));
+        assertThat(recordedRequest.isPseudo(), is(true));
 
         assertNotNull(response);
         assertEquals(MT_UID, response.getMtUid());
