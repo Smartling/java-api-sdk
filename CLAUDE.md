@@ -98,15 +98,14 @@ All API responses follow the pattern:
 # Run all tests
 ./mvnw test
 
-# Run tests for specific module
-./mvnw test -pl smartling-files-api
+# Run tests for specific module (use -am to also build its dependencies)
+./mvnw test -pl smartling-files-api -am
 
 # Run single test class
-./mvnw test -pl smartling-files-api -Dtest=FilesApiTest
+./mvnw test -pl smartling-files-api -am -Dtest=FilesApiTest
 
 # Run single test method
-./mvnw test -pl smartling-files-api -Dtest=FilesApiTest#testUploadFile
-```
+./mvnw test -pl smartling-files-api -am -Dtest=FilesApiTest#testUploadFile
 
 ### Documentation
 
