@@ -1,5 +1,6 @@
 package com.smartling.api.filetranslations.v2;
 
+import com.smartling.api.filetranslations.v2.pto.file.FileTypesResponse;
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadPTO;
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadResponse;
 import com.smartling.api.filetranslations.v2.pto.ld.LanguageDetectionRequest;
@@ -28,6 +29,15 @@ import static javax.ws.rs.core.MediaType.WILDCARD;
 @Path("/file-translations-api/v2")
 public interface FileTranslationsApi extends AutoCloseable
 {
+    /**
+     * Get all supported file types
+     *
+     * @return response containing list of supported file type identifiers
+     */
+    @GET
+    @Path("/file-types")
+    FileTypesResponse getFileTypes();
+
     /**
      * Upload file to perform further actions on it
      *

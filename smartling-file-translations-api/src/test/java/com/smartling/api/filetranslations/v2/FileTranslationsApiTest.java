@@ -6,6 +6,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.smartling.api.filetranslations.v2.pto.Error;
 import com.smartling.api.filetranslations.v2.pto.FileType;
 import com.smartling.api.filetranslations.v2.pto.LanguagePTO;
+import com.smartling.api.filetranslations.v2.pto.file.FileTypesResponse;
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadPTO;
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadRequest;
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadResponse;
@@ -317,6 +318,22 @@ public class FileTranslationsApiTest
         assertEquals(response.getDetectedSourceLanguages().get(0).getDefaultLocaleId(), status.getDetectedSourceLanguages().get(0).getDefaultLocaleId());
         assertEquals(response.getDetectedSourceLanguages().get(1).getLanguageId(), status.getDetectedSourceLanguages().get(1).getLanguageId());
         assertEquals(response.getDetectedSourceLanguages().get(1).getDefaultLocaleId(), status.getDetectedSourceLanguages().get(1).getDefaultLocaleId());
+    }
+
+    @Test
+    public void getFileTypes() throws InterruptedException
+    {
+        assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE,
+            "{\"fileTypes\":[\"DOCX\",\"PLAIN_TEXT\",\"JSON\"]}"));
+
+        FileTypesResponse response = sut.getFileTypes();
+
+        getRequestWithValidation(HttpMethod.GET, "/file-translations-api/v2/file-types");
+        assertNotNull(response);
+        assertThat(response.getFileTypes().size(), is(3));
+        assertThat(response.getFileTypes().get(0), is("DOCX"));
+        assertThat(response.getFileTypes().get(1), is("PLAIN_TEXT"));
+        assertThat(response.getFileTypes().get(2), is("JSON"));
     }
 
     private void assignResponse(final int httpStatusCode, final String body)
