@@ -2,6 +2,7 @@ package com.smartling.api.filetranslations.v2;
 
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadPTO;
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadResponse;
+import com.smartling.api.filetranslations.v2.pto.ld.LanguageDetectionRequest;
 import com.smartling.api.filetranslations.v2.pto.ld.LanguageDetectionResponse;
 import com.smartling.api.filetranslations.v2.pto.ld.LanguageDetectionStatusResponse;
 import com.smartling.api.filetranslations.v2.pto.mt.MtRequest;
@@ -106,11 +107,13 @@ public interface FileTranslationsApi extends AutoCloseable
      *
      * @param accountUid the uid of account.
      * @param fileUid file identifier for which source language detection is being requested
+     * @param languageDetectionRequest optional request with callback configuration
      * @return response that contains language detection identifier, that can be used for other operations
      */
     @POST
     @Path("/accounts/{accountUid}/files/{fileUid}/language-detection")
-    LanguageDetectionResponse detectFileSourceLanguage(@PathParam("accountUid") String accountUid, @PathParam("fileUid") String fileUid);
+    LanguageDetectionResponse detectFileSourceLanguage(@PathParam("accountUid") String accountUid,
+        @PathParam("fileUid") String fileUid, LanguageDetectionRequest languageDetectionRequest);
 
     /**
      * Get progress for earlier triggered source language detection action

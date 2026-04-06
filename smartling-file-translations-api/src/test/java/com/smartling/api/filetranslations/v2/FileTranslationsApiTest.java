@@ -9,7 +9,9 @@ import com.smartling.api.filetranslations.v2.pto.LanguagePTO;
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadPTO;
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadRequest;
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadResponse;
+import com.smartling.api.filetranslations.v2.pto.Callback;
 import com.smartling.api.filetranslations.v2.pto.file.ParseConfigItem;
+import com.smartling.api.filetranslations.v2.pto.ld.LanguageDetectionRequest;
 import com.smartling.api.filetranslations.v2.pto.ld.LanguageDetectionResponse;
 import com.smartling.api.filetranslations.v2.pto.ld.LanguageDetectionState;
 import com.smartling.api.filetranslations.v2.pto.ld.LanguageDetectionStatusResponse;
@@ -251,9 +253,31 @@ public class FileTranslationsApiTest
         assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, String.format(
             "{\"languageDetectionUid\":\"%s\"}", LANGUAGE_DETECTION_UID)));
 
-        LanguageDetectionResponse response = sut.detectFileSourceLanguage(ACCOUNT_UID, FILE_UID);
+        LanguageDetectionResponse response = sut.detectFileSourceLanguage(ACCOUNT_UID, FILE_UID, null);
 
         getRequestWithValidation(HttpMethod.POST, String.format("/file-translations-api/v2/accounts/%s/files/%s/language-detection", ACCOUNT_UID, FILE_UID));
+        assertNotNull(response);
+        assertEquals(LANGUAGE_DETECTION_UID, response.getLanguageDetectionUid());
+    }
+
+    @Test
+    public void detectSourceLanguageWithCallback() throws InterruptedException
+    {
+        assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, String.format(
+            "{\"languageDetectionUid\":\"%s\"}", LANGUAGE_DETECTION_UID)));
+
+        Callback callback = new Callback("https://example.com/callback", "POST", "user-data");
+        LanguageDetectionRequest request = new LanguageDetectionRequest(callback);
+
+        LanguageDetectionResponse response = sut.detectFileSourceLanguage(ACCOUNT_UID, FILE_UID, request);
+
+        RecordedRequest recorded = getRequestWithValidation(HttpMethod.POST,
+            String.format("/file-translations-api/v2/accounts/%s/files/%s/language-detection", ACCOUNT_UID, FILE_UID));
+        LanguageDetectionRequest serializedRequest = toObj(recorded.getBody().readUtf8(), LanguageDetectionRequest.class);
+        assertThat(serializedRequest.getCallback().getUrl(), is("https://example.com/callback"));
+        assertThat(serializedRequest.getCallback().getHttpMethod(), is("POST"));
+        assertThat(serializedRequest.getCallback().getUserData(), is("user-data"));
+
         assertNotNull(response);
         assertEquals(LANGUAGE_DETECTION_UID, response.getLanguageDetectionUid());
     }
