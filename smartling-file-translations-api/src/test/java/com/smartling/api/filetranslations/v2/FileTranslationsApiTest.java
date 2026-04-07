@@ -6,9 +6,13 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.smartling.api.filetranslations.v2.pto.Error;
 import com.smartling.api.filetranslations.v2.pto.FileType;
 import com.smartling.api.filetranslations.v2.pto.LanguagePTO;
+import com.smartling.api.filetranslations.v2.pto.file.FileTypesResponse;
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadPTO;
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadRequest;
 import com.smartling.api.filetranslations.v2.pto.file.FileUploadResponse;
+import com.smartling.api.filetranslations.v2.pto.Callback;
+import com.smartling.api.filetranslations.v2.pto.file.ParseConfigItem;
+import com.smartling.api.filetranslations.v2.pto.ld.LanguageDetectionRequest;
 import com.smartling.api.filetranslations.v2.pto.ld.LanguageDetectionResponse;
 import com.smartling.api.filetranslations.v2.pto.ld.LanguageDetectionState;
 import com.smartling.api.filetranslations.v2.pto.ld.LanguageDetectionStatusResponse;
@@ -98,18 +102,22 @@ public class FileTranslationsApiTest
     {
         assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, String.format("{\"fileUid\":\"%s\"}", FILE_UID)));
 
+        ParseConfigItem configItem = new ParseConfigItem("instruction1", "value1");
         FileUploadRequest request = new FileUploadRequest();
         request.setFileType(FileType.PLAIN_TEXT);
+        request.setParseConfigItems(Collections.singletonList(configItem));
         FileUploadPTO fileUploadPTO = new FileUploadPTO();
         fileUploadPTO.setRequest(request);
         fileUploadPTO.setFile(new ByteArrayInputStream("whatever".getBytes(StandardCharsets.UTF_8)));
 
-
         FileUploadResponse response = sut.uploadFile(ACCOUNT_UID, fileUploadPTO);
 
         LinkedHashMap<String, Part> parts = toParts(getRequestWithValidation(HttpMethod.POST, String.format("/file-translations-api/v2/accounts/%s/files", ACCOUNT_UID)));
-        assertThat(toObj(parts.get("request").getBodyUtf8(), FileUploadRequest.class).getFileType(), is(FileType.PLAIN_TEXT));
-        assertThat(parts.get("file").getBodyUtf8(), is("whatever"));
+        FileUploadRequest serializedRequest = toObj(parts.get("request").getBodyUtf8(), FileUploadRequest.class);
+        assertThat(serializedRequest.getFileType(), is(FileType.PLAIN_TEXT));
+        assertThat(serializedRequest.getParseConfigItems().size(), is(1));
+        assertThat(serializedRequest.getParseConfigItems().get(0).getInstruction(), is("instruction1"));
+        assertThat(serializedRequest.getParseConfigItems().get(0).getValue(), is("value1"));
 
         assertNotNull(response);
         assertEquals(FILE_UID, response.getFileUid());
@@ -123,6 +131,7 @@ public class FileTranslationsApiTest
         MtRequest request = new MtRequest();
         request.setSourceLocaleId(SOURCE_LOCALE_ID);
         request.setTargetLocaleIds(Arrays.asList(TARGET_LOCALE_ID_1, TARGET_LOCALE_ID_2));
+        request.setPseudo(true);
 
         MtResponse response = sut.mtFile(ACCOUNT_UID, FILE_UID, request);
 
@@ -130,6 +139,7 @@ public class FileTranslationsApiTest
             String.format("/file-translations-api/v2/accounts/%s/files/%s/mt", ACCOUNT_UID, FILE_UID)).getBody().readUtf8(), MtRequest.class);
         assertThat(recordedRequest.getSourceLocaleId(), is(SOURCE_LOCALE_ID));
         assertThat(recordedRequest.getTargetLocaleIds(), is(Arrays.asList(TARGET_LOCALE_ID_1, TARGET_LOCALE_ID_2)));
+        assertThat(recordedRequest.isPseudo(), is(true));
 
         assertNotNull(response);
         assertEquals(MT_UID, response.getMtUid());
@@ -246,9 +256,31 @@ public class FileTranslationsApiTest
         assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, String.format(
             "{\"languageDetectionUid\":\"%s\"}", LANGUAGE_DETECTION_UID)));
 
-        LanguageDetectionResponse response = sut.detectFileSourceLanguage(ACCOUNT_UID, FILE_UID);
+        LanguageDetectionResponse response = sut.detectFileSourceLanguage(ACCOUNT_UID, FILE_UID, null);
 
         getRequestWithValidation(HttpMethod.POST, String.format("/file-translations-api/v2/accounts/%s/files/%s/language-detection", ACCOUNT_UID, FILE_UID));
+        assertNotNull(response);
+        assertEquals(LANGUAGE_DETECTION_UID, response.getLanguageDetectionUid());
+    }
+
+    @Test
+    public void detectSourceLanguageWithCallback() throws InterruptedException
+    {
+        assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE, String.format(
+            "{\"languageDetectionUid\":\"%s\"}", LANGUAGE_DETECTION_UID)));
+
+        Callback callback = new Callback("https://example.com/callback", "POST", "user-data");
+        LanguageDetectionRequest request = new LanguageDetectionRequest(callback);
+
+        LanguageDetectionResponse response = sut.detectFileSourceLanguage(ACCOUNT_UID, FILE_UID, request);
+
+        RecordedRequest recorded = getRequestWithValidation(HttpMethod.POST,
+            String.format("/file-translations-api/v2/accounts/%s/files/%s/language-detection", ACCOUNT_UID, FILE_UID));
+        LanguageDetectionRequest serializedRequest = toObj(recorded.getBody().readUtf8(), LanguageDetectionRequest.class);
+        assertThat(serializedRequest.getCallback().getUrl(), is("https://example.com/callback"));
+        assertThat(serializedRequest.getCallback().getHttpMethod(), is("POST"));
+        assertThat(serializedRequest.getCallback().getUserData(), is("user-data"));
+
         assertNotNull(response);
         assertEquals(LANGUAGE_DETECTION_UID, response.getLanguageDetectionUid());
     }
@@ -286,6 +318,22 @@ public class FileTranslationsApiTest
         assertEquals(response.getDetectedSourceLanguages().get(0).getDefaultLocaleId(), status.getDetectedSourceLanguages().get(0).getDefaultLocaleId());
         assertEquals(response.getDetectedSourceLanguages().get(1).getLanguageId(), status.getDetectedSourceLanguages().get(1).getLanguageId());
         assertEquals(response.getDetectedSourceLanguages().get(1).getDefaultLocaleId(), status.getDetectedSourceLanguages().get(1).getDefaultLocaleId());
+    }
+
+    @Test
+    public void getFileTypes() throws InterruptedException
+    {
+        assignResponse(HttpStatus.SC_OK, String.format(SUCCESS_RESPONSE_ENVELOPE,
+            "{\"fileTypes\":[\"DOCX\",\"PLAIN_TEXT\",\"JSON\"]}"));
+
+        FileTypesResponse response = sut.getFileTypes();
+
+        getRequestWithValidation(HttpMethod.GET, "/file-translations-api/v2/file-types");
+        assertNotNull(response);
+        assertThat(response.getFileTypes().size(), is(3));
+        assertThat(response.getFileTypes().get(0), is("DOCX"));
+        assertThat(response.getFileTypes().get(1), is("PLAIN_TEXT"));
+        assertThat(response.getFileTypes().get(2), is("JSON"));
     }
 
     private void assignResponse(final int httpStatusCode, final String body)
