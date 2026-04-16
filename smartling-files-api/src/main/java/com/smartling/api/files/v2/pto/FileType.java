@@ -53,6 +53,12 @@ public enum FileType
     INDD("application/octet-stream", false),        // Adobe InDesign Document
     VSDX("application/octet-stream", false),        // Microsoft Visio Drawing
     VSDM("application/octet-stream", false),        // Microsoft Visio Macro-Enabled Drawing
+    MDX("text/plain", true),                        // MDX parser
+    IMAGE_PNG("image/png", false),                  // PNG image
+    IMAGE_JPG("image/jpeg", false),                 // JPG image
+    IMAGE_WEBP("image/webp", false),                // WebP image
+    IMAGE_GIF("image/gif", false),                  // GIF image
+    IMAGE_BMP("image/bmp", false),                  // BMP image
     ;
     private final String identifier;
     private final String mimeType;
