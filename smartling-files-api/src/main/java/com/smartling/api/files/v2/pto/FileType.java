@@ -57,8 +57,6 @@ public enum FileType
     IMAGE_PNG("image/png", false),                  // PNG image
     IMAGE_JPG("image/jpeg", false),                 // JPG image
     IMAGE_WEBP("image/webp", false),                // WebP image
-    IMAGE_GIF("image/gif", false),                  // GIF image
-    IMAGE_BMP("image/bmp", false),                  // BMP image
     ;
     private final String identifier;
     private final String mimeType;
