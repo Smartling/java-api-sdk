@@ -141,4 +141,16 @@ public class AuthenticatorTest
         when(clock.currentTimeMillis()).thenReturn(REFRESH_TOKEN_TTL * 1000 + System.currentTimeMillis());
         assertFalse(authenticator.isRefreshable());
     }
+
+    @Test
+    public void refreshExpiresAtUsesSecondsToMillisConversion()
+    {
+        when(clock.currentTimeMillis()).thenReturn(System.currentTimeMillis());
+        authenticator.getAccessToken();
+
+        // refreshExpiresAt must be computed with a *1000 (not *100) conversion,
+        // so it should still be refreshable just before the real TTL elapses.
+        when(clock.currentTimeMillis()).thenReturn(REFRESH_TOKEN_TTL * 1000 + System.currentTimeMillis() - 1000);
+        assertTrue(authenticator.isRefreshable());
+    }
 }
