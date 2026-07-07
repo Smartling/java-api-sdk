@@ -88,7 +88,12 @@ public class Authenticator
             log.debug("Going to refresh access token.");
             try
             {
-                return refreshAccessToken();
+                String accessToken = refreshAccessToken();
+                if (!isSessionCapped())
+                {
+                    return accessToken;
+                }
+                log.debug("Refreshed token has a session-capped lifetime ({}s); re-authenticating.", authentication.getRefreshExpiresIn());
             }
             catch (Exception e)
             {
@@ -114,6 +119,11 @@ public class Authenticator
             return false;
 
         return refreshExpiresAt > clock.currentTimeMillis();
+    }
+
+    boolean isSessionCapped()
+    {
+        return authentication.getRefreshExpiresIn() * 1000L < REFRESH_BEFORE_EXPIRES_MS;
     }
 
     public synchronized void invalidate()
