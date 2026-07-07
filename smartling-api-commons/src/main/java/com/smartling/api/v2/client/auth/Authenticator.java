@@ -93,7 +93,7 @@ public class Authenticator
                 {
                     return accessToken;
                 }
-                log.info("Refreshed token has a session-capped lifetime ({}s); re-authenticating.", authentication.getRefreshExpiresIn());
+                log.debug("Refreshed token has a session-capped lifetime ({}s); re-authenticating.", authentication.getRefreshExpiresIn());
             }
             catch (Exception e)
             {
