@@ -141,4 +141,46 @@ public class AuthenticatorTest
         when(clock.currentTimeMillis()).thenReturn(REFRESH_TOKEN_TTL * 1000 + System.currentTimeMillis());
         assertFalse(authenticator.isRefreshable());
     }
+
+    @Test
+    public void refreshExpiresAtUsesSecondsToMillisConversion()
+    {
+        when(clock.currentTimeMillis()).thenReturn(System.currentTimeMillis());
+        authenticator.getAccessToken();
+
+        when(clock.currentTimeMillis()).thenReturn(REFRESH_TOKEN_TTL * 1000 + System.currentTimeMillis() - 1000);
+        assertTrue(authenticator.isRefreshable());
+    }
+
+    @Test
+    public void refreshOrRequestNewAccessTokenSessionCappedTriggersReAuth()
+    {
+        when(clock.currentTimeMillis()).thenReturn(System.currentTimeMillis());
+        authenticator.getAccessToken();
+
+        Authentication cappedAuth = new Authentication("cappedAccessToken", "cappedRefreshToken", ACCESS_TOKEN_TTL, 45, "bearer");
+        when(authenticationApi.refresh(any(AuthenticationRefreshRequest.class))).thenReturn(cappedAuth);
+
+        String accessToken = authenticator.refreshOrRequestNewAccessToken(true);
+
+        verify(authenticationApi).refresh(any(AuthenticationRefreshRequest.class));
+        verify(authenticationApi, times(2)).authenticate(any(AuthenticationRequest.class));
+        assertEquals(auth.getAccessToken(), accessToken);
+    }
+
+    @Test
+    public void refreshOrRequestNewAccessTokenNormalRefreshUnaffected()
+    {
+        when(clock.currentTimeMillis()).thenReturn(System.currentTimeMillis());
+        authenticator.getAccessToken();
+
+        Authentication refreshedAuth = new Authentication("refreshedAccessToken", "refreshedRefreshToken", ACCESS_TOKEN_TTL, REFRESH_TOKEN_TTL, "bearer");
+        when(authenticationApi.refresh(any(AuthenticationRefreshRequest.class))).thenReturn(refreshedAuth);
+
+        String accessToken = authenticator.refreshOrRequestNewAccessToken(true);
+
+        verify(authenticationApi).refresh(any(AuthenticationRefreshRequest.class));
+        verify(authenticationApi, times(1)).authenticate(any(AuthenticationRequest.class));
+        assertEquals(refreshedAuth.getAccessToken(), accessToken);
+    }
 }
