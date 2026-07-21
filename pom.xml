@@ -29,7 +29,9 @@
         <org.powermock.version>2.0.4</org.powermock.version>
         <org.jboss.resteasy.version>4.7.10.Final</org.jboss.resteasy.version>
         <apache.httpclient.version>4.5.14</apache.httpclient.version>
-        <jackson.version>2.15.4</jackson.version>
+        <jackson.version>2.18.9</jackson.version>
+        <commons-io.version>2.19.0</commons-io.version>
+        <jakarta.mail.version>1.6.8</jakarta.mail.version>
         <okhttp.version>4.12.0</okhttp.version>
         <wiremock.version>2.35.2</wiremock.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
@@ -39,6 +41,16 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- AEM-1043: import the Jackson BOM so ${jackson.version} actually governs
+                 jackson-core/databind across the reactor (previously a no-op) and keeps
+                 all jackson-* artifacts aligned. -->
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
@@ -73,6 +85,30 @@
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-multipart-provider</artifactId>
             <version>${org.jboss.resteasy.version}</version>
+        </dependency>
+        <!-- AEM-1043: pin RESTEasy 4.7.10's vulnerable transitives to patched versions.
+             Declared directly (not just in dependencyManagement) so the patched versions
+             propagate to downstream consumers via Maven nearest-wins. RESTEasy itself stays
+             on 4.7.10.Final to keep the javax.ws.rs namespace / Java 8. jackson-core and
+             jackson-databind take their version from the imported jackson-bom above.
+             Clears CVE-2024-47554, CVE-2025-52999, CVE-2022-42004, CVE-2025-7962. -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>${jakarta.mail.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.spec.javax.ws.rs</groupId>

@@ -42,7 +42,7 @@ public class RestApiContextResolver implements ContextResolver<ObjectMapper>
             deserializerModule.addSerializer(klass, (JsonSerializer) classJsonSerializerMap.get(klass));
 
         objectMapper.registerModule(deserializerModule);
-        objectMapper.registerModule(new KotlinModule());
+        objectMapper.registerModule(new KotlinModule.Builder().build());
 
         this.objectMapper = objectMapper;
     }
