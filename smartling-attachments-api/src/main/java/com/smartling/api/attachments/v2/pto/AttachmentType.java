@@ -4,7 +4,10 @@ public enum AttachmentType
 {
     JOBS(1),
     ISSUES(2),
-    STRINGS(3);
+    STRINGS(3),
+    GLOSSARIES(4),
+    TRANSLATION_CERTIFICATE_BUNDLE(5),
+    LOCALE_TRANSLATION_CERTIFICATE(6);
 
     private int value;
 
@@ -29,5 +32,10 @@ public enum AttachmentType
             }
         }
         return null;
+    }
+
+    public String toUrlSegment()
+    {
+        return name().toLowerCase().replace("_", "-");
     }
 }
