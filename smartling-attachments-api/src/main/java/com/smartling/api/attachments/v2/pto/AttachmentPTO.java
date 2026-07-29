@@ -11,6 +11,7 @@ public class AttachmentPTO implements ResponseData
     private String description;
     private Date createdDate;
     private String createdByUserUid;
+    private String localeId;
 
     public String getAttachmentUid()
     {
@@ -60,5 +61,15 @@ public class AttachmentPTO implements ResponseData
     public void setCreatedByUserUid(String createdByUserUid)
     {
         this.createdByUserUid = createdByUserUid;
+    }
+
+    public String getLocaleId()
+    {
+        return localeId;
+    }
+
+    public void setLocaleId(String localeId)
+    {
+        this.localeId = localeId;
     }
 }

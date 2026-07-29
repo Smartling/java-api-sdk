@@ -32,4 +32,8 @@ public class AttachmentUploadPTO
     @FormParam("description")
     @PartType("text/plain")
     private String description;
+
+    @FormParam("localeId")
+    @PartType("text/plain")
+    private String localeId;
 }

@@ -212,6 +212,52 @@ public class AttachmentsApiTest
     }
 
     @Test
+    public void testUploadAttachmentWithLocaleId() throws Exception
+    {
+        // given
+        AttachmentPTO expectedPTO = createAttachmentPTO();
+        expectedPTO.setLocaleId("en-US");
+        assignResponse(HttpStatus.SC_OK, MediaType.APPLICATION_JSON, jsonResponse(expectedPTO));
+
+        AttachmentUploadPTO attachment = new AttachmentUploadPTO();
+        attachment.setFile(new ByteArrayInputStream("content".getBytes()));
+        attachment.setName("certificate.pdf");
+        attachment.setEntityUids(asList("jobUuid1"));
+        attachment.setLocaleId("en-US");
+
+        // when
+        AttachmentPTO response = attachmentsApi.uploadAttachment(ACCOUNT_UID, ATTACHMENT_TYPE, attachment);
+
+        // then
+        RecordedRequest request = getRequestWithValidation(HttpMethod.POST, ATTACHMENTS, ACCOUNT_UID, ATTACHMENT_TYPE);
+        String requestBody = request.getBody().readUtf8();
+
+        assertTrue(requestBody.contains(
+            "Content-Disposition: form-data; name=\"localeId\"\r\n" +
+            "Content-Type: text/plain\r\n" +
+            "\r\n" +
+            "en-US\r\n"));
+
+        assertEquals(expectedPTO.getLocaleId(), response.getLocaleId());
+    }
+
+    @Test
+    public void testAttachmentTypeNewValues()
+    {
+        assertEquals(4, AttachmentType.GLOSSARIES.getValue());
+        assertEquals(5, AttachmentType.TRANSLATION_CERTIFICATE_BUNDLE.getValue());
+        assertEquals(6, AttachmentType.LOCALE_TRANSLATION_CERTIFICATE.getValue());
+
+        assertEquals(AttachmentType.GLOSSARIES, AttachmentType.valueOf(4));
+        assertEquals(AttachmentType.TRANSLATION_CERTIFICATE_BUNDLE, AttachmentType.valueOf(5));
+        assertEquals(AttachmentType.LOCALE_TRANSLATION_CERTIFICATE, AttachmentType.valueOf(6));
+
+        assertEquals("glossaries", AttachmentType.GLOSSARIES.toUrlSegment());
+        assertEquals("translation-certificate-bundle", AttachmentType.TRANSLATION_CERTIFICATE_BUNDLE.toUrlSegment());
+        assertEquals("locale-translation-certificate", AttachmentType.LOCALE_TRANSLATION_CERTIFICATE.toUrlSegment());
+    }
+
+    @Test
     public void testDownloadAttachment() throws IOException, InterruptedException {
         // given
         String attachmentContent = "Attachment content\nThe end.";
