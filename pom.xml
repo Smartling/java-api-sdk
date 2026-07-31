@@ -28,7 +28,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <org.jboss.resteasy.version>4.7.10.Final</org.jboss.resteasy.version>
         <apache.httpclient.version>4.5.14</apache.httpclient.version>
-        <jackson.version>2.17.3</jackson.version>
+        <jackson.version>2.21.5</jackson.version>
+        <commons-io.version>2.19.0</commons-io.version>
+        <jakarta.mail.version>1.6.8</jakarta.mail.version>
+        <apache.mime4j.version>0.8.10</apache.mime4j.version>
         <okhttp.version>4.12.0</okhttp.version>
         <wiremock.version>2.35.2</wiremock.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
@@ -38,6 +41,16 @@
 
     <dependencyManagement>
         <dependencies>
+        <!-- CVE fix: import the Jackson BOM so ${jackson.version} actually governs
+             jackson-core/databind across the reactor (previously a no-op) and keeps
+             all jackson-* artifacts aligned. -->
+        <dependency>
+            <groupId>com.fasterxml.jackson</groupId>
+            <artifactId>jackson-bom</artifactId>
+            <version>${jackson.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
@@ -77,6 +90,77 @@
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-multipart-provider</artifactId>
             <version>${org.jboss.resteasy.version}</version>
+        </dependency>
+        <!-- CVE fix: pin RESTEasy 4.7.10's vulnerable transitives to patched versions.
+             Declared directly (not just in dependencyManagement) so the patched versions
+             propagate to downstream consumers via Maven nearest-wins. RESTEasy itself stays
+             on 4.7.10.Final to keep the javax.ws.rs namespace / Java 8. The jackson stack
+             takes its version from the imported jackson-bom above. -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.james</groupId>
+            <artifactId>apache-mime4j-core</artifactId>
+            <version>${apache.mime4j.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- apache-mime4j-dom must stay compile-scoped: TranslatedFileMultipartReader reaches
+             org.apache.james.mime4j.dom.Multipart through RESTEasy's MultipartInput signature,
+             so javac needs it even though the type never appears in our source. Moving it to
+             runtime like its siblings fails the smartling-files-api build. -->
+        <dependency>
+            <groupId>org.apache.james</groupId>
+            <artifactId>apache-mime4j-dom</artifactId>
+            <version>${apache.mime4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.james</groupId>
+            <artifactId>apache-mime4j-storage</artifactId>
+            <version>${apache.mime4j.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <!-- the rest of the jackson stack that RESTEasy pulls transitively must be declared
+             directly too, so the jackson-bom version propagates to downstream consumers via
+             nearest-wins. Otherwise the connector gets these at RESTEasy's bundled version,
+             an unsupported mismatch against jackson-databind (databind requires
+             jackson-annotations >= its own version). All versionless -> governed by jackson-bom. -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-base</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jaxb-annotations</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- Must stay compile-scoped (not runtime): RESTEasy pulls this in at compile scope, and a
+             runtime-scoped override here is invisible to Gradle/Maven's compile-scope resolution,
+             leaving the old vulnerable version on downstream consumers' compile classpath. -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>${jakarta.mail.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.spec.javax.ws.rs</groupId>
