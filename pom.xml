@@ -29,7 +29,7 @@
         <org.powermock.version>2.0.4</org.powermock.version>
         <org.jboss.resteasy.version>4.7.10.Final</org.jboss.resteasy.version>
         <apache.httpclient.version>4.5.14</apache.httpclient.version>
-        <jackson.version>2.18.9</jackson.version>
+        <jackson.version>2.18.12</jackson.version>
         <commons-io.version>2.19.0</commons-io.version>
         <jakarta.mail.version>1.6.8</jakarta.mail.version>
         <apache.mime4j.version>0.8.10</apache.mime4j.version>
