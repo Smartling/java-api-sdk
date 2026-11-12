@@ -99,7 +99,7 @@ public interface IssuesApi extends AutoCloseable
     /**
      * Returns a page of issue comments.
      *
-     * @param limit  max number of comments to return (1..500); server default is 500 when {@code null}
+     * @param limit max number of comments to return (1..500); server default is 500 when {@code null}
      * @param offset number of comments to skip (>= 0); server default is 0 when {@code null}
      */
     @GET
